@@ -1,26 +1,27 @@
-# 📥 YouTube to Obsidian
+# 🧠 Oyto OS
 
-Importa transcrições de vídeos do YouTube como notas markdown estruturadas para o seu vault do Obsidian, com **metadados ricos em frontmatter YAML** prontos para RAG, busca e filtros avançados.
+Oyto OS é um "sistema operacional" pessoal projetado para hospedar módulos de extração de conhecimento e interligar ideias de forma autônoma. 
 
-> **Visão de futuro:** Este é o primeiro módulo de um sistema de _segundo cérebro_ alimentado por IA. O vault do Obsidian servirá como base de conhecimento para um agente de IA com RAG, que poderá responder perguntas, gerar resumos e conectar ideias entre vídeos, artigos e outras fontes.
+A arquitetura do projeto é modular, facilitando a adição de novas fontes e integrações no futuro. Atualmente, o módulo central extrai transcrições de vídeos do YouTube e os salva como notas markdown no seu vault do Obsidian, formando uma base de conhecimento estruturada e conectada.
 
 ---
 
 ## ✨ Funcionalidades (V1)
 
-- 🎬 Importação de vídeos via URL (formatos: `youtube.com/watch?v=`, `youtu.be/`, `youtube.com/shorts/`)
-- 📜 Extração automática de transcrição com fallback de idioma
-- 📝 Markdown rico com frontmatter YAML completo
-- ⏱ Transcrição agrupada em blocos de ~30s com deep-links para o YouTube
-- 🔍 Idempotência: não duplica vídeos já importados
-- 📚 Listagem de todos os vídeos importados
-- 🌙 Interface web dark mode premium
+### Módulo: YouTube → Obsidian
+- 🎬 **Importação de vídeos** via URL (suporte a shorts, URLs reduzidas, etc.)
+- 📜 **Extração de transcrição** com suporte a múltiplos idiomas
+- ⏱ **Marcação de tempo agrupada** (blocos de ~30s com links para o player do YouTube)
+- 📝 **Markdown rico** com metadados em frontmatter YAML
+- 🕸️ **Conexão de Grafo (Determinística)**: gera seção "Relacionados" linkando notas de conteúdo similar (TF-IDF + similaridade de cosseno), fortalecendo o grafo do Obsidian.
+- 🏷️ **Tags de Tópicos Automáticas**: extrai as principais palavras-chave da transcrição e adiciona como `topic/...`.
+- 🔍 **Idempotência**: protege contra duplicação de vídeos.
 
 ## 📋 Pré-requisitos
 
 - **Python 3.11+**
-- **Vault do Obsidian** existente no filesystem
-- Conexão com a internet (para acessar o YouTube)
+- **Vault do Obsidian** existente no filesystem local
+- Conexão com a internet
 
 ## 🚀 Instalação
 
@@ -44,80 +45,69 @@ pip install -r requirements.txt
 
 ## ⚙️ Configuração
 
-```bash
-# Copie o arquivo de exemplo
-cp .env.example .env
+Copie `.env.example` para `.env` e ajuste:
 
-# Edite com seu editor preferido
-# Ajuste OBSIDIAN_VAULT_PATH para o caminho do seu vault
-```
-
-**Variáveis importantes:**
-
-| Variável | Descrição | Padrão |
+| Variável | Padrão | Descrição |
 |---|---|---|
-| `OBSIDIAN_VAULT_PATH` | Caminho absoluto para a raiz do vault | `C:/Documentos/Obsidian Vault` |
-| `OBSIDIAN_YOUTUBE_FOLDER` | Subpasta dentro do vault para os vídeos | `YouTube` |
-| `DEFAULT_TRANSCRIPT_LANGUAGE` | Idioma preferido da transcrição | `pt` |
-| `PORT` | Porta do servidor web | `8000` |
+| `OBSIDIAN_VAULT_PATH` | `C:/Documentos/Obsidian Vault` | Caminho do vault |
+| `OBSIDIAN_YOUTUBE_FOLDER` | `YouTube` | Pasta raiz de importação |
+| `RELATED_VIDEOS_COUNT` | `5` | Máximo de conexões no grafo por nota |
+| `RELATED_MIN_SIMILARITY`| `0.10` | Similaridade mínima (0-1) |
+| `TOPIC_TAGS_COUNT` | `5` | Quantidade de tags extraídas |
+| `PORT` | `8000` | Porta do app |
 
 ## ▶️ Execução
 
+Para iniciar o shell da aplicação:
 ```bash
-# Opção 1: script
-./run.sh
-
-# Opção 2: diretamente
 uvicorn app.main:app --reload --port 8000
-
-# Opção 3: Windows
-python -m uvicorn app.main:app --reload --port 8000
 ```
+Acesse **http://localhost:8000** no navegador.
 
-Abra **http://localhost:8000** no navegador.
+## 🔄 Script de Migração
 
-## 🧪 Testes
+Para reprocessar todos os vídeos já importados, calcular a similaridade entre eles e criar as conexões no grafo (Ajuste 2 e 3):
 
 ```bash
-pytest
+python scripts/migrate.py
 ```
+> O script é idempotente e ignorará anotações feitas manualmente, atualizando apenas o frontmatter e a seção "Relacionados".
 
-Os testes usam mocks para as APIs externas — não fazem requisições reais ao YouTube.
+## 📁 Estrutura de Módulos
 
-## 📁 Estrutura do Projeto
+A estrutura atual é construída para a inclusão de novos módulos facilmente:
 
 ```
-youtube-to-obsidian/
+oyto-os/
 ├── app/
-│   ├── main.py              # FastAPI app
-│   ├── config.py            # Settings via .env
-│   ├── routes/videos.py     # POST/GET /api/videos
-│   ├── services/
-│   │   ├── youtube.py       # Validação de URL + metadados (yt-dlp)
-│   │   ├── transcript.py    # Transcrição (youtube-transcript-api)
-│   │   └── obsidian.py      # Geração de markdown + vault
-│   ├── models/video.py      # Modelos Pydantic v2
-│   └── utils/               # Helpers: slugify, timestamp
-├── static/                  # Frontend (HTML/CSS/JS vanilla)
-├── tests/                   # Testes unitários
-├── .env.example
-├── requirements.txt
-└── run.sh
+│   ├── main.py              # FastAPI app setup
+│   ├── core/                # Funcionalidades e utils compartilhados
+│   │   ├── config.py
+│   │   ├── graph.py         # Conexão no Obsidian (TF-IDF)
+│   │   └── similarity.py    # Cálculos matemáticos de NLP (scikit-learn)
+│   └── modules/             # Módulos independentes do Oyto OS
+│       └── youtube/         # Módulo 1: YouTube → Obsidian
+│           ├── routes.py
+│           ├── obsidian.py
+│           ├── transcript.py
+│           └── youtube.py
+├── scripts/
+│   └── migrate.py           # Script para conectar o grafo existente
+├── static/                  # Shell Frontend (HTML/CSS/JS)
+└── tests/
 ```
+
+### Como Adicionar Novos Módulos
+1. Crie uma pasta em `app/modules/seu-modulo/`.
+2. Adicione as rotas e regras de negócio relativas a ele.
+3. Importe o roteador em `app/main.py`.
+4. Adicione um novo botão na barra lateral (`static/index.html`) e um componente de visualização.
 
 ## 🗺️ Roadmap
 
-Funcionalidades planejadas para versões futuras:
+O Oyto OS se tornará o centro nervoso de conhecimento pessoal:
 
-- [ ] 🤖 **Agente de IA com RAG** — perguntas e respostas sobre o conteúdo do vault
-- [ ] 📄 **Suporte a PDFs e artigos web** — expandir fontes além do YouTube
-- [ ] ✍️ **Resumo automático via LLM** — preencher seções de resumo e pontos-chave
-- [ ] 🏷️ **Tags automáticas via IA** — categorização inteligente do conteúdo
-- [ ] 📊 **Dashboard de analytics** — estatísticas sobre o vault
-- [ ] 🔄 **Fila de processamento** — importação em batch com Celery/RQ
-- [ ] 🗂️ **Múltiplos vaults** — suporte a mais de um vault do Obsidian
-- [ ] 🎙️ **Podcasts** — importar transcrições de podcasts
-
-## 📄 Licença
-
-MIT
+- [ ] 🤖 **Agente RAG Nativo** — Q&A em todo o vault
+- [ ] 📄 **Módulo: Extrator de Web & PDF**
+- [ ] ✍️ **Resumos com LLM Local** (LLaMA via Ollama)
+- [ ] 📊 **Dashboard de Analytics do Conhecimento**

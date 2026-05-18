@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.routes.videos import router as videos_router
+from app.modules.youtube.routes import router as videos_router
 
 # --- Logging estruturado ---
 logging.basicConfig(

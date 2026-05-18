@@ -93,19 +93,90 @@ body::before {
     z-index: 0;
 }
 
-/* --- Layout --- */
-.app-container {
+/* --- Layout: Oyto OS Shell --- */
+.os-shell {
+    display: flex;
+    min-height: 100vh;
     position: relative;
     z-index: 1;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
 }
 
-/* --- Header --- */
-.app-header {
-    text-align: center;
-    margin-bottom: 48px;
+/* --- Sidebar --- */
+.os-sidebar {
+    width: 280px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-subtle);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.os-content {
+    flex: 1;
+    padding: 40px;
+    max-width: 800px;
+}
+
+.module-header {
+    margin-bottom: 32px;
+}
+
+.module-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.module-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Sidebar Nav */
+.sidebar-nav {
+    margin-top: 32px;
+}
+
+.nav-section-title {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: left;
+}
+
+.nav-item:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.nav-icon {
+    font-size: 1.2rem;
 }
 
 .app-logo {
@@ -468,8 +539,19 @@ body::before {
 
 /* --- Responsive --- */
 @media (max-width: 600px) {
-    .app-container {
-        padding: 24px 16px 60px;
+    .os-shell {
+        flex-direction: column;
+    }
+
+    .os-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 16px;
+    }
+
+    .os-content {
+        padding: 24px 16px;
     }
 
     .app-title {

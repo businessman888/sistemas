@@ -3,79 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Importa transcrições de vídeos do YouTube como markdown estruturado para o vault do Obsidian.">
-    <title>YouTube to Obsidian</title>
+    <meta name="description" content="Oyto OS - Módulo de importação de transcrições de vídeos do YouTube.">
+    <title>Oyto OS</title>
     <link rel="stylesheet" href="/static/style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📥</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 </head>
 <body>
-    <div class="app-container">
-
-        <!-- Header -->
-        <header class="app-header">
+    <div class="os-shell">
+        <!-- Sidebar -->
+        <aside class="os-sidebar">
             <div class="app-logo">
-                <div class="app-logo-icon">📥</div>
-                <h1 class="app-title">YouTube to Obsidian</h1>
+                <div class="app-logo-icon">🧠</div>
+                <h1 class="app-title">Oyto OS</h1>
             </div>
-            <p class="app-subtitle">Extraia transcrições e salve como notas estruturadas no seu vault</p>
-        </header>
-
-        <!-- Import Card -->
-        <section class="import-card" id="import-card">
-            <h2>🎬 Importar Vídeo</h2>
-
-            <form id="import-form" autocomplete="off">
-                <div class="input-group">
-                    <label for="video-url">URL do YouTube</label>
-                    <input
-                        type="url"
-                        id="video-url"
-                        class="input-url"
-                        placeholder="https://www.youtube.com/watch?v=..."
-                        required
-                        autofocus
-                    >
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Módulos</span>
+                    <button class="nav-item active" id="nav-youtube">
+                        <span class="nav-icon">🎬</span>
+                        <span>YouTube → Obsidian</span>
+                    </button>
+                    <!-- Add new modules here in the future -->
                 </div>
+            </nav>
+        </aside>
 
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="language-select">Idioma da transcrição</label>
-                        <select id="language-select" class="select-language">
-                            <option value="pt" selected>Português (pt)</option>
-                            <option value="en">English (en)</option>
-                            <option value="es">Español (es)</option>
-                            <option value="fr">Français (fr)</option>
-                            <option value="de">Deutsch (de)</option>
-                            <option value="it">Italiano (it)</option>
-                            <option value="ja">日本語 (ja)</option>
-                            <option value="ko">한국어 (ko)</option>
-                            <option value="zh">中文 (zh)</option>
-                        </select>
+        <!-- Main Content Area -->
+        <main class="os-content">
+            <!-- YouTube Module Content -->
+            <div class="module-content" id="module-youtube">
+                <header class="module-header">
+                    <h2>YouTube → Obsidian</h2>
+                    <p class="module-subtitle">Extraia transcrições e salve como notas interconectadas no vault</p>
+                </header>
+
+                <section class="import-card" id="import-card">
+                    <h3>Importar Vídeo</h3>
+
+                    <form id="import-form" autocomplete="off">
+                        <div class="input-group">
+                            <label for="video-url">URL do YouTube</label>
+                            <input
+                                type="url"
+                                id="video-url"
+                                class="input-url"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                                required
+                                autofocus
+                            >
+                        </div>
+
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="language-select">Idioma da transcrição</label>
+                                <select id="language-select" class="select-language">
+                                    <option value="pt" selected>Português (pt)</option>
+                                    <option value="en">English (en)</option>
+                                    <option value="es">Español (es)</option>
+                                    <option value="fr">Français (fr)</option>
+                                    <option value="de">Deutsch (de)</option>
+                                    <option value="it">Italiano (it)</option>
+                                    <option value="ja">日本語 (ja)</option>
+                                    <option value="ko">한국어 (ko)</option>
+                                    <option value="zh">中文 (zh)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-import" class="btn-import">
+                            <span id="btn-text">Importar Transcrição</span>
+                        </button>
+                    </form>
+
+                    <div class="status-area" id="status-area"></div>
+                </section>
+
+                <section class="videos-section" id="videos-section">
+                    <div class="videos-header">
+                        <h3>📚 Vídeos Importados</h3>
+                        <span class="videos-count" id="videos-count">0</span>
                     </div>
-                </div>
-
-                <button type="submit" id="btn-import" class="btn-import">
-                    <span id="btn-text">Importar Transcrição</span>
-                </button>
-            </form>
-
-            <div class="status-area" id="status-area"></div>
-        </section>
-
-        <!-- Video List -->
-        <section class="videos-section" id="videos-section">
-            <div class="videos-header">
-                <h2>📚 Vídeos Importados</h2>
-                <span class="videos-count" id="videos-count">0</span>
+                    <div class="videos-list" id="videos-list">
+                        <div class="empty-state" id="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>Nenhum vídeo importado ainda</p>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div class="videos-list" id="videos-list">
-                <div class="empty-state" id="empty-state">
-                    <div class="empty-state-icon">📭</div>
-                    <p>Nenhum vídeo importado ainda</p>
-                </div>
-            </div>
-        </section>
-
+        </main>
     </div>
 
     <script src="/static/app.js"></script>

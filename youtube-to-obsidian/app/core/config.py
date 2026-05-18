@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     obsidian_vault_path: str = "C:/Documentos/Obsidian Vault"
     obsidian_youtube_folder: str = "YouTube"
     default_transcript_language: str = "pt"
+    related_videos_count: int = 5
+    related_min_similarity: float = 0.10
+    topic_tags_count: int = 5
     port: int = 8000
 
     model_config = {

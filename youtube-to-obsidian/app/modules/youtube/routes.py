@@ -4,7 +4,7 @@ import logging
 
 from fastapi import APIRouter, HTTPException
 
-from app.config import settings
+from app.core.config import settings
 from app.models.video import (
     ErrorResponse,
     VideoConflictResponse,
@@ -12,9 +12,10 @@ from app.models.video import (
     VideoImportResponse,
     VideoListItem,
 )
-from app.services.obsidian import check_existing_video, list_imported_videos, save_video_markdown
-from app.services.transcript import fetch_transcript
-from app.services.youtube import fetch_video_metadata, validate_youtube_url
+from app.core.graph import update_vault_graph
+from app.modules.youtube.obsidian import check_existing_video, list_imported_videos, save_video_markdown
+from app.modules.youtube.transcript import fetch_transcript
+from app.modules.youtube.youtube import fetch_video_metadata, validate_youtube_url
 
 logger = logging.getLogger(__name__)
 
@@ -103,9 +104,15 @@ async def import_video(request: VideoImportRequest) -> VideoImportResponse:
             status_code=500,
             detail=f"Erro ao salvar o arquivo no vault: {e}",
         )
+        
+    # Dispara a atualização do grafo para calcular relacionados e tags do novo vídeo
+    try:
+        update_vault_graph()
+    except Exception as e:
+        logger.error(f"Erro ao atualizar o grafo: {e}")
 
     # 7. Retornar sucesso
-    from app.utils.timestamp import seconds_to_timestamp
+    from app.core.utils.timestamp import seconds_to_timestamp
 
     return VideoImportResponse(
         status="imported",

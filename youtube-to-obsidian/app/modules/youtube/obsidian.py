@@ -5,14 +5,14 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from app.config import settings
+from app.core.config import settings
 from app.models.video import (
     TranscriptResult,
     VideoListItem,
     VideoMetadata,
 )
-from app.utils.slugify import slugify, slugify_tag
-from app.utils.timestamp import seconds_to_timestamp
+from app.core.utils.slugify import slugify, slugify_tag
+from app.core.utils.timestamp import seconds_to_timestamp
 
 logger = logging.getLogger(__name__)
 
@@ -175,6 +175,9 @@ def _build_markdown(
         f"> - **URL:** {video_url}",
         "",
         f"![Thumbnail]({meta.thumbnail})",
+        "",
+        "## 🔗 Relacionados",
+        "*(Nenhum vídeo similar encontrado ainda)*",
         "",
         "## 📝 Resumo",
         "*(será preenchido pelo agente de IA ou manualmente)*",
