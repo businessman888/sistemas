@@ -8,7 +8,10 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.core.database import init_db
 from app.modules.youtube.routes import router as videos_router
+from app.modules.social_media.routes import router as social_media_router
+from app.modules.clone.routes import router as clone_router
 
 # --- Logging estruturado ---
 logging.basicConfig(
@@ -21,13 +24,21 @@ logger = logging.getLogger("youtube-to-obsidian")
 
 # --- FastAPI app ---
 app = FastAPI(
-    title="YouTube to Obsidian",
-    description="Importa transcrições de vídeos do YouTube como markdown para o vault do Obsidian.",
-    version="1.0.0",
+    title="Oyto OS",
+    description="Sistema operacional modular para conexões de conhecimento e análises.",
+    version="1.1.0",
 )
+
+# --- Eventos de ciclo de vida ---
+@app.on_event("startup")
+def on_startup():
+    init_db()
 
 # --- Rotas da API ---
 app.include_router(videos_router)
+app.include_router(social_media_router)
+app.include_router(clone_router)
+
 
 
 @app.get("/health")

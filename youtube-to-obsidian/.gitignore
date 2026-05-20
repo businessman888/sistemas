@@ -11,3 +11,6 @@ venv/
 *.egg-info/
 dist/
 build/
+*.db
+data/
+

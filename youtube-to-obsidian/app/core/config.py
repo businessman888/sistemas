@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     related_min_similarity: float = 0.10
     topic_tags_count: int = 5
     port: int = 8000
+    apify_api_key: str = ""
+    anthropic_api_key: str = ""
+    database_path: str = "data/oyto_os.db"
 
     model_config = {
         "env_file": ".env",
