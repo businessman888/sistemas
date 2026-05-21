@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Oyto OS - Módulo de importação de transcrições de vídeos do YouTube.">
     <title>Oyto OS</title>
-    <link rel="stylesheet" href="/static/style.css?v=1.1.0">
+    <link rel="stylesheet" href="/static/style.css?v=1.2.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 </head>
 <body>
@@ -31,6 +31,10 @@
                     <button class="nav-item" id="nav-clone">
                         <span class="nav-icon">🧠</span>
                         <span>Mentes Clones</span>
+                    </button>
+                    <button class="nav-item" id="nav-orchestrator">
+                        <span class="nav-icon">🛠️</span>
+                        <span>Orquestrador</span>
                     </button>
                     <!-- Add new modules here in the future -->
                 </div>
@@ -392,10 +396,190 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Project Orchestrator Content -->
+            <div class="module-content" id="module-orchestrator" style="display: none;">
+                <header class="module-header">
+                    <h2>Orquestrador de Projetos</h2>
+                    <p class="module-subtitle">Gerencie as fases de desenvolvimento dos aplicativos da Oyto Tecnologia no Canvas ou no Checklist</p>
+                </header>
+
+                <div class="orchestrator-workspace">
+                    <!-- Left Sidebar: list of apps -->
+                    <div class="orchestrator-sidebar">
+                        <div class="orchestrator-sidebar-header">
+                            <h3>Aplicativos</h3>
+                            <button id="btn-show-create-project" class="btn-create-small">+ Novo App</button>
+                        </div>
+                        <div id="projects-list" class="projects-list-container">
+                            <div class="empty-state">
+                                <p>Carregando apps...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Active Project View -->
+                    <div class="orchestrator-main-panel">
+                        <!-- Panel A: Create Project Form -->
+                        <div id="panel-create-project" class="orchestrator-panel-card">
+                            <h3>🚀 Adicionar Novo Aplicativo</h3>
+                            <form id="project-creation-form" autocomplete="off" style="margin-top: 16px;">
+                                <div class="input-group">
+                                    <label for="project-name-input">Nome do Aplicativo</label>
+                                    <input type="text" id="project-name-input" class="input-url" placeholder="ex: Oyto Delivery" required>
+                                </div>
+                                <div class="input-group" style="margin-top: 12px;">
+                                    <label for="project-desc-input">Descrição / Objetivo</label>
+                                    <textarea id="project-desc-input" class="input-textarea" rows="3" placeholder="Descreva brevemente o propósito deste aplicativo..."></textarea>
+                                </div>
+                                <button type="submit" id="btn-submit-project" class="btn-import" style="margin-top: 20px;">
+                                    <span id="btn-submit-project-text">Criar Aplicativo</span>
+                                </button>
+                            </form>
+                            <div id="project-creation-status" class="status-area"></div>
+                        </div>
+
+                        <!-- Panel B: Project Management View -->
+                        <div id="panel-manage-project" class="orchestrator-panel-card" style="display: none;">
+                            <div class="project-view-header">
+                                <div class="project-info">
+                                    <h3 id="project-title-name">Nome do App</h3>
+                                    <p id="project-title-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Descrição do App</p>
+                                </div>
+                                <div class="project-actions">
+                                    <button id="btn-delete-project" class="btn-chat-action btn-danger-text">Remover App</button>
+                                </div>
+                            </div>
+
+                            <!-- Tabs: Canvas Visual vs Checklist -->
+                            <div class="project-view-tabs">
+                                <button class="sub-tab active" id="tab-canvas">🎨 Canvas Visual (Miro)</button>
+                                <button class="sub-tab" id="tab-checklist">📋 Checklist Fases</button>
+                            </div>
+
+                            <!-- Tab Content: Canvas -->
+                            <div id="tab-content-canvas" class="tab-pane-content">
+                                <div class="canvas-toolbar">
+                                    <button id="btn-canvas-add-node" class="btn-toolbar-action">➕ Nova Fase</button>
+                                    <span class="toolbar-divider">|</span>
+                                    <button id="btn-canvas-zoom-in" class="btn-toolbar-action" title="Zoom In">🔍﹢</button>
+                                    <button id="btn-canvas-zoom-out" class="btn-toolbar-action" title="Zoom Out">🔍﹣</button>
+                                    <button id="btn-canvas-zoom-reset" class="btn-toolbar-action" title="Resetar Visualização">↺</button>
+                                    <span class="toolbar-divider">|</span>
+                                    <button id="btn-canvas-save" class="btn-toolbar-action btn-success-soft" style="color: var(--success);" title="Salvar Posições e Conexões">💾 Salvar Canvas</button>
+                                    <span id="canvas-save-status" style="font-size: 0.8rem; color: var(--success); margin-left: 8px;"></span>
+                                </div>
+
+                                <div class="canvas-container" id="canvas-container">
+                                    <div class="canvas-viewport" id="canvas-viewport">
+                                        <!-- SVG connection lines layer -->
+                                        <svg class="canvas-svg" id="canvas-svg">
+                                            <defs>
+                                                <!-- Marker for Arrow Head -->
+                                                <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#8a63ff" />
+                                                </marker>
+                                                <marker id="arrow-completed" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399" />
+                                                </marker>
+                                            </defs>
+                                        </svg>
+                                        <!-- Canvas nodes/phases will be inserted here dynamically -->
+                                    </div>
+                                </div>
+                                <div class="canvas-helper-text">
+                                    💡 <em>Clique duplo no Canvas para criar uma fase. Arraste os nós para reposicionar. Clique no círculo azul de um nó e arraste até outro para conectá-los.</em>
+                                </div>
+                            </div>
+
+                            <!-- Tab Content: Checklist -->
+                            <div id="tab-content-checklist" class="tab-pane-content" style="display: none;">
+                                <div class="checklist-card-view">
+                                    <div class="checklist-header">
+                                        <h4>Progresso de Fases</h4>
+                                        <div class="progress-bar-container" style="max-width: 300px; width: 100%;">
+                                            <div class="progress-bar-fill" id="project-progress-bar" style="width: 0%;"></div>
+                                        </div>
+                                        <span id="project-progress-percentage" style="font-size: 0.85rem; font-weight: bold; color: var(--accent);">0%</span>
+                                    </div>
+                                    <div id="checklist-items-container" class="checklist-items-list">
+                                        <!-- Checklist items list dynamically generated -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel C: Empty State -->
+                        <div id="panel-empty-project" class="orchestrator-panel-card empty-panel-state">
+                            <div class="empty-state-icon">🛠️</div>
+                            <h3>Nenhum aplicativo selecionado</h3>
+                            <p>Selecione um aplicativo na lista lateral ou cadastre um novo para planejar seu desenvolvimento.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
+    <!-- Modal: Adicionar/Editar Fase -->
+    <div id="modal-phase-edit" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card">
+            <div class="os-modal-header">
+                <h3 id="modal-phase-title-action">Editar Fase</h3>
+                <button id="btn-close-phase-modal" class="btn-close-modal">✕</button>
+            </div>
+            <form id="phase-edit-form" autocomplete="off">
+                <input type="hidden" id="phase-id-input">
+                <div class="input-group">
+                    <label for="phase-title-input">Título da Fase</label>
+                    <input type="text" id="phase-title-input" class="input-url" placeholder="ex: Configuração da API" required>
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
+                    <label for="phase-desc-input">Descrição / Observações</label>
+                    <textarea id="phase-desc-input" class="input-textarea" rows="3" placeholder="Detalhes adicionais sobre esta etapa..."></textarea>
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
+                    <label for="phase-status-input">Status</label>
+                    <select id="phase-status-input" class="select-language">
+                        <option value="pending">Pendente</option>
+                        <option value="completed">Concluída</option>
+                    </select>
+                </div>
 
-    <script src="/static/app.js?v=1.1.0"></script>
+                <!-- Seção de Subtarefas -->
+                <div id="modal-subtasks-wrapper" class="input-group" style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+                    <label style="font-weight: bold; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Subtarefas</span>
+                        <span id="subtasks-count" style="font-size: 0.8rem; color: var(--text-secondary);">0 concluídas</span>
+                    </label>
+                    
+                    <!-- Campo para adicionar nova subtarefa -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <input type="text" id="new-subtask-title" class="input-url" style="margin-top: 0; flex: 1;" placeholder="Nova subtarefa (ex: Criar schema do banco)">
+                        <button type="button" id="btn-add-subtask" class="btn-import" style="width: auto; padding: 0 16px; margin-top: 0; background: var(--accent-soft); border-color: rgba(138,99,255,0.3); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; height: 38px;">
+                            ＋
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de subtarefas existentes -->
+                    <div id="subtasks-list-container" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px;">
+                        <!-- Gerado dinamicamente -->
+                    </div>
+                </div>
+
+                <div class="modal-footer-actions">
+                    <button type="button" id="btn-delete-phase" class="btn-danger btn-import" style="width: auto; padding: 10px 18px; margin-top: 0; background: var(--error-soft); border: 1px solid rgba(248,113,113,0.3); color: var(--error);">
+                        Excluir Fase
+                    </button>
+                    <button type="submit" id="btn-save-phase" class="btn-import" style="width: auto; padding: 10px 24px; margin-top: 0;">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="/static/app.js?v=1.2.0"></script>
 </body>
 </html>

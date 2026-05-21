@@ -225,20 +225,36 @@
     const navYoutube = document.getElementById('nav-youtube');
     const navSocialMedia = document.getElementById('nav-social-media');
     const navClone = document.getElementById('nav-clone');
+    const navOrchestrator = document.getElementById('nav-orchestrator');
     const moduleYoutube = document.getElementById('module-youtube');
     const moduleSocialMedia = document.getElementById('module-social-media');
     const moduleClone = document.getElementById('module-clone');
+    const moduleOrchestrator = document.getElementById('module-orchestrator');
 
     // Troca de módulo na Sidebar
     function switchModule(activeNav, activeModule) {
-        [navYoutube, navSocialMedia, navClone].forEach(nav => {
+        [navYoutube, navSocialMedia, navClone, navOrchestrator].forEach(nav => {
             if (nav) nav.classList.remove('active');
         });
-        [moduleYoutube, moduleSocialMedia, moduleClone].forEach(mod => {
+        [moduleYoutube, moduleSocialMedia, moduleClone, moduleOrchestrator].forEach(mod => {
             if (mod) mod.style.display = 'none';
         });
         activeNav.classList.add('active');
-        activeModule.style.display = 'block';
+        if (activeModule === moduleOrchestrator) {
+            activeModule.style.display = 'flex';
+        } else {
+            activeModule.style.display = 'block';
+        }
+
+        // Toggle wide layout for Orchestrator
+        const osContent = document.querySelector('.os-content');
+        if (osContent) {
+            if (activeModule === moduleOrchestrator) {
+                osContent.classList.add('wide-layout');
+            } else {
+                osContent.classList.remove('wide-layout');
+            }
+        }
     }
 
     navYoutube.addEventListener('click', () => {
@@ -256,6 +272,13 @@
         switchModule(navClone, moduleClone);
         loadClones();
     });
+
+    if (navOrchestrator) {
+        navOrchestrator.addEventListener('click', () => {
+            switchModule(navOrchestrator, moduleOrchestrator);
+            loadProjects();
+        });
+    }
 
 
     // Troca de abas secundárias (sub-tabs)
@@ -678,7 +701,7 @@
     // Ações de exibição de painéis
     if (btnShowCreateClone) {
         btnShowCreateClone.addEventListener('click', () => {
-            panelCreateClone.style.display = 'block';
+            panelCreateClone.style.display = 'flex';
             panelChatClone.style.display = 'none';
             panelEmptyClone.style.display = 'none';
             cloneCreationForm.reset();
@@ -1052,6 +1075,981 @@
         
         return html;
     }
+
+    // ============================================================
+    // Lógica do Módulo Orquestrador de Projetos
+    // ============================================================
+
+    let activeProjectId = null;
+    let activeProjectData = null;
+    let zoom = 1.0;
+    let panX = 100;
+    let panY = 100;
+    let isPanning = false;
+    let startPanX = 0;
+    let startPanY = 0;
+    let draggingNode = null;
+    let dragStartNodeX = 0;
+    let dragStartNodeY = 0;
+    let dragStartMouseX = 0;
+    let dragStartMouseY = 0;
+    let isDraggingNode = false;
+    let connectingFromId = null;
+    let tempLine = null;
+    let editingPhase = null;
+
+    // --- DOM Elements ---
+    const projectsList = document.getElementById('projects-list');
+    const btnShowCreateProject = document.getElementById('btn-show-create-project');
+    const panelCreateProject = document.getElementById('panel-create-project');
+    const panelManageProject = document.getElementById('panel-manage-project');
+    const panelEmptyProject = document.getElementById('panel-empty-project');
+    
+    const projectCreationForm = document.getElementById('project-creation-form');
+    const projectNameInput = document.getElementById('project-name-input');
+    const projectDescInput = document.getElementById('project-desc-input');
+    const btnSubmitProject = document.getElementById('btn-submit-project');
+    const projectCreationStatus = document.getElementById('project-creation-status');
+
+    const projectTitleName = document.getElementById('project-title-name');
+    const projectTitleDesc = document.getElementById('project-title-desc');
+    const btnDeleteProject = document.getElementById('btn-delete-project');
+
+    // Tabs
+    const tabCanvas = document.getElementById('tab-canvas');
+    const tabChecklist = document.getElementById('tab-checklist');
+    const tabContentCanvas = document.getElementById('tab-content-canvas');
+    const tabContentChecklist = document.getElementById('tab-content-checklist');
+
+    // Canvas
+    const canvasContainer = document.getElementById('canvas-container');
+    const canvasViewport = document.getElementById('canvas-viewport');
+    const canvasSvg = document.getElementById('canvas-svg');
+    
+    const btnCanvasAddNode = document.getElementById('btn-canvas-add-node');
+    const btnCanvasZoomIn = document.getElementById('btn-canvas-zoom-in');
+    const btnCanvasZoomOut = document.getElementById('btn-canvas-zoom-out');
+    const btnCanvasZoomReset = document.getElementById('btn-canvas-zoom-reset');
+    const btnCanvasSave = document.getElementById('btn-canvas-save');
+    const canvasSaveStatus = document.getElementById('canvas-save-status');
+
+    // Checklist
+    const checklistItemsContainer = document.getElementById('checklist-items-container');
+    const projectProgressBar = document.getElementById('project-progress-bar');
+    const projectProgressPercentage = document.getElementById('project-progress-percentage');
+
+    // Phase Modal
+    const modalPhaseEdit = document.getElementById('modal-phase-edit');
+    const phaseEditForm = document.getElementById('phase-edit-form');
+    const phaseIdInput = document.getElementById('phase-id-input');
+    const phaseTitleInput = document.getElementById('phase-title-input');
+    const phaseDescInput = document.getElementById('phase-desc-input');
+    const phaseStatusInput = document.getElementById('phase-status-input');
+    const btnClosePhaseModal = document.getElementById('btn-close-phase-modal');
+    const btnDeletePhase = document.getElementById('btn-delete-phase');
+    const btnSavePhase = document.getElementById('btn-save-phase');
+    const modalPhaseTitleAction = document.getElementById('modal-phase-title-action');
+
+    // Subtasks Elements
+    const modalSubtasksWrapper = document.getElementById('modal-subtasks-wrapper');
+    const subtasksCount = document.getElementById('subtasks-count');
+    const newSubtaskTitle = document.getElementById('new-subtask-title');
+    const btnAddSubtask = document.getElementById('btn-add-subtask');
+    const subtasksListContainer = document.getElementById('subtasks-list-container');
+
+    async function loadProjects() {
+        if (!projectsList) return;
+        try {
+            const projects = await apiFetch('/api/projects');
+            renderProjects(projects);
+        } catch (err) {
+            console.error('Erro ao carregar projetos:', err);
+            projectsList.innerHTML = `<div class="empty-state"><p>Erro ao carregar aplicativos.</p></div>`;
+        }
+    }
+
+    function renderProjects(projects) {
+        if (!projectsList) return;
+        if (projects.length === 0) {
+            projectsList.innerHTML = `<div class="empty-state"><p style="font-size: 0.8rem;">Nenhum app cadastrado.</p></div>`;
+            return;
+        }
+
+        projectsList.innerHTML = projects.map(p => {
+            const isActive = activeProjectId === p.id;
+            return `
+                <div class="project-item ${isActive ? 'active' : ''}" data-id="${p.id}">
+                    <div class="project-item-name">${escapeHtml(p.name)}</div>
+                    <div class="project-item-desc">${escapeHtml(p.description || 'Sem descrição')}</div>
+                </div>
+            `;
+        }).join('');
+
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const id = parseInt(item.getAttribute('data-id'));
+                selectProject(id);
+            });
+        });
+    }
+
+    async function selectProject(id) {
+        activeProjectId = id;
+        
+        document.querySelectorAll('.project-item').forEach(item => {
+            if (parseInt(item.getAttribute('data-id')) === id) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        panelEmptyProject.style.display = 'none';
+        panelCreateProject.style.display = 'none';
+        panelManageProject.style.display = 'flex';
+
+        try {
+            const data = await apiFetch(`/api/projects/${id}`);
+            activeProjectData = data;
+            
+            projectTitleName.textContent = data.project.name;
+            projectTitleDesc.textContent = data.project.description || 'Sem descrição cadastrada.';
+
+            // Reset zoom/pan
+            zoom = 1.0;
+            panX = 50;
+            panY = 50;
+            updateCanvasTransform();
+
+            // Explicitly sync/reset tab active state on select
+            if (tabCanvas && tabChecklist && tabContentCanvas && tabContentChecklist) {
+                tabCanvas.classList.add('active');
+                tabChecklist.classList.remove('active');
+                tabContentCanvas.style.display = 'flex';
+                tabContentChecklist.style.display = 'none';
+            }
+
+            renderCanvas();
+            renderChecklist();
+        } catch (err) {
+            console.error('Erro ao carregar detalhes do projeto:', err);
+            alert('Falha ao abrir o projeto: ' + err.message);
+        }
+    }
+
+    function screenToCanvasCoords(clientX, clientY) {
+        const rect = canvasContainer.getBoundingClientRect();
+        const x = (clientX - rect.left - panX) / zoom;
+        const y = (clientY - rect.top - panY) / zoom;
+        return { x, y };
+    }
+
+    function renderCanvas() {
+        if (!activeProjectData || !canvasViewport) return;
+        
+        // Remove nodes antigos
+        const oldNodes = canvasViewport.querySelectorAll('.canvas-node');
+        oldNodes.forEach(node => node.remove());
+
+        const phases = activeProjectData.phases;
+        
+        phases.forEach(phase => {
+            const nodeEl = document.createElement('div');
+            nodeEl.className = 'canvas-node';
+            if (phase.status === 'completed') {
+                nodeEl.classList.add('completed-node');
+            }
+            
+            nodeEl.setAttribute('data-id', phase.id);
+            nodeEl.style.left = phase.pos_x + 'px';
+            nodeEl.style.top = phase.pos_y + 'px';
+            
+            const subCount = phase.subtasks ? phase.subtasks.length : 0;
+            const subCompleted = phase.subtasks ? phase.subtasks.filter(s => s.status === 'completed').length : 0;
+            const progressBadge = subCount > 0 ? `<span class="node-progress-badge">${subCompleted}/${subCount}</span>` : '';
+            
+            nodeEl.innerHTML = `
+                <div class="node-header">
+                    <div class="checklist-item-checkbox node-checkbox" title="Marcar como concluído">
+                        ${phase.status === 'completed' ? '✓' : ''}
+                    </div>
+                    <div class="node-title-container">
+                        <div class="node-title" title="${escapeHtml(phase.title)}">
+                            ${escapeHtml(phase.title)}
+                            ${progressBadge}
+                        </div>
+                    </div>
+                    <button class="btn-node-edit" title="Editar ou Excluir">✏️</button>
+                </div>
+                <div class="node-desc">${escapeHtml(phase.description || 'Sem descrição')}</div>
+                <div class="node-handle-out" title="Conectar a outra fase"></div>
+            `;
+
+            canvasViewport.appendChild(nodeEl);
+            
+            makeDraggable(nodeEl, phase);
+
+            nodeEl.querySelector('.btn-node-edit').addEventListener('click', (e) => {
+                e.stopPropagation();
+                openPhaseModal(phase);
+            });
+
+            nodeEl.querySelector('.node-checkbox').addEventListener('click', async (e) => {
+                e.stopPropagation();
+                phase.status = phase.status === 'completed' ? 'pending' : 'completed';
+                try {
+                    await apiFetch(`/api/projects/${activeProjectId}/phases/${phase.id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(phase)
+                    });
+                    renderCanvas();
+                    renderChecklist();
+                } catch (err) {
+                    console.error('Erro ao atualizar status do nó:', err);
+                }
+            });
+
+            const handle = nodeEl.querySelector('.node-handle-out');
+            handle.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                connectingFromId = phase.id;
+                
+                const x1 = phase.pos_x + 220;
+                const y1 = phase.pos_y + (nodeEl.offsetHeight / 2 || 40);
+                
+                tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                tempLine.setAttribute('x1', x1);
+                tempLine.setAttribute('y1', y1);
+                tempLine.setAttribute('x2', x1);
+                tempLine.setAttribute('y2', y1);
+                tempLine.setAttribute('class', 'connection-line-pending');
+                tempLine.setAttribute('stroke', '#8a63ff');
+                tempLine.setAttribute('stroke-width', '2.5');
+                tempLine.setAttribute('stroke-dasharray', '4 4');
+                
+                canvasSvg.appendChild(tempLine);
+            });
+        });
+
+        setTimeout(drawConnections, 0);
+    }
+
+    function makeDraggable(nodeEl, phase) {
+        nodeEl.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.node-checkbox') || e.target.closest('.btn-node-edit') || e.target.closest('.node-handle-out')) {
+                return;
+            }
+            e.stopPropagation();
+            
+            isDraggingNode = true;
+            draggingNode = nodeEl;
+            nodeEl.classList.add('dragging');
+            
+            dragStartNodeX = phase.pos_x;
+            dragStartNodeY = phase.pos_y;
+            dragStartMouseX = e.clientX;
+            dragStartMouseY = e.clientY;
+        });
+    }
+
+    function drawConnections() {
+        if (!activeProjectData || !canvasSvg) return;
+        
+        const paths = canvasSvg.querySelectorAll('path');
+        paths.forEach(p => p.remove());
+
+        activeProjectData.connections.forEach(conn => {
+            const fromPhase = activeProjectData.phases.find(p => p.id === conn.from_phase_id);
+            const toPhase = activeProjectData.phases.find(p => p.id === conn.to_phase_id);
+            
+            if (!fromPhase || !toPhase) return;
+            
+            const fromNodeEl = document.querySelector(`.canvas-node[data-id="${conn.from_phase_id}"]`);
+            const toNodeEl = document.querySelector(`.canvas-node[data-id="${conn.to_phase_id}"]`);
+            
+            const fromHeight = fromNodeEl ? fromNodeEl.offsetHeight : 80;
+            const toHeight = toNodeEl ? toNodeEl.offsetHeight : 80;
+            
+            const x1 = fromPhase.pos_x + 220;
+            const y1 = fromPhase.pos_y + fromHeight / 2;
+            const x2 = toPhase.pos_x;
+            const y2 = toPhase.pos_y + toHeight / 2;
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            const controlOffset = Math.max(Math.abs(x2 - x1) / 2, 40);
+            const d = `M ${x1} ${y1} C ${x1 + controlOffset} ${y1}, ${x2 - controlOffset} ${y2}, ${x2} ${y2}`;
+            
+            path.setAttribute('d', d);
+            
+            const isCompleted = fromPhase.status === 'completed';
+            
+            path.setAttribute('class', isCompleted ? 'connection-line-completed' : 'connection-line-pending');
+            path.setAttribute('marker-end', isCompleted ? 'url(#arrow-completed)' : 'url(#arrow)');
+            
+            path.setAttribute('data-from', conn.from_phase_id);
+            path.setAttribute('data-to', conn.to_phase_id);
+            
+            path.style.pointerEvents = 'stroke';
+            path.style.cursor = 'pointer';
+            path.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                if (confirm('Deseja remover esta conexão visual?')) {
+                    activeProjectData.connections = activeProjectData.connections.filter(
+                        c => !(c.from_phase_id === conn.from_phase_id && c.to_phase_id === conn.to_phase_id)
+                    );
+                    saveCanvasStateInBackground();
+                    drawConnections();
+                }
+            });
+            
+            canvasSvg.appendChild(path);
+        });
+    }
+
+    async function saveCanvasStateInBackground() {
+        if (!activeProjectId || !activeProjectData) return;
+        
+        const payload = {
+            positions: activeProjectData.phases.map(p => ({
+                id: p.id,
+                pos_x: p.pos_x,
+                pos_y: p.pos_y
+            })),
+            connections: activeProjectData.connections.map(c => ({
+                from_phase_id: c.from_phase_id,
+                to_phase_id: c.to_phase_id
+            }))
+        };
+        
+        try {
+            canvasSaveStatus.textContent = '💾 Salvando...';
+            await apiFetch(`/api/projects/${activeProjectId}/canvas/sync`, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            canvasSaveStatus.textContent = '✅ Canvas Salvo';
+            setTimeout(() => { canvasSaveStatus.textContent = ''; }, 3000);
+        } catch (err) {
+            console.error('Erro ao sincronizar canvas:', err);
+            canvasSaveStatus.textContent = '❌ Erro ao salvar';
+        }
+    }
+
+    function updateCanvasTransform() {
+        if (!canvasViewport) return;
+        canvasViewport.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+    }
+
+    function renderChecklist() {
+        if (!activeProjectData || !checklistItemsContainer) return;
+        
+        const phases = activeProjectData.phases;
+        const total = phases.length;
+        const completed = phases.filter(p => p.status === 'completed').length;
+        const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+        
+        projectProgressBar.style.width = percentage + '%';
+        projectProgressPercentage.textContent = percentage + '%';
+
+        if (total === 0) {
+            checklistItemsContainer.innerHTML = `
+                <div class="empty-state">
+                    <p style="font-size: 0.85rem;">Nenhuma fase cadastrada. Crie uma fase no Canvas Visual ou clique no botão abaixo.</p>
+                    <button id="btn-checklist-add-phase" class="btn-import" style="width: auto; margin: 12px auto 0; padding: 8px 16px;">➕ Adicionar Primeira Fase</button>
+                </div>
+            `;
+            const btnAdd = document.getElementById('btn-checklist-add-phase');
+            if (btnAdd) {
+                btnAdd.addEventListener('click', () => {
+                    openPhaseModal(null, 150, 150);
+                });
+            }
+            return;
+        }
+
+        checklistItemsContainer.innerHTML = phases.map(phase => {
+            const isComp = phase.status === 'completed';
+            
+            const subCount = phase.subtasks ? phase.subtasks.length : 0;
+            const subCompleted = phase.subtasks ? phase.subtasks.filter(s => s.status === 'completed').length : 0;
+            const progressBadge = subCount > 0 ? `<span style="font-size: 0.75rem; color: var(--text-secondary); margin-left: 6px;">(${subCompleted}/${subCount})</span>` : '';
+
+            const subtasksHtml = (phase.subtasks && phase.subtasks.length > 0) ? `
+                <div class="checklist-subtasks-list">
+                    ${phase.subtasks.map(sub => {
+                        const subComp = sub.status === 'completed';
+                        return `
+                            <div class="checklist-subtask-item ${subComp ? 'completed' : ''}" data-sub-id="${sub.id}" data-phase-id="${phase.id}">
+                                <div class="checklist-subtask-checkbox" title="Marcar subtarefa">
+                                    ${subComp ? '✓' : ''}
+                                </div>
+                                <span class="checklist-subtask-title">${escapeHtml(sub.title)}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            ` : '';
+
+            return `
+                <div class="checklist-item ${isComp ? 'completed' : ''}" data-id="${phase.id}">
+                    <div class="checklist-item-checkbox" title="Marcar status">
+                        ${isComp ? '✓' : ''}
+                    </div>
+                    <div class="checklist-item-info">
+                        <div class="checklist-item-title">${escapeHtml(phase.title)} ${progressBadge}</div>
+                        <div class="checklist-item-desc">${escapeHtml(phase.description || 'Sem descrição')}</div>
+                        ${subtasksHtml}
+                    </div>
+                    <button class="btn-node-edit btn-checklist-edit" title="Editar">✏️</button>
+                </div>
+            `;
+        }).join('');
+
+        document.querySelectorAll('.checklist-item').forEach(item => {
+            const id = parseInt(item.getAttribute('data-id'));
+            const phase = phases.find(p => p.id === id);
+            
+            const cb = item.querySelector('.checklist-item-checkbox');
+            cb.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (phase) {
+                    phase.status = phase.status === 'completed' ? 'pending' : 'completed';
+                    try {
+                        await apiFetch(`/api/projects/${activeProjectId}/phases/${id}`, {
+                            method: 'PUT',
+                            body: JSON.stringify(phase)
+                        });
+                        renderCanvas();
+                        renderChecklist();
+                    } catch (err) {
+                        console.error('Erro ao atualizar checklist:', err);
+                    }
+                }
+            });
+
+            // Listeners para as subtarefas do checklist
+            item.querySelectorAll('.checklist-subtask-item').forEach(subItem => {
+                const subId = parseInt(subItem.getAttribute('data-sub-id'));
+                const phaseId = parseInt(subItem.getAttribute('data-phase-id'));
+                const subCheckbox = subItem.querySelector('.checklist-subtask-checkbox');
+                
+                subCheckbox.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const parentPhase = phases.find(p => p.id === phaseId);
+                    if (!parentPhase) return;
+                    
+                    const subtask = parentPhase.subtasks.find(s => s.id === subId);
+                    if (!subtask) return;
+                    
+                    const newStatus = subtask.status === 'completed' ? 'pending' : 'completed';
+                    
+                    try {
+                        const updatedSub = await apiFetch(`/api/projects/${activeProjectId}/phases/${phaseId}/subtasks/${subId}`, {
+                            method: 'PUT',
+                            body: JSON.stringify({
+                                title: subtask.title,
+                                status: newStatus
+                            })
+                        });
+                        
+                        // Atualizar localmente
+                        subtask.status = updatedSub.status;
+                        
+                        // Re-renderizar canvas e checklist
+                        renderCanvas();
+                        renderChecklist();
+                    } catch (err) {
+                        console.error('Erro ao atualizar subtarefa no checklist:', err);
+                        alert('Erro ao atualizar subtarefa: ' + err.message);
+                    }
+                });
+            });
+
+            const editBtn = item.querySelector('.btn-checklist-edit');
+            editBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openPhaseModal(phase);
+            });
+        });
+    }
+
+    function openPhaseModal(phase, defaultX = 100, defaultY = 100) {
+        if (!modalPhaseEdit) return;
+        modalPhaseEdit.style.display = 'flex';
+        
+        if (phase) {
+            editingPhase = phase;
+            modalPhaseTitleAction.textContent = 'Editar Fase';
+            phaseIdInput.value = phase.id;
+            phaseTitleInput.value = phase.title;
+            phaseDescInput.value = phase.description || '';
+            phaseStatusInput.value = phase.status;
+            btnDeletePhase.style.display = 'block';
+            phaseEditForm.dataset.x = phase.pos_x;
+            phaseEditForm.dataset.y = phase.pos_y;
+            
+            // Subtasks
+            if (modalSubtasksWrapper) modalSubtasksWrapper.style.display = 'block';
+            renderModalSubtasks(phase);
+        } else {
+            editingPhase = null;
+            modalPhaseTitleAction.textContent = 'Criar Nova Fase';
+            phaseIdInput.value = '';
+            phaseTitleInput.value = '';
+            phaseDescInput.value = '';
+            phaseStatusInput.value = 'pending';
+            btnDeletePhase.style.display = 'none';
+            phaseEditForm.dataset.x = defaultX;
+            phaseEditForm.dataset.y = defaultY;
+            
+            // Subtasks (esconder na criação de fase)
+            if (modalSubtasksWrapper) modalSubtasksWrapper.style.display = 'none';
+        }
+    }
+
+    function renderModalSubtasks(phase) {
+        if (!subtasksListContainer) return;
+        
+        newSubtaskTitle.value = '';
+        const subtasks = phase.subtasks || [];
+        const completedCount = subtasks.filter(s => s.status === 'completed').length;
+        
+        if (subtasksCount) {
+            subtasksCount.textContent = `${completedCount} de ${subtasks.length} concluídas`;
+        }
+        
+        if (subtasks.length === 0) {
+            subtasksListContainer.innerHTML = '<div style="font-size: 0.8rem; color: var(--text-secondary); text-align: center; padding: 12px;">Nenhuma subtarefa adicionada.</div>';
+            return;
+        }
+        
+        subtasksListContainer.innerHTML = subtasks.map(sub => {
+            const isComp = sub.status === 'completed';
+            return `
+                <div class="modal-subtask-item ${isComp ? 'completed' : ''}" data-sub-id="${sub.id}">
+                    <div class="modal-subtask-checkbox" title="Alternar status">
+                        ${isComp ? '✓' : ''}
+                    </div>
+                    <span class="modal-subtask-title">${escapeHtml(sub.title)}</span>
+                    <button type="button" class="btn-delete-subtask" title="Excluir subtarefa">✕</button>
+                </div>
+            `;
+        }).join('');
+        
+        // Listeners das subtarefas dentro do modal
+        subtasksListContainer.querySelectorAll('.modal-subtask-item').forEach(item => {
+            const subId = parseInt(item.getAttribute('data-sub-id'));
+            const sub = subtasks.find(s => s.id === subId);
+            
+            // Alternar status
+            item.querySelector('.modal-subtask-checkbox').addEventListener('click', async () => {
+                const newStatus = sub.status === 'completed' ? 'pending' : 'completed';
+                try {
+                    const updated = await apiFetch(`/api/projects/${activeProjectId}/phases/${phase.id}/subtasks/${subId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ title: sub.title, status: newStatus })
+                    });
+                    sub.status = updated.status;
+                    renderModalSubtasks(phase);
+                    renderCanvas();
+                    renderChecklist();
+                } catch (err) {
+                    alert('Erro ao atualizar subtarefa: ' + err.message);
+                }
+            });
+            
+            // Remover subtarefa
+            item.querySelector('.btn-delete-subtask').addEventListener('click', async () => {
+                if (confirm(`Deseja remover a subtarefa "${sub.title}"?`)) {
+                    try {
+                        await apiFetch(`/api/projects/${activeProjectId}/phases/${phase.id}/subtasks/${subId}`, {
+                            method: 'DELETE'
+                        });
+                        phase.subtasks = phase.subtasks.filter(s => s.id !== subId);
+                        renderModalSubtasks(phase);
+                        renderCanvas();
+                        renderChecklist();
+                    } catch (err) {
+                        alert('Erro ao remover subtarefa: ' + err.message);
+                    }
+                }
+            });
+        });
+    }
+
+    async function handleAddSubtask() {
+        if (!editingPhase) return;
+        const title = newSubtaskTitle.value.trim();
+        if (!title) return;
+        
+        try {
+            const created = await apiFetch(`/api/projects/${activeProjectId}/phases/${editingPhase.id}/subtasks`, {
+                method: 'POST',
+                body: JSON.stringify({ title: title, status: 'pending' })
+            });
+            
+            if (!editingPhase.subtasks) {
+                editingPhase.subtasks = [];
+            }
+            editingPhase.subtasks.push(created);
+            
+            renderModalSubtasks(editingPhase);
+            renderCanvas();
+            renderChecklist();
+        } catch (err) {
+            alert('Erro ao adicionar subtarefa: ' + err.message);
+        }
+    }
+
+    function createConnectionLocal(fromId, toId) {
+        const exists = activeProjectData.connections.some(c => c.from_phase_id === fromId && c.to_phase_id === toId);
+        if (!exists) {
+            activeProjectData.connections.push({
+                from_phase_id: fromId,
+                to_phase_id: toId
+            });
+            saveCanvasStateInBackground();
+            drawConnections();
+        }
+    }
+
+    // --- Document Event Listeners (Drag & Pan & Temp connection drawing) ---
+    document.addEventListener('mousemove', (e) => {
+        if (isDraggingNode && draggingNode) {
+            const dx = (e.clientX - dragStartMouseX) / zoom;
+            const dy = (e.clientY - dragStartMouseY) / zoom;
+            
+            const newX = dragStartNodeX + dx;
+            const newY = dragStartNodeY + dy;
+            
+            draggingNode.style.left = newX + 'px';
+            draggingNode.style.top = newY + 'px';
+            
+            const id = parseInt(draggingNode.getAttribute('data-id'));
+            const phase = activeProjectData.phases.find(p => p.id === id);
+            if (phase) {
+                phase.pos_x = newX;
+                phase.pos_y = newY;
+            }
+            
+            drawConnections();
+        } else if (isPanning) {
+            panX = e.clientX - startPanX;
+            panY = e.clientY - startPanY;
+            updateCanvasTransform();
+        } else if (connectingFromId && tempLine) {
+            const mouseCanvas = screenToCanvasCoords(e.clientX, e.clientY);
+            tempLine.setAttribute('x2', mouseCanvas.x);
+            tempLine.setAttribute('y2', mouseCanvas.y);
+        }
+    });
+
+    document.addEventListener('mouseup', async (e) => {
+        if (isDraggingNode && draggingNode) {
+            draggingNode.classList.remove('dragging');
+            isDraggingNode = false;
+            
+            const id = parseInt(draggingNode.getAttribute('data-id'));
+            const phase = activeProjectData.phases.find(p => p.id === id);
+            if (phase) {
+                try {
+                    await apiFetch(`/api/projects/${activeProjectId}/phases/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(phase)
+                    });
+                } catch (err) {
+                    console.error('Erro ao salvar posição:', err);
+                }
+            }
+            draggingNode = null;
+        }
+        
+        isPanning = false;
+        if (canvasContainer) {
+            canvasContainer.classList.remove('grabbing');
+        }
+        
+        if (connectingFromId) {
+            const targetNodeEl = e.target.closest('.canvas-node');
+            if (targetNodeEl) {
+                const toId = parseInt(targetNodeEl.getAttribute('data-id'));
+                if (toId !== connectingFromId) {
+                    createConnectionLocal(connectingFromId, toId);
+                }
+            }
+            
+            if (tempLine) {
+                tempLine.remove();
+                tempLine = null;
+            }
+            connectingFromId = null;
+        }
+    });
+
+    // Canvas Mouse Wheel & DblClick
+    if (canvasContainer) {
+        canvasContainer.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.canvas-node') || e.target.closest('.btn-toolbar-action') || e.target.closest('.os-modal-card')) {
+                return;
+            }
+            isPanning = true;
+            canvasContainer.classList.add('grabbing');
+            startPanX = e.clientX - panX;
+            startPanY = e.clientY - panY;
+        });
+
+        canvasContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomFactor = 0.05;
+            let newZoom = zoom + (e.deltaY < 0 ? zoomFactor : -zoomFactor);
+            newZoom = Math.max(0.3, Math.min(2.0, newZoom));
+            
+            const rect = canvasContainer.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const localX = (mouseX - panX) / zoom;
+            const localY = (mouseY - panY) / zoom;
+            
+            zoom = newZoom;
+            panX = mouseX - localX * zoom;
+            panY = mouseY - localY * zoom;
+            
+            updateCanvasTransform();
+        });
+
+        canvasContainer.addEventListener('dblclick', (e) => {
+            if (e.target.closest('.canvas-node') || e.target.closest('.btn-toolbar-action')) {
+                return;
+            }
+            const coords = screenToCanvasCoords(e.clientX, e.clientY);
+            openPhaseModal(null, coords.x, coords.y);
+        });
+    }
+
+    // Toolbar buttons
+    if (btnCanvasAddNode) {
+        btnCanvasAddNode.addEventListener('click', () => {
+            const rect = canvasContainer.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const coords = screenToCanvasCoords(rect.left + centerX, rect.top + centerY);
+            openPhaseModal(null, coords.x, coords.y);
+        });
+    }
+    if (btnCanvasZoomIn) {
+        btnCanvasZoomIn.addEventListener('click', () => {
+            zoom = Math.min(2.0, zoom + 0.1);
+            updateCanvasTransform();
+        });
+    }
+    if (btnCanvasZoomOut) {
+        btnCanvasZoomOut.addEventListener('click', () => {
+            zoom = Math.max(0.3, zoom - 0.1);
+            updateCanvasTransform();
+        });
+    }
+    if (btnCanvasZoomReset) {
+        btnCanvasZoomReset.addEventListener('click', () => {
+            zoom = 1.0;
+            panX = 50;
+            panY = 50;
+            updateCanvasTransform();
+        });
+    }
+    if (btnCanvasSave) {
+        btnCanvasSave.addEventListener('click', () => {
+            saveCanvasStateInBackground();
+        });
+    }
+
+    // Modal Events
+    if (btnClosePhaseModal) {
+        btnClosePhaseModal.addEventListener('click', () => {
+            modalPhaseEdit.style.display = 'none';
+        });
+    }
+
+    if (phaseEditForm) {
+        phaseEditForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = phaseIdInput.value;
+            const title = phaseTitleInput.value.trim();
+            const description = phaseDescInput.value.trim();
+            const status = phaseStatusInput.value;
+            const pos_x = parseFloat(phaseEditForm.dataset.x || 100);
+            const pos_y = parseFloat(phaseEditForm.dataset.y || 100);
+
+            if (!title) return;
+
+            const payload = { title, description, status, pos_x, pos_y };
+
+            try {
+                if (id) {
+                    const updated = await apiFetch(`/api/projects/${activeProjectId}/phases/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const idx = activeProjectData.phases.findIndex(p => p.id === parseInt(id));
+                    if (idx !== -1) activeProjectData.phases[idx] = updated;
+                } else {
+                    const created = await apiFetch(`/api/projects/${activeProjectId}/phases`, {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    activeProjectData.phases.push(created);
+                }
+
+                modalPhaseEdit.style.display = 'none';
+                renderCanvas();
+                renderChecklist();
+            } catch (err) {
+                alert('Erro ao salvar fase: ' + err.message);
+            }
+        });
+    }
+
+    if (btnDeletePhase) {
+        btnDeletePhase.addEventListener('click', async () => {
+            const id = phaseIdInput.value;
+            if (!id) return;
+            if (confirm('Deseja realmente remover esta fase? (Todas as conexões associadas também serão apagadas)')) {
+                try {
+                    await apiFetch(`/api/projects/${activeProjectId}/phases/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    activeProjectData.phases = activeProjectData.phases.filter(p => p.id !== parseInt(id));
+                    activeProjectData.connections = activeProjectData.connections.filter(c => c.from_phase_id !== parseInt(id) && c.to_phase_id !== parseInt(id));
+                    
+                    modalPhaseEdit.style.display = 'none';
+                    renderCanvas();
+                    renderChecklist();
+                } catch (err) {
+                    alert('Erro ao remover fase: ' + err.message);
+                }
+            }
+        });
+    }
+
+    if (btnAddSubtask) {
+        btnAddSubtask.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleAddSubtask();
+        });
+    }
+
+    if (newSubtaskTitle) {
+        newSubtaskTitle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddSubtask();
+            }
+        });
+    }
+
+    // Projects list Sidebar and Forms
+    if (projectCreationForm) {
+        projectCreationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = projectNameInput.value.trim();
+            const description = projectDescInput.value.trim();
+            
+            if (!name) return;
+            
+            btnSubmitProject.disabled = true;
+            projectCreationStatus.innerHTML = '';
+            
+            try {
+                const created = await apiFetch('/api/projects', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, description })
+                });
+                
+                projectCreationStatus.innerHTML = `
+                    <div class="status-message status-success">
+                        ✅ Aplicativo <strong>${escapeHtml(name)}</strong> criado com sucesso!
+                    </div>
+                `;
+                projectCreationForm.reset();
+                await loadProjects();
+                
+                selectProject(created.id);
+                
+                setTimeout(() => { projectCreationStatus.innerHTML = ''; }, 5000);
+            } catch (err) {
+                projectCreationStatus.innerHTML = `<div class="status-message status-error">❌ ${escapeHtml(err.message)}</div>`;
+            } finally {
+                btnSubmitProject.disabled = false;
+            }
+        });
+    }
+
+    if (btnDeleteProject) {
+        btnDeleteProject.addEventListener('click', async () => {
+            if (!activeProjectId) return;
+            if (confirm('Deseja realmente remover este aplicativo e todo o seu fluxo de desenvolvimento do Orquestrador?')) {
+                try {
+                    await apiFetch(`/api/projects/${activeProjectId}`, { method: 'DELETE' });
+                    activeProjectId = null;
+                    activeProjectData = null;
+                    
+                    panelManageProject.style.display = 'none';
+                    panelCreateProject.style.display = 'none';
+                    panelEmptyProject.style.display = 'flex';
+                    
+                    await loadProjects();
+                } catch (err) {
+                    alert('Erro ao excluir projeto: ' + err.message);
+                }
+            }
+        });
+    }
+
+    if (btnShowCreateProject) {
+        btnShowCreateProject.addEventListener('click', () => {
+            activeProjectId = null;
+            document.querySelectorAll('.project-item').forEach(item => item.classList.remove('active'));
+            panelEmptyProject.style.display = 'none';
+            panelManageProject.style.display = 'none';
+            panelCreateProject.style.display = 'flex';
+            projectCreationForm.reset();
+            projectCreationStatus.innerHTML = '';
+        });
+    }
+
+    // Tabs navigation
+    if (tabCanvas) {
+        tabCanvas.addEventListener('click', () => {
+            tabCanvas.classList.add('active');
+            tabChecklist.classList.remove('active');
+            tabContentCanvas.style.display = 'flex';
+            tabContentChecklist.style.display = 'none';
+            renderCanvas();
+        });
+    }
+
+    if (tabChecklist) {
+        tabChecklist.addEventListener('click', () => {
+            tabCanvas.classList.remove('active');
+            tabChecklist.classList.add('active');
+            tabContentCanvas.style.display = 'none';
+            tabContentChecklist.style.display = 'flex';
+            renderChecklist();
+        });
+    }
+
+    // Close modails clicking outside card
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('os-modal-overlay')) {
+            e.target.style.display = 'none';
+        }
+    });
 
 })();
 

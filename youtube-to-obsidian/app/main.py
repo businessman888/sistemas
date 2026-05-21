@@ -12,6 +12,7 @@ from app.core.database import init_db
 from app.modules.youtube.routes import router as videos_router
 from app.modules.social_media.routes import router as social_media_router
 from app.modules.clone.routes import router as clone_router
+from app.modules.orchestrator.routes import router as orchestrator_router
 
 # --- Logging estruturado ---
 logging.basicConfig(
@@ -38,6 +39,7 @@ def on_startup():
 app.include_router(videos_router)
 app.include_router(social_media_router)
 app.include_router(clone_router)
+app.include_router(orchestrator_router)
 
 
 

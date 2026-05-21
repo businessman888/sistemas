@@ -5,13 +5,13 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from app.models.video import TranscriptResult
-from app.services.transcript import fetch_transcript
+from app.modules.youtube.transcript import fetch_transcript
 
 
 class TestFetchTranscript:
     """Testes de busca de transcrição com mocks."""
 
-    @patch("app.services.transcript._api")
+    @patch("app.modules.youtube.transcript._api")
     def test_preferred_language_found(self, mock_api):
         """Retorna transcrição no idioma preferido quando disponível."""
         mock_transcript_list = MagicMock()
@@ -43,7 +43,7 @@ class TestFetchTranscript:
         assert len(result.segments) == 2
         assert result.segments[0].text == "Olá mundo"
 
-    @patch("app.services.transcript._api")
+    @patch("app.modules.youtube.transcript._api")
     def test_no_transcripts_raises(self, mock_api):
         """Levanta ValueError quando não há legendas."""
         from youtube_transcript_api._errors import TranscriptsDisabled
@@ -53,7 +53,7 @@ class TestFetchTranscript:
         with pytest.raises(ValueError, match="legendas"):
             fetch_transcript("test123")
 
-    @patch("app.services.transcript._api")
+    @patch("app.modules.youtube.transcript._api")
     def test_video_unavailable_raises(self, mock_api):
         """Levanta LookupError quando vídeo não existe."""
         from youtube_transcript_api._errors import VideoUnavailable

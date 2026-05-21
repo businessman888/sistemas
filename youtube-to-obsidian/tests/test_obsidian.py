@@ -8,15 +8,15 @@ from unittest.mock import patch
 import pytest
 
 from app.models.video import TranscriptResult, TranscriptSegment, VideoMetadata
-from app.services.obsidian import (
+from app.modules.youtube.obsidian import (
     _build_markdown,
     _group_transcript_blocks,
     check_existing_video,
     list_imported_videos,
     save_video_markdown,
 )
-from app.utils.slugify import slugify, slugify_tag
-from app.utils.timestamp import seconds_to_timestamp, timestamp_to_seconds
+from app.core.utils.slugify import slugify, slugify_tag
+from app.core.utils.timestamp import seconds_to_timestamp, timestamp_to_seconds
 
 
 # --- Fixtures ---
@@ -163,7 +163,7 @@ class TestCheckExistingVideo:
 
     def test_finds_existing(self, sample_metadata, sample_transcript):
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("app.services.obsidian.settings") as mock_settings:
+            with patch("app.modules.youtube.obsidian.settings") as mock_settings:
                 mock_settings.youtube_output_dir = Path(tmpdir)
 
                 # Write a file with known video_id in frontmatter
@@ -179,7 +179,7 @@ class TestCheckExistingVideo:
 
     def test_returns_none_when_not_found(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("app.services.obsidian.settings") as mock_settings:
+            with patch("app.modules.youtube.obsidian.settings") as mock_settings:
                 mock_settings.youtube_output_dir = Path(tmpdir)
 
                 result = check_existing_video("nonexistent")
@@ -190,7 +190,7 @@ class TestSaveVideoMarkdown:
 
     def test_creates_file(self, sample_metadata, sample_transcript):
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("app.services.obsidian.settings") as mock_settings:
+            with patch("app.modules.youtube.obsidian.settings") as mock_settings:
                 mock_settings.youtube_output_dir = Path(tmpdir)
 
                 path = save_video_markdown(sample_metadata, sample_transcript)
@@ -201,7 +201,7 @@ class TestSaveVideoMarkdown:
 
     def test_filename_format(self, sample_metadata, sample_transcript):
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("app.services.obsidian.settings") as mock_settings:
+            with patch("app.modules.youtube.obsidian.settings") as mock_settings:
                 mock_settings.youtube_output_dir = Path(tmpdir)
 
                 path = save_video_markdown(sample_metadata, sample_transcript)

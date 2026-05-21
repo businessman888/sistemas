@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.services.youtube import extract_video_id, fetch_video_metadata, validate_youtube_url
+from app.modules.youtube.youtube import extract_video_id, fetch_video_metadata, validate_youtube_url
 
 
 class TestExtractVideoId:
@@ -58,7 +58,7 @@ class TestValidateYoutubeUrl:
 class TestFetchVideoMetadata:
     """Testes de busca de metadados via yt-dlp (com mock)."""
 
-    @patch("app.services.youtube.yt_dlp.YoutubeDL")
+    @patch("app.modules.youtube.youtube.yt_dlp.YoutubeDL")
     def test_success(self, mock_ydl_class):
         mock_ydl = MagicMock()
         mock_ydl_class.return_value.__enter__ = MagicMock(return_value=mock_ydl)
@@ -80,7 +80,7 @@ class TestFetchVideoMetadata:
         assert result.channel == "Test Channel"
         assert result.duration == 300
 
-    @patch("app.services.youtube.yt_dlp.YoutubeDL")
+    @patch("app.modules.youtube.youtube.yt_dlp.YoutubeDL")
     def test_video_not_found(self, mock_ydl_class):
         import yt_dlp
 
