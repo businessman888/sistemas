@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="rotate(-28 16 16)">
+    <!-- Top Arc -->
+    <path d="M 6.2 14 A 10 10 0 0 1 25.8 14"></path>
+    <!-- Bottom Arc -->
+    <path d="M 25.8 18 A 10 10 0 0 1 6.2 18"></path>
+    <!-- Top Line -->
+    <line x1="4" y1="14" x2="28" y2="14"></line>
+    <!-- Bottom Line -->
+    <line x1="4" y1="18" x2="28" y2="18"></line>
+  </g>
+</svg>

@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Oyto OS - Módulo de importação de transcrições de vídeos do YouTube.">
+    <meta name="description" content="Oyto OS - Ecossistema Inteligente da Oyto Tecnologia">
     <title>Oyto OS</title>
-    <link rel="stylesheet" href="/static/style.css?v=1.2.0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/style.css?v=1.3.0">
+    <link rel="icon" href="/static/assets/oyto-o.svg" type="image/svg+xml">
 </head>
 <body>
+    <!-- Ambient Glow Orbs -->
+    <div class="oyto-glow-orb orb-1"></div>
+    <div class="oyto-glow-orb orb-2"></div>
     <div class="os-shell">
         <!-- Sidebar -->
         <aside class="os-sidebar">
             <div class="app-logo">
-                <div class="app-logo-icon">🧠</div>
+                <img src="/static/assets/oyto-o.svg" class="app-logo-icon" alt="Oyto Logo">
                 <h1 class="app-title">Oyto OS</h1>
             </div>
             
@@ -21,19 +28,19 @@
                 <div class="nav-section">
                     <span class="nav-section-title">Módulos</span>
                     <button class="nav-item active" id="nav-youtube">
-                        <span class="nav-icon">🎬</span>
+                        <span class="material-symbols-outlined nav-icon">movie</span>
                         <span>YouTube → Obsidian</span>
                     </button>
                     <button class="nav-item" id="nav-social-media">
-                        <span class="nav-icon">📊</span>
+                        <span class="material-symbols-outlined nav-icon">insights</span>
                         <span>Social Media AI</span>
                     </button>
                     <button class="nav-item" id="nav-clone">
-                        <span class="nav-icon">🧠</span>
+                        <span class="material-symbols-outlined nav-icon">psychology</span>
                         <span>Mentes Clones</span>
                     </button>
                     <button class="nav-item" id="nav-orchestrator">
-                        <span class="nav-icon">🛠️</span>
+                        <span class="material-symbols-outlined nav-icon">apps</span>
                         <span>Orquestrador</span>
                     </button>
                     <!-- Add new modules here in the future -->
@@ -94,12 +101,12 @@
 
                 <section class="videos-section" id="videos-section">
                     <div class="videos-header">
-                        <h3>📚 Vídeos Importados</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">library_books</span> Vídeos Importados</h3>
                         <span class="videos-count" id="videos-count">0</span>
                     </div>
                     <div class="videos-list" id="videos-list">
                         <div class="empty-state" id="empty-state">
-                            <div class="empty-state-icon">📭</div>
+                            <span class="material-symbols-outlined empty-state-icon">inbox</span>
                             <p>Nenhum vídeo importado ainda</p>
                         </div>
                     </div>
@@ -124,7 +131,7 @@
                 <!-- Sub-tab: Creators -->
                 <div class="sub-tab-content" id="subcontent-creators">
                     <section class="import-card">
-                        <h3>➕ Rastrear Novo Criador</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">person_add</span> Rastrear Novo Criador</h3>
                         <form id="creator-form" autocomplete="off" style="margin-top: 12px;">
                             <div class="input-row">
                                 <div class="input-group">
@@ -163,7 +170,7 @@
                     </section>
 
                     <section class="videos-section">
-                        <h3>📋 Criadores Rastreados</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">group</span> Criadores Rastreados</h3>
                         <div class="table-container" style="margin-top: 12px; overflow-x: auto;">
                             <table class="data-table">
                                 <thead>
@@ -192,7 +199,7 @@
                 <!-- Sub-tab: Configs -->
                 <div class="sub-tab-content" id="subcontent-configs" style="display: none;">
                     <section class="import-card">
-                        <h3>⚙️ Nova Configuração de Roteiros</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">settings</span> Nova Configuração de Roteiros</h3>
                         <form id="config-form" autocomplete="off" style="margin-top: 12px;">
                             <div class="input-row">
                                 <div class="input-group">
@@ -224,7 +231,7 @@
                     </section>
 
                     <section class="videos-section">
-                        <h3>📋 Configurações Salvas</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">list_alt</span> Configurações Salvas</h3>
                         <div class="table-container" style="margin-top: 12px; overflow-x: auto;">
                             <table class="data-table">
                                 <thead>
@@ -248,7 +255,7 @@
                 <!-- Sub-tab: Run -->
                 <div class="sub-tab-content" id="subcontent-run" style="display: none;">
                     <section class="import-card">
-                        <h3>🚀 Iniciar Pipeline de Análise</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">rocket_launch</span> Iniciar Pipeline de Análise</h3>
                         <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
                             Selecione uma configuração abaixo. O Oyto OS buscará automaticamente os criadores cadastrados que pertencem ao mesmo nicho, raspará os posts mais virais por meio da API do Apify e gerará os roteiros na API da Anthropic.
                         </p>
@@ -281,7 +288,7 @@
                 <!-- Sub-tab: History & Results -->
                 <div class="sub-tab-content" id="subcontent-history" style="display: none;">
                     <section class="import-card">
-                        <h3>📜 Histórico de Execuções</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">history</span> Histórico de Execuções</h3>
                         <div class="input-group" style="margin-top: 12px;">
                             <label for="history-pipeline-select">Selecione uma Execução</label>
                             <select id="history-pipeline-select" class="select-language">
@@ -292,7 +299,7 @@
 
                     <!-- Results List -->
                     <section class="videos-section" id="results-display-section" style="display: none;">
-                        <h3>📊 Resultados e Roteiros Gerados</h3>
+                        <h3><span class="material-symbols-outlined section-title-icon">analytics</span> Resultados e Roteiros Gerados</h3>
                         <div id="results-list" style="margin-top: 16px; display: flex; flex-direction: column; gap: 20px;">
                             <!-- Dinamicamente preenchido -->
                         </div>
@@ -311,8 +318,8 @@
                     <!-- Left sidebar: list of clones -->
                     <div class="clone-sidebar">
                         <div class="clone-sidebar-header">
-                            <h3>Cérebros Clonados</h3>
-                            <button id="btn-show-create-clone" class="btn-create-small">+ Novo</button>
+                            <h3><span class="material-symbols-outlined section-title-icon">psychology</span> Cérebros Clonados</h3>
+                            <button id="btn-show-create-clone" class="btn-create-small"><span class="material-symbols-outlined">add</span> Novo</button>
                         </div>
                         <div id="clones-list" class="clones-list-container">
                             <div class="empty-state">
@@ -326,7 +333,7 @@
                         
                         <!-- Panel A: Create Clone Form -->
                         <div id="panel-create-clone" class="clone-panel-card">
-                            <h3>🧠 Clonar Nova Mente</h3>
+                            <h3><span class="material-symbols-outlined section-title-icon">psychology</span> Clonar Nova Mente</h3>
                             <form id="clone-creation-form" autocomplete="off" style="margin-top: 16px;">
                                 <div class="input-group">
                                     <label for="clone-name-input">Nome do Criador</label>
@@ -355,8 +362,8 @@
                                     <span id="chat-title-status" class="chat-status-indicator">Online</span>
                                 </div>
                                 <div class="chat-actions">
-                                    <button id="btn-toggle-blueprint" class="btn-chat-action">Ver Blueprint</button>
-                                    <button id="btn-clear-chat" class="btn-chat-action btn-danger-text">Limpar Chat</button>
+                                    <button id="btn-toggle-blueprint" class="btn-chat-action"><span class="material-symbols-outlined">menu_book</span> Ver Blueprint</button>
+                                    <button id="btn-clear-chat" class="btn-chat-action btn-danger-text"><span class="material-symbols-outlined">delete</span> Limpar Chat</button>
                                 </div>
                             </div>
                             
@@ -369,8 +376,8 @@
                                 <!-- Blueprint View -->
                                 <div id="chat-blueprint-panel" class="chat-blueprint-sidebar" style="display: none;">
                                     <div class="blueprint-sidebar-header">
-                                        <h4>Master Blueprint 🧠</h4>
-                                        <button id="btn-close-blueprint" class="btn-close-blueprint-small">✕</button>
+                                        <h4><span class="material-symbols-outlined">architecture</span> Master Blueprint</h4>
+                                        <button id="btn-close-blueprint" class="btn-close-blueprint-small"><span class="material-symbols-outlined">close</span></button>
                                     </div>
                                     <div id="chat-blueprint-content" class="blueprint-markdown-view">
                                         <!-- Markdown text -->
@@ -381,14 +388,14 @@
                             <form id="chat-send-form" class="chat-input-area">
                                 <input type="text" id="chat-user-input" class="chat-input-field" placeholder="Pergunte algo para esta mente..." required>
                                 <button type="submit" id="btn-chat-send" class="btn-chat-send">
-                                    <span id="btn-chat-send-text">Enviar</span>
+                                    <span id="btn-chat-send-text" class="material-symbols-outlined">send</span>
                                 </button>
                             </form>
                         </div>
 
                         <!-- Panel C: Empty State -->
                         <div id="panel-empty-clone" class="clone-panel-card empty-panel-state">
-                            <div class="empty-state-icon">🧠</div>
+                            <span class="material-symbols-outlined empty-state-icon">psychology</span>
                             <h3>Nenhuma mente selecionada</h3>
                             <p>Selecione um cérebro clonado na lista lateral ou crie um novo para iniciar a conversa.</p>
                         </div>
@@ -408,8 +415,8 @@
                     <!-- Left Sidebar: list of apps -->
                     <div class="orchestrator-sidebar">
                         <div class="orchestrator-sidebar-header">
-                            <h3>Aplicativos</h3>
-                            <button id="btn-show-create-project" class="btn-create-small">+ Novo App</button>
+                            <h3><span class="material-symbols-outlined section-title-icon">apps</span> Aplicativos</h3>
+                            <button id="btn-show-create-project" class="btn-create-small"><span class="material-symbols-outlined">add</span> Novo App</button>
                         </div>
                         <div id="projects-list" class="projects-list-container">
                             <div class="empty-state">
@@ -422,7 +429,7 @@
                     <div class="orchestrator-main-panel">
                         <!-- Panel A: Create Project Form -->
                         <div id="panel-create-project" class="orchestrator-panel-card">
-                            <h3>🚀 Adicionar Novo Aplicativo</h3>
+                            <h3><span class="material-symbols-outlined section-title-icon">rocket_launch</span> Adicionar Novo Aplicativo</h3>
                             <form id="project-creation-form" autocomplete="off" style="margin-top: 16px;">
                                 <div class="input-group">
                                     <label for="project-name-input">Nome do Aplicativo</label>
@@ -447,7 +454,7 @@
                                     <p id="project-title-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Descrição do App</p>
                                 </div>
                                 <div class="project-actions">
-                                    <button id="btn-delete-project" class="btn-chat-action btn-danger-text">Remover App</button>
+                                    <button id="btn-delete-project" class="btn-chat-action btn-danger-text"><span class="material-symbols-outlined">delete</span> Remover App</button>
                                 </div>
                             </div>
 
@@ -460,13 +467,13 @@
                             <!-- Tab Content: Canvas -->
                             <div id="tab-content-canvas" class="tab-pane-content">
                                 <div class="canvas-toolbar">
-                                    <button id="btn-canvas-add-node" class="btn-toolbar-action">➕ Nova Fase</button>
+                                    <button id="btn-canvas-add-node" class="btn-toolbar-action"><span class="material-symbols-outlined">add_circle</span> Nova Fase</button>
                                     <span class="toolbar-divider">|</span>
-                                    <button id="btn-canvas-zoom-in" class="btn-toolbar-action" title="Zoom In">🔍﹢</button>
-                                    <button id="btn-canvas-zoom-out" class="btn-toolbar-action" title="Zoom Out">🔍﹣</button>
-                                    <button id="btn-canvas-zoom-reset" class="btn-toolbar-action" title="Resetar Visualização">↺</button>
+                                    <button id="btn-canvas-zoom-in" class="btn-toolbar-action" title="Zoom In"><span class="material-symbols-outlined">zoom_in</span></button>
+                                    <button id="btn-canvas-zoom-out" class="btn-toolbar-action" title="Zoom Out"><span class="material-symbols-outlined">zoom_out</span></button>
+                                    <button id="btn-canvas-zoom-reset" class="btn-toolbar-action" title="Resetar Visualização"><span class="material-symbols-outlined">restart_alt</span></button>
                                     <span class="toolbar-divider">|</span>
-                                    <button id="btn-canvas-save" class="btn-toolbar-action btn-success-soft" style="color: var(--success);" title="Salvar Posições e Conexões">💾 Salvar Canvas</button>
+                                    <button id="btn-canvas-save" class="btn-toolbar-action btn-success-soft" style="color: var(--success);" title="Salvar Posições e Conexões"><span class="material-symbols-outlined">save</span> Salvar Canvas</button>
                                     <span id="canvas-save-status" style="font-size: 0.8rem; color: var(--success); margin-left: 8px;"></span>
                                 </div>
 
@@ -477,10 +484,10 @@
                                             <defs>
                                                 <!-- Marker for Arrow Head -->
                                                 <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#8a63ff" />
+                                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#00C3FF" />
                                                 </marker>
                                                 <marker id="arrow-completed" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399" />
+                                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#22C55E" />
                                                 </marker>
                                             </defs>
                                         </svg>
@@ -511,7 +518,7 @@
 
                         <!-- Panel C: Empty State -->
                         <div id="panel-empty-project" class="orchestrator-panel-card empty-panel-state">
-                            <div class="empty-state-icon">🛠️</div>
+                            <span class="material-symbols-outlined empty-state-icon">apps</span>
                             <h3>Nenhum aplicativo selecionado</h3>
                             <p>Selecione um aplicativo na lista lateral ou cadastre um novo para planejar seu desenvolvimento.</p>
                         </div>
@@ -525,8 +532,8 @@
     <div id="modal-phase-edit" class="os-modal-overlay" style="display: none;">
         <div class="os-modal-card">
             <div class="os-modal-header">
-                <h3 id="modal-phase-title-action">Editar Fase</h3>
-                <button id="btn-close-phase-modal" class="btn-close-modal">✕</button>
+                <h3 id="modal-phase-title-action"><span class="material-symbols-outlined">edit</span> Editar Fase</h3>
+                <button id="btn-close-phase-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
             </div>
             <form id="phase-edit-form" autocomplete="off">
                 <input type="hidden" id="phase-id-input">
@@ -556,8 +563,8 @@
                     <!-- Campo para adicionar nova subtarefa -->
                     <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                         <input type="text" id="new-subtask-title" class="input-url" style="margin-top: 0; flex: 1;" placeholder="Nova subtarefa (ex: Criar schema do banco)">
-                        <button type="button" id="btn-add-subtask" class="btn-import" style="width: auto; padding: 0 16px; margin-top: 0; background: var(--accent-soft); border-color: rgba(138,99,255,0.3); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; height: 38px;">
-                            ＋
+                        <button type="button" id="btn-add-subtask" class="btn-import" style="width: auto; padding: 0 16px; margin-top: 0; display: flex; align-items: center; justify-content: center; height: 38px;">
+                            <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
                     

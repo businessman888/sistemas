@@ -1325,7 +1325,7 @@
                 tempLine.setAttribute('x2', x1);
                 tempLine.setAttribute('y2', y1);
                 tempLine.setAttribute('class', 'connection-line-pending');
-                tempLine.setAttribute('stroke', '#8a63ff');
+                tempLine.setAttribute('stroke', '#00C3FF');
                 tempLine.setAttribute('stroke-width', '2.5');
                 tempLine.setAttribute('stroke-dasharray', '4 4');
                 
