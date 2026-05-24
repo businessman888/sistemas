@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     apify_api_key: str = ""
     anthropic_api_key: str = ""
     database_path: str = "data/oyto_os.db"
+    database_url: str = ""
+
 
     model_config = {
         "env_file": ".env",
