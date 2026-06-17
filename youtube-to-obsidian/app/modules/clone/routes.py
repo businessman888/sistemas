@@ -79,6 +79,19 @@ async def delete_clone(id: int):
         conn.commit()
     return {"message": "Clone mental removido com sucesso."}
 
+@router.post("/{id}/build_blueprint")
+async def build_clone_blueprint(id: int):
+    """Gera o Master Mental Model Blueprint do clone e salva no vault."""
+    try:
+        from app.modules.clone.clone_service import generate_clone_blueprint
+        blueprint_markdown = await generate_clone_blueprint(id)
+        return {"status": "success", "blueprint": blueprint_markdown}
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except Exception as e:
+        logger.exception("Erro ao gerar blueprint para o clone")
+        raise HTTPException(status_code=500, detail=f"Erro interno de processamento da IA: {e}")
+
 @router.get("/{id}/messages", response_model=List[MessageResponse])
 async def get_clone_messages(id: int):
     """Retorna o histórico de conversas com um clone."""

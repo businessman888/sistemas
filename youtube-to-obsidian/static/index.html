@@ -39,6 +39,10 @@
                         <span class="material-symbols-outlined nav-icon">psychology</span>
                         <span>Mentes Clones</span>
                     </button>
+                    <button class="nav-item" id="nav-brain">
+                        <span class="material-symbols-outlined nav-icon">psychology_alt</span>
+                        <span>Segundo Cérebro</span>
+                    </button>
                     <button class="nav-item" id="nav-orchestrator">
                         <span class="material-symbols-outlined nav-icon">apps</span>
                         <span>Orquestrador</span>
@@ -46,6 +50,21 @@
                     <!-- Add new modules here in the future -->
                 </div>
             </nav>
+            
+            <div class="system-usage-indicator">
+                <div class="system-usage-row">
+                    <span>Chamadas IA:</span>
+                    <span id="usage-calls">0</span>
+                </div>
+                <div class="system-usage-row">
+                    <span>Tokens:</span>
+                    <span id="usage-tokens">0</span>
+                </div>
+                <div class="system-usage-row">
+                    <span>Custo:</span>
+                    <span id="usage-cost" style="color: var(--accent); font-weight: bold;">$0.0000</span>
+                </div>
+            </div>
         </aside>
 
 
@@ -362,6 +381,8 @@
                                     <span id="chat-title-status" class="chat-status-indicator">Online</span>
                                 </div>
                                 <div class="chat-actions">
+                                    <button id="btn-build-blueprint-action" class="btn-chat-action"><span class="material-symbols-outlined">construction</span> Gerar Blueprint</button>
+                                    <button id="btn-conversar-brain-action" class="btn-chat-action btn-success-soft" style="color: var(--success);"><span class="material-symbols-outlined">chat</span> Conversar</button>
                                     <button id="btn-toggle-blueprint" class="btn-chat-action"><span class="material-symbols-outlined">menu_book</span> Ver Blueprint</button>
                                     <button id="btn-clear-chat" class="btn-chat-action btn-danger-text"><span class="material-symbols-outlined">delete</span> Limpar Chat</button>
                                 </div>
@@ -400,6 +421,115 @@
                             <p>Selecione um cérebro clonado na lista lateral ou crie um novo para iniciar a conversa.</p>
                         </div>
 
+                    </div>
+                </div>
+            </div>
+            <!-- Segundo Cérebro Module Content -->
+            <div class="module-content" id="module-brain" style="display: none;">
+                <header class="module-header">
+                    <h2>Segundo Cérebro</h2>
+                    <p class="module-subtitle">Sintetize o conhecimento coletado do seu vault e converse com seu segundo cérebro (com suporte a RAG)</p>
+                </header>
+
+                <!-- Sub-tabs navigation -->
+                <div class="sub-tabs">
+                    <button class="sub-tab active" id="subtab-synthesis">Síntese Global</button>
+                    <button class="sub-tab" id="subtab-brain-chat">Conversa Inteligente (RAG)</button>
+                </div>
+
+                <!-- Sub-tab: Síntese -->
+                <div class="sub-tab-content" id="subcontent-synthesis">
+                    <div class="empty-state" id="synthesis-empty-state">
+                        <span class="material-symbols-outlined empty-state-icon">description</span>
+                        <p>Nenhuma síntese de conhecimento gerada ainda no vault.</p>
+                        <button id="btn-generate-synthesis-initial" class="btn-import" style="margin-top: 16px; width: auto;">Gerar Minha Primeira Síntese</button>
+                    </div>
+
+                    <div id="synthesis-card-wrapper" style="display: none;">
+                        <div class="synthesis-card-view">
+                            <div class="synthesis-metadata">
+                                <span>📅 Gerado em: <strong id="synthesis-generated-at">-</strong></span>
+                                <span>📚 Notas analisadas: <strong id="synthesis-vault-size">0</strong></span>
+                            </div>
+                            <div id="synthesis-content-view" class="synthesis-content-markdown">
+                                <!-- Conteúdo em markdown renderizado aqui -->
+                            </div>
+                        </div>
+                        <div class="synthesis-actions">
+                            <button id="btn-update-synthesis" class="btn-import" style="width: auto;"><span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">refresh</span> Atualizar Síntese</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-tab: Chat -->
+                <div class="sub-tab-content" id="subcontent-brain-chat" style="display: none;">
+                    <div class="brain-workspace">
+                        <!-- Sidebar: lista de sessões de chat -->
+                        <div class="brain-sidebar">
+                            <button id="btn-sidebar-new-chat" class="btn-sidebar-new-chat">
+                                <span class="material-symbols-outlined">add_comment</span>
+                                <span>Nova Conversa</span>
+                            </button>
+                            <div class="brain-sidebar-header">
+                                <h3>Conversas Recentes</h3>
+                            </div>
+                            <div id="sessions-list" class="sessions-list-container">
+                                <!-- Lista gerada dinamicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Painel principal de conversa -->
+                        <div class="brain-main-panel">
+                            <!-- Estado vazio (sem sessão ativa) -->
+                            <div id="panel-empty-brain" class="empty-panel-state">
+                                <span class="material-symbols-outlined empty-state-icon">psychology_alt</span>
+                                <h3>Nenhuma conversa selecionada</h3>
+                                <p>Selecione uma conversa ao lado ou crie uma nova para iniciar a interação.</p>
+                            </div>
+
+                            <!-- Área do chat ativo -->
+                            <div id="panel-chat-brain" class="brain-chat-area" style="display: none; height: 100%;">
+                                <!-- Cabeçalho do chat: seletor de persona -->
+                                <div class="brain-chat-header">
+                                    <div class="chat-persona-selector">
+                                        <label for="brain-persona-select" style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Persona:</label>
+                                        <select id="brain-persona-select" class="chat-persona-select">
+                                            <option value="">Oyto Brain (Neutro)</option>
+                                            <!-- Preenchido dinamicamente com mentes clones -->
+                                        </select>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                        Anthropic Claude API
+                                    </div>
+                                </div>
+
+                                <div class="brain-chat-inner-layout">
+                                    <!-- Listagem de mensagens e formulário de input -->
+                                    <div class="brain-chat-area">
+                                        <div class="brain-chat-messages" id="brain-chat-messages-list">
+                                            <!-- Mensagens do chat geradas aqui -->
+                                        </div>
+                                        <form id="brain-chat-send-form" class="brain-chat-input-area">
+                                            <input type="text" id="brain-chat-user-input" class="chat-input-field" placeholder="Pergunte ao seu Segundo Cérebro..." required autocomplete="off">
+                                            <button type="submit" id="btn-brain-chat-send" class="btn-chat-send">
+                                                <span class="material-symbols-outlined">send</span>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Inspetor de Fontes Lateral (RAG) -->
+                                    <div id="brain-sources-inspector" class="brain-sources-inspector">
+                                        <div class="sources-inspector-header">
+                                            <h4>Fontes Relevantes (RAG)</h4>
+                                            <button id="btn-close-sources" class="btn-close-modal" style="font-size: 1rem;"><span class="material-symbols-outlined">close</span></button>
+                                        </div>
+                                        <div id="sources-list-container" class="sources-list">
+                                            <!-- Fontes da mensagem selecionada -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -586,7 +716,41 @@
         </div>
     </div>
 
+    <!-- Modal: Confirmar Síntese -->
+    <div id="modal-synthesis-confirm" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card">
+            <div class="os-modal-header">
+                <h3><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">analytics</span> Confirmar Síntese</h3>
+                <button id="btn-close-synthesis-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+                A geração da síntese global analisa todas as transcrições do YouTube no seu vault. Esse processo consome tokens na Anthropic API (Claude 3.5 Sonnet).
+            </p>
+            <div class="synthesis-estimate-details">
+                <div class="synthesis-estimate-row">
+                    <span>Notas analisadas:</span>
+                    <span id="synthesis-estimate-notes">0</span>
+                </div>
+                <div class="synthesis-estimate-row">
+                    <span>Tokens estimados:</span>
+                    <span id="synthesis-estimate-tokens">0</span>
+                </div>
+                <div class="synthesis-estimate-row cost-highlight" style="margin-top: 8px; border-top: 1px dashed var(--border-subtle); padding-top: 8px;">
+                    <span>Custo máximo aproximado:</span>
+                    <span id="synthesis-estimate-cost">$0.0000</span>
+                </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--warning); margin-top: 16px; display: flex; align-items: center; gap: 6px;">
+                <span class="material-symbols-outlined" style="font-size: 1rem;">warning</span>
+                <em>O processo pode levar entre 30 a 60 segundos. Não feche a página.</em>
+            </p>
+            <div class="modal-footer-actions">
+                <button type="button" id="btn-cancel-synthesis" class="btn-chat-action" style="padding: 10px 18px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem;">Cancelar</button>
+                <button type="button" id="btn-confirm-synthesis" class="btn-import" style="width: auto; padding: 10px 24px; margin-top: 0;">Confirmar e Gerar</button>
+            </div>
+        </div>
+    </div>
 
-    <script src="/static/app.js?v=1.2.0"></script>
+    <script src="/static/app.js?v=1.3.0"></script>
 </body>
 </html>

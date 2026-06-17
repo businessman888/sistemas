@@ -19,6 +19,18 @@ class Settings(BaseSettings):
     database_path: str = "data/oyto_os.db"
     database_url: str = ""
 
+    # Anthropic e RAG Settings
+    anthropic_model_default: str = "claude-sonnet-4-6"
+    anthropic_model_light: str = "claude-haiku-4-5"
+    llm_max_tokens_default: int = 4096
+    llm_temperature_default: float = 0.7
+    llm_request_timeout_seconds: int = 60
+
+    # Segundo Cérebro RAG
+    brain_retrieval_top_k: int = 5
+    brain_retrieval_min_similarity: float = 0.05
+    brain_chat_history_window: int = 10
+
 
     model_config = {
         "env_file": ".env",

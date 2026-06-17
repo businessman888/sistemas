@@ -298,6 +298,33 @@ def init_postgres():
             status VARCHAR(100) NOT NULL DEFAULT 'pending'
         )
         """)
+
+        # 11. Tabela: brain_chat_sessions
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS brain_chat_sessions (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            persona_id INTEGER REFERENCES clones(id) ON DELETE SET NULL,
+            is_clone_only INTEGER DEFAULT 0,
+            created_at VARCHAR(100) NOT NULL,
+            updated_at VARCHAR(100) NOT NULL
+        )
+        """)
+
+        # 12. Tabela: brain_chat_messages
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS brain_chat_messages (
+            id SERIAL PRIMARY KEY,
+            session_id INTEGER NOT NULL REFERENCES brain_chat_sessions(id) ON DELETE CASCADE,
+            role VARCHAR(50) NOT NULL,
+            content TEXT NOT NULL,
+            sources_json TEXT,
+            tokens_input INTEGER DEFAULT 0,
+            tokens_output INTEGER DEFAULT 0,
+            cost_usd DOUBLE PRECISION DEFAULT 0.0,
+            created_at VARCHAR(100) NOT NULL
+        )
+        """)
         
         conn.commit()
     logger.info("Banco PostgreSQL inicializado com sucesso!")
@@ -440,6 +467,35 @@ def init_sqlite():
             title TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT 'pending',
             FOREIGN KEY(phase_id) REFERENCES project_phases(id) ON DELETE CASCADE
+        )
+        """)
+
+        # Tabela: Sessões de Chat do Segundo Cérebro
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS brain_chat_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            persona_id INTEGER,
+            is_clone_only INTEGER DEFAULT 0,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY(persona_id) REFERENCES clones(id) ON DELETE SET NULL
+        )
+        """)
+
+        # Tabela: Mensagens de Chat do Segundo Cérebro
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS brain_chat_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id INTEGER NOT NULL,
+            role TEXT NOT NULL,
+            content TEXT NOT NULL,
+            sources_json TEXT,
+            tokens_input INTEGER DEFAULT 0,
+            tokens_output INTEGER DEFAULT 0,
+            cost_usd REAL DEFAULT 0.0,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY(session_id) REFERENCES brain_chat_sessions(id) ON DELETE CASCADE
         )
         """)
         

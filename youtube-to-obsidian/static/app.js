@@ -30,12 +30,21 @@
             body: JSON.stringify({ url, language }),
         });
 
-        const data = await response.json();
+        let data;
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            try {
+                data = await response.json();
+            } catch (e) {
+                // Ignore parse errors, will use fallback detail
+            }
+        }
 
         if (!response.ok) {
-            const error = new Error(data.detail || 'Erro desconhecido');
+            const errorMsg = (data && data.detail) || `Erro no servidor (status ${response.status}).`;
+            const error = new Error(errorMsg);
             error.status = response.status;
-            error.data = data;
+            error.data = data || { detail: errorMsg };
             throw error;
         }
 
@@ -225,18 +234,20 @@
     const navYoutube = document.getElementById('nav-youtube');
     const navSocialMedia = document.getElementById('nav-social-media');
     const navClone = document.getElementById('nav-clone');
+    const navBrain = document.getElementById('nav-brain');
     const navOrchestrator = document.getElementById('nav-orchestrator');
     const moduleYoutube = document.getElementById('module-youtube');
     const moduleSocialMedia = document.getElementById('module-social-media');
     const moduleClone = document.getElementById('module-clone');
+    const moduleBrain = document.getElementById('module-brain');
     const moduleOrchestrator = document.getElementById('module-orchestrator');
 
     // Troca de módulo na Sidebar
     function switchModule(activeNav, activeModule) {
-        [navYoutube, navSocialMedia, navClone, navOrchestrator].forEach(nav => {
+        [navYoutube, navSocialMedia, navClone, navBrain, navOrchestrator].forEach(nav => {
             if (nav) nav.classList.remove('active');
         });
-        [moduleYoutube, moduleSocialMedia, moduleClone, moduleOrchestrator].forEach(mod => {
+        [moduleYoutube, moduleSocialMedia, moduleClone, moduleBrain, moduleOrchestrator].forEach(mod => {
             if (mod) mod.style.display = 'none';
         });
         activeNav.classList.add('active');
@@ -246,10 +257,10 @@
             activeModule.style.display = 'block';
         }
 
-        // Toggle wide layout for Orchestrator
+        // Toggle wide layout for Orchestrator or Brain
         const osContent = document.querySelector('.os-content');
         if (osContent) {
-            if (activeModule === moduleOrchestrator) {
+            if (activeModule === moduleOrchestrator || activeModule === moduleBrain) {
                 osContent.classList.add('wide-layout');
             } else {
                 osContent.classList.remove('wide-layout');
@@ -272,6 +283,13 @@
         switchModule(navClone, moduleClone);
         loadClones();
     });
+
+    if (navBrain) {
+        navBrain.addEventListener('click', () => {
+            switchModule(navBrain, moduleBrain);
+            initBrainModule();
+        });
+    }
 
     if (navOrchestrator) {
         navOrchestrator.addEventListener('click', () => {
@@ -306,9 +324,18 @@
             headers: { 'Content-Type': 'application/json', ...options.headers },
             ...options
         });
-        const data = await response.json();
+        let data;
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            try {
+                data = await response.json();
+            } catch (e) {
+                // Ignore parse errors, will use fallback detail
+            }
+        }
         if (!response.ok) {
-            throw new Error(data.detail || 'Erro na requisição');
+            const errorMsg = (data && data.detail) || `Erro na requisição: ${response.status} ${response.statusText}`;
+            throw new Error(errorMsg);
         }
         return data;
     }
@@ -2050,6 +2077,630 @@
             e.target.style.display = 'none';
         }
     });
+
+    // ============================================================
+    // Lógica de Integração do Módulo Mentes Clones com Anthropic
+    // ============================================================
+    const btnBuildBlueprintAction = document.getElementById('btn-build-blueprint-action');
+    const btnConversarBrainAction = document.getElementById('btn-conversar-brain-action');
+
+    if (btnBuildBlueprintAction) {
+        btnBuildBlueprintAction.addEventListener('click', async () => {
+            if (!currentActiveClone) return;
+            const cloneId = currentActiveClone.id;
+            
+            btnBuildBlueprintAction.disabled = true;
+            btnBuildBlueprintAction.innerHTML = '<span class="spinner"></span> Processando...';
+            chatTitleStatus.textContent = 'Gerando Blueprint...';
+            
+            try {
+                const res = await apiFetch(`/api/clones/${cloneId}/build_blueprint`, { method: 'POST' });
+                alert('Blueprint de modelo mental gerado e salvo no Obsidian com sucesso! ✓');
+                await loadClones();
+                
+                // Recarrega o clone atualizado
+                const clones = await apiFetch('/api/clones');
+                const updated = clones.find(c => c.id === cloneId);
+                if (updated) {
+                    selectClone(updated);
+                }
+            } catch (err) {
+                alert('Erro ao gerar blueprint: ' + err.message);
+                chatTitleStatus.textContent = 'Falhou';
+            } finally {
+                btnBuildBlueprintAction.disabled = false;
+                btnBuildBlueprintAction.innerHTML = '<span class="material-symbols-outlined">construction</span> Gerar Blueprint';
+            }
+        });
+    }
+
+    if (btnConversarBrainAction) {
+        btnConversarBrainAction.addEventListener('click', async () => {
+            if (!currentActiveClone) return;
+            const cloneId = currentActiveClone.id;
+            const cloneName = currentActiveClone.name;
+            
+            // 1. Alterna para o Módulo Segundo Cérebro
+            switchModule(navBrain, moduleBrain);
+            
+            // 2. Garante que carrega e exibe a subtab de Chat (RAG)
+            const tabBrainChat = document.getElementById('subtab-brain-chat');
+            if (tabBrainChat) {
+                tabBrainChat.click();
+            }
+            
+            // 3. Cria uma sessão de chat configurada para conversar apenas com essa persona (clone_only)
+            try {
+                const session = await apiFetch('/api/brain/chat/sessions', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: `Conversa com ${cloneName}`,
+                        persona_id: cloneId,
+                        is_clone_only: true
+                    })
+                });
+                
+                await initBrainModule();
+                
+                // Alterna a subtab ativa para Chat e seleciona a nova sessão
+                if (tabBrainChat) tabBrainChat.click();
+                selectBrainSession(session.id);
+                
+            } catch (err) {
+                console.error("Erro ao iniciar conversa com clone:", err);
+                alert("Erro ao iniciar chat: " + err.message);
+            }
+        });
+    }
+
+
+    // ============================================================
+    // Lógica do Módulo Segundo Cérebro
+    // ============================================================
+    let activeBrainSessionId = null;
+    let isSendingBrainMessage = false;
+
+    // Elementos DOM do Segundo Cérebro
+    const btnSidebarNewChat = document.getElementById('btn-sidebar-new-chat');
+    const sessionsList = document.getElementById('sessions-list');
+    const panelEmptyBrain = document.getElementById('panel-empty-brain');
+    const panelChatBrain = document.getElementById('panel-chat-brain');
+    const brainPersonaSelect = document.getElementById('brain-persona-select');
+    const brainChatMessagesList = document.getElementById('brain-chat-messages-list');
+    const brainChatSendForm = document.getElementById('brain-chat-send-form');
+    const brainChatUserInput = document.getElementById('brain-chat-user-input');
+    const btnBrainChatSend = document.getElementById('btn-brain-chat-send');
+    const brainSourcesInspector = document.getElementById('brain-sources-inspector');
+    const btnCloseSources = document.getElementById('btn-close-sources');
+    const sourcesListContainer = document.getElementById('sources-list-container');
+
+    // Síntese
+    const synthesisEmptyState = document.getElementById('synthesis-empty-state');
+    const btnGenerateSynthesisInitial = document.getElementById('btn-generate-synthesis-initial');
+    const synthesisCardWrapper = document.getElementById('synthesis-card-wrapper');
+    const synthesisGeneratedAt = document.getElementById('synthesis-generated-at');
+    const synthesisVaultSize = document.getElementById('synthesis-vault-size');
+    const synthesisContentView = document.getElementById('synthesis-content-view');
+    const btnUpdateSynthesis = document.getElementById('btn-update-synthesis');
+
+    // Modais
+    const modalSynthesisConfirm = document.getElementById('modal-synthesis-confirm');
+    const btnCloseSynthesisModal = document.getElementById('btn-close-synthesis-modal');
+    const btnCancelSynthesis = document.getElementById('btn-cancel-synthesis');
+    const btnConfirmSynthesis = document.getElementById('btn-confirm-synthesis');
+    const synthesisEstimateNotes = document.getElementById('synthesis-estimate-notes');
+    const synthesisEstimateTokens = document.getElementById('synthesis-estimate-tokens');
+    const synthesisEstimateCost = document.getElementById('synthesis-estimate-cost');
+
+    // Subtabs Segundo Cérebro
+    const brainSubtabs = ['synthesis', 'brain-chat'];
+    brainSubtabs.forEach(tab => {
+        const btn = document.getElementById(`subtab-${tab}`);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                brainSubtabs.forEach(t => {
+                    const el = document.getElementById(`subtab-${t}`);
+                    if (el) el.classList.remove('active');
+                    const cont = document.getElementById(`subcontent-${t}`);
+                    if (cont) cont.style.display = 'none';
+                });
+                btn.classList.add('active');
+                const targetContent = document.getElementById(`subcontent-${tab}`);
+                if (targetContent) targetContent.style.display = 'block';
+
+                if (tab === 'synthesis') loadSynthesisTab();
+                if (tab === 'brain-chat') loadBrainChatTab();
+            });
+        }
+    });
+
+    // Inicializa o Módulo Brain
+    async function initBrainModule() {
+        // Carrega o uso do sistema (custos e chamadas)
+        updateSystemUsage();
+        
+        // Ativa a aba padrão (Síntese)
+        const tabSynthesis = document.getElementById('subtab-synthesis');
+        if (tabSynthesis) tabSynthesis.click();
+    }
+
+    // Carrega aba Síntese
+    async function loadSynthesisTab() {
+        try {
+            const data = await apiFetch('/api/brain/synthesize');
+            synthesisEmptyState.style.display = 'none';
+            synthesisCardWrapper.style.display = 'block';
+            
+            synthesisGeneratedAt.textContent = formatDateTime(data.generated_at);
+            synthesisVaultSize.textContent = data.vault_size;
+            synthesisContentView.innerHTML = parseMarkdown(data.synthesis);
+        } catch (err) {
+            // Nota não existe
+            synthesisEmptyState.style.display = 'block';
+            synthesisCardWrapper.style.display = 'none';
+        }
+    }
+
+    // Modal de Confirmação da Síntese
+    async function openSynthesisConfirmModal() {
+        try {
+            // Estimativa
+            const estimate = await apiFetch('/api/brain/synthesize/estimate');
+            synthesisEstimateNotes.textContent = estimate.total_notes;
+            synthesisEstimateTokens.textContent = estimate.estimated_tokens.toLocaleString();
+            synthesisEstimateCost.textContent = `$${estimate.estimated_cost_usd.toFixed(4)}`;
+            
+            modalSynthesisConfirm.style.display = 'flex';
+        } catch (err) {
+            alert("Erro ao obter estimativa de custo: " + err.message);
+        }
+    }
+
+    if (btnGenerateSynthesisInitial) {
+        btnGenerateSynthesisInitial.addEventListener('click', openSynthesisConfirmModal);
+    }
+    if (btnUpdateSynthesis) {
+        btnUpdateSynthesis.addEventListener('click', openSynthesisConfirmModal);
+    }
+    if (btnCloseSynthesisModal) {
+        btnCloseSynthesisModal.addEventListener('click', () => { modalSynthesisConfirm.style.display = 'none'; });
+    }
+    if (btnCancelSynthesis) {
+        btnCancelSynthesis.addEventListener('click', () => { modalSynthesisConfirm.style.display = 'none'; });
+    }
+
+    if (btnConfirmSynthesis) {
+        btnConfirmSynthesis.addEventListener('click', async () => {
+            modalSynthesisConfirm.style.display = 'none';
+            
+            // Loading State no container
+            synthesisEmptyState.style.display = 'none';
+            synthesisCardWrapper.style.display = 'block';
+            synthesisGeneratedAt.textContent = "Atualizando...";
+            synthesisVaultSize.textContent = "Calculando...";
+            synthesisContentView.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--accent);">
+                    <div class="spinner" style="margin: 0 auto 16px auto; width: 32px; height: 32px;"></div>
+                    <span>Sintetizando todo o vault do Obsidian via Claude 3.5 Sonnet...</span><br>
+                    <small style="color: var(--text-muted);">Esse processo pode demorar entre 30 e 60 segundos.</small>
+                </div>
+            `;
+            
+            if (btnUpdateSynthesis) btnUpdateSynthesis.disabled = true;
+
+            try {
+                const res = await apiFetch('/api/brain/synthesize', { method: 'POST' });
+                alert("Síntese gerada e salva com sucesso em seu Obsidian vault! ✓");
+                await loadSynthesisTab();
+                await updateSystemUsage();
+            } catch (err) {
+                alert("Falha ao gerar síntese: " + err.message);
+                synthesisEmptyState.style.display = 'block';
+                synthesisCardWrapper.style.display = 'none';
+            } finally {
+                if (btnUpdateSynthesis) btnUpdateSynthesis.disabled = false;
+            }
+        });
+    }
+
+    // Carrega aba Chat
+    async function loadBrainChatTab() {
+        await loadPersonaSelector();
+        await loadBrainSessions();
+    }
+
+    // Carrega dropdown de personas (clones)
+    async function loadPersonaSelector() {
+        try {
+            const clones = await apiFetch('/api/clones');
+            const completedClones = clones.filter(c => c.status === 'completed');
+            
+            // Mantém "Neutro" e adiciona os prontos
+            brainPersonaSelect.innerHTML = '<option value="">Oyto Brain (Neutro)</option>' + 
+                completedClones.map(c => `<option value="${c.id}">Clone: ${escapeHtml(c.name)}</option>`).join('');
+        } catch (err) {
+            console.error("Erro ao carregar personas para selector:", err);
+        }
+    }
+
+    // Carrega sessões de chat do Segundo Cérebro
+    async function loadBrainSessions() {
+        try {
+            const sessions = await apiFetch('/api/brain/chat/sessions');
+            renderBrainSessions(sessions);
+        } catch (err) {
+            console.error("Erro ao carregar sessões de chat:", err);
+        }
+    }
+
+    function renderBrainSessions(sessions) {
+        if (sessions.length === 0) {
+            sessionsList.innerHTML = `
+                <div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 0.8rem;">
+                    Nenhuma conversa recente.
+                </div>
+            `;
+            return;
+        }
+
+        sessionsList.innerHTML = sessions.map(s => {
+            const isActive = activeBrainSessionId === s.id;
+            return `
+                <div class="session-item ${isActive ? 'active' : ''}" data-id="${s.id}">
+                    <div class="session-item-title">${escapeHtml(s.title)}</div>
+                    <button class="btn-delete-session" data-id="${s.id}">
+                        <span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span>
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+        // Clicks
+        document.querySelectorAll('.session-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-delete-session')) return;
+                const id = parseInt(item.getAttribute('data-id'));
+                selectBrainSession(id);
+            });
+        });
+
+        // Deletar
+        document.querySelectorAll('.btn-delete-session').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.getAttribute('data-id'));
+                if (confirm('Deseja apagar permanentemente esta conversa?')) {
+                    try {
+                        await apiFetch(`/api/brain/chat/sessions/${id}`, { method: 'DELETE' });
+                        if (activeBrainSessionId === id) {
+                            activeBrainSessionId = null;
+                            panelChatBrain.style.display = 'none';
+                            panelEmptyBrain.style.display = 'flex';
+                        }
+                        await loadBrainSessions();
+                    } catch (err) {
+                        alert("Erro ao excluir conversa: " + err.message);
+                    }
+                }
+            });
+        });
+    }
+
+    // Criar nova sessão
+    if (btnSidebarNewChat) {
+        btnSidebarNewChat.addEventListener('click', async () => {
+            try {
+                const session = await apiFetch('/api/brain/chat/sessions', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: "Nova Conversa",
+                        persona_id: brainPersonaSelect.value ? parseInt(brainPersonaSelect.value) : null,
+                        is_clone_only: false
+                    })
+                });
+                activeBrainSessionId = session.id;
+                await loadBrainSessions();
+                selectBrainSession(session.id);
+            } catch (err) {
+                alert("Erro ao criar conversa: " + err.message);
+            }
+        });
+    }
+
+    // Selecionar sessão de chat
+    async function selectBrainSession(id) {
+        activeBrainSessionId = id;
+        
+        // Highlight na sidebar
+        document.querySelectorAll('.session-item').forEach(item => {
+            if (parseInt(item.getAttribute('data-id')) === id) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        panelEmptyBrain.style.display = 'none';
+        panelChatBrain.style.display = 'flex';
+        brainSourcesInspector.classList.remove('visible'); // esconde inspetor por padrão
+        
+        // Carrega histórico
+        brainChatMessagesList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Carregando histórico...</div>';
+        
+        try {
+            const messages = await apiFetch(`/api/brain/chat/sessions/${id}/messages`);
+            
+            // Sincroniza dropdown de persona da sessão no banco
+            const sessions = await apiFetch('/api/brain/chat/sessions');
+            const current = sessions.find(s => s.id === id);
+            if (current) {
+                brainPersonaSelect.value = current.persona_id ? current.persona_id.toString() : '';
+            }
+
+            renderBrainMessages(messages);
+        } catch (err) {
+            brainChatMessagesList.innerHTML = `<div style="text-align: center; color: var(--error); padding: 20px;">Erro: ${escapeHtml(err.message)}</div>`;
+        }
+    }
+
+    // Seletor de persona no cabeçalho do chat do Segundo Cérebro
+    if (brainPersonaSelect) {
+        brainPersonaSelect.addEventListener('change', async () => {
+            if (!activeBrainSessionId) return;
+            const personaId = brainPersonaSelect.value ? parseInt(brainPersonaSelect.value) : null;
+            
+            // Atualiza no banco
+            try {
+                const selectedText = brainPersonaSelect.options[brainPersonaSelect.selectedIndex].text;
+                alert(`Persona alterada para: ${selectedText}. As próximas perguntas usarão esta persona.`);
+                
+                await apiFetch('/api/brain/chat/sessions', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: `Conversa com ${selectedText.replace('Clone: ', '')}`,
+                        persona_id: personaId,
+                        is_clone_only: false
+                    })
+                }).then(session => {
+                    activeBrainSessionId = session.id;
+                    loadBrainSessions().then(() => {
+                        selectBrainSession(session.id);
+                    });
+                });
+            } catch (err) {
+                console.error("Erro ao alternar persona:", err);
+            }
+        });
+    }
+
+    function renderBrainMessages(messages) {
+        if (messages.length === 0) {
+            brainChatMessagesList.innerHTML = `
+                <div style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.9rem;">
+                    💡 Faça uma pergunta sobre qualquer conteúdo importado! O RAG recuperará as notas e responderá referenciando as fontes.
+                </div>
+            `;
+            return;
+        }
+
+        brainChatMessagesList.innerHTML = messages.map(msg => {
+            const isUser = msg.role === 'user';
+            const senderName = isUser ? 'Você' : 'Oyto Brain';
+            
+            // Botão de fontes se houver
+            let sourcesMarkup = '';
+            if (!isUser && msg.sources && msg.sources.length > 0) {
+                const sourcesJsonEscaped = escapeHtml(JSON.stringify(msg.sources));
+                sourcesMarkup = `
+                    <div class="chat-msg-sources-bar">
+                        <button class="btn-msg-inspect-sources" onclick="inspectMessageSources(this)" data-sources="${sourcesJsonEscaped}">
+                            <span class="material-symbols-outlined" style="font-size: 1rem;">menu_book</span>
+                            <span>Ver Fontes (${msg.sources.length})</span>
+                        </button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="chat-msg-row ${isUser ? 'user' : 'assistant'}">
+                    <span class="chat-msg-header">${senderName}</span>
+                    <div class="chat-msg-body">${parseMarkdown(msg.content)}</div>
+                    ${sourcesMarkup}
+                </div>
+            `;
+        }).join('');
+
+        brainChatMessagesList.scrollTop = brainChatMessagesList.scrollHeight;
+    }
+
+    // Função de clique global para inspecionar fontes
+    window.inspectMessageSources = function(button) {
+        const sourcesDataRaw = button.getAttribute('data-sources');
+        const sources = JSON.parse(sourcesDataRaw);
+        
+        sourcesListContainer.innerHTML = sources.map(s => {
+            const nameWithoutExt = s.title;
+            const fileParam = encodeURIComponent(s.file_path);
+            const obsidianUri = `obsidian://open?file=${fileParam}`;
+
+            return `
+                <div class="source-item">
+                    <div class="source-item-title">${escapeHtml(nameWithoutExt)}</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted); word-break: break-all;">${escapeHtml(s.file_path)}</div>
+                    <div class="source-item-score">
+                        <span>Similaridade: ${(s.similarity_score * 100).toFixed(1)}%</span>
+                        <a href="${obsidianUri}" style="color: var(--accent); text-decoration: underline;">Abrir no Obsidian ↗</a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        brainSourcesInspector.classList.add('visible');
+    };
+
+    if (btnCloseSources) {
+        btnCloseSources.addEventListener('click', () => {
+            brainSourcesInspector.classList.remove('visible');
+        });
+    }
+
+    // Enviar Mensagem via streaming (SSE / EventSource manual com Fetch)
+    if (brainChatSendForm) {
+        brainChatSendForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!activeBrainSessionId || isSendingBrainMessage) return;
+
+            const text = brainChatUserInput.value.trim();
+            if (!text) return;
+
+            brainChatUserInput.value = '';
+            isSendingBrainMessage = true;
+            btnBrainChatSend.disabled = true;
+
+            // 1. Renderiza mensagem do usuário localmente
+            const userMsgHtml = `
+                <div class="chat-msg-row user">
+                    <span class="chat-msg-header">Você</span>
+                    <div class="chat-msg-body">${escapeHtml(text)}</div>
+                </div>
+            `;
+            if (brainChatMessagesList.querySelector('div[style*="text-align"]')) {
+                brainChatMessagesList.innerHTML = '';
+            }
+            brainChatMessagesList.insertAdjacentHTML('beforeend', userMsgHtml);
+            brainChatMessagesList.scrollTop = brainChatMessagesList.scrollHeight;
+
+            // 2. Renderiza indicador de pesquisa (RAG)
+            const indicatorId = 'chat-rag-indicator';
+            const indicatorHtml = `
+                <div class="chat-searching-indicator" id="${indicatorId}">
+                    <span class="spinner" style="width: 14px; height: 14px;"></span>
+                    <span>🔎 Consultando notas no seu vault do Obsidian...</span>
+                </div>
+            `;
+            brainChatMessagesList.insertAdjacentHTML('beforeend', indicatorHtml);
+            brainChatMessagesList.scrollTop = brainChatMessagesList.scrollHeight;
+
+            // 3. Renderiza container para a resposta que vai chegar por stream
+            const assistantId = 'brain-assistant-stream-' + Date.now();
+            const assistantMsgHtml = `
+                <div class="chat-msg-row assistant" id="${assistantId}" style="display: none;">
+                    <span class="chat-msg-header">Oyto Brain</span>
+                    <div class="chat-msg-body"></div>
+                </div>
+            `;
+            brainChatMessagesList.insertAdjacentHTML('beforeend', assistantMsgHtml);
+            const assistantEl = document.getElementById(assistantId);
+            const assistantBody = assistantEl.querySelector('.chat-msg-body');
+
+            let answerAccumulator = "";
+
+            try {
+                // 4. Executa requisição POST para obter stream SSE
+                const response = await fetch(`/api/brain/chat/sessions/${activeBrainSessionId}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: text })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Erro na comunicação com a IA.");
+                }
+
+                // Remove indicador de pesquisa
+                const indicatorEl = document.getElementById(indicatorId);
+                if (indicatorEl) indicatorEl.remove();
+
+                // Mostra container da resposta
+                assistantEl.style.display = 'flex';
+
+                // Lógica de leitura do Stream
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let buffer = '';
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // Mantém o que estiver incompleto
+
+                    for (const line of lines) {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine.startsWith('data: ')) {
+                            const dataStr = trimmedLine.slice(6).trim();
+                            if (dataStr) {
+                                try {
+                                    const event = JSON.parse(dataStr);
+                                    
+                                    if (event.status === 'searching') {
+                                        // Apenas sinaliza busca ativa
+                                    } else if (event.token) {
+                                        // Delta de token recebido
+                                        answerAccumulator += event.token;
+                                        // Renderiza markdown em tempo real
+                                        assistantBody.innerHTML = parseMarkdown(answerAccumulator);
+                                        brainChatMessagesList.scrollTop = brainChatMessagesList.scrollHeight;
+                                    } else if (event.message_id) {
+                                        // Final da geração
+                                        // Exibe botão de fontes se houver
+                                        if (event.sources && event.sources.length > 0) {
+                                            const sourcesJsonEscaped = escapeHtml(JSON.stringify(event.sources));
+                                            const sourcesBar = `
+                                                <div class="chat-msg-sources-bar">
+                                                    <button class="btn-msg-inspect-sources" onclick="inspectMessageSources(this)" data-sources="${sourcesJsonEscaped}">
+                                                        <span class="material-symbols-outlined" style="font-size: 1rem;">menu_book</span>
+                                                        <span>Ver Fontes (${event.sources.length})</span>
+                                                    </button>
+                                                </div>
+                                            `;
+                                            assistantEl.insertAdjacentHTML('beforeend', sourcesBar);
+                                            brainChatMessagesList.scrollTop = brainChatMessagesList.scrollHeight;
+                                        }
+                                        
+                                        // Atualiza estatísticas na barra lateral
+                                        await updateSystemUsage();
+                                        await loadBrainSessions();
+                                    }
+                                } catch (e) {
+                                    console.error("Erro no parse do JSON SSE:", e);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (err) {
+                // Remove indicador de pesquisa
+                const indicatorEl = document.getElementById(indicatorId);
+                if (indicatorEl) indicatorEl.remove();
+
+                assistantEl.style.display = 'flex';
+                assistantBody.innerHTML = `<span style="color: var(--error);">❌ Falha na resposta: ${escapeHtml(err.message)}</span>`;
+                brainChatMessagesList.scrollTop = brainChatMessagesList.scrollHeight;
+            } finally {
+                isSendingBrainMessage = false;
+                btnBrainChatSend.disabled = false;
+            }
+        });
+    }
+
+    // Atualiza custos na barra lateral
+    async function updateSystemUsage() {
+        try {
+            const usage = await apiFetch('/api/system/usage');
+            document.getElementById('usage-calls').textContent = usage.total_calls;
+            document.getElementById('usage-tokens').textContent = usage.total_input_tokens + usage.total_output_tokens;
+            document.getElementById('usage-cost').textContent = `$${usage.total_cost_usd.toFixed(4)}`;
+        } catch (err) {
+            console.error("Erro ao carregar custos do sistema:", err);
+        }
+    }
+
+    // Inicializa carregamento do custo ao abrir a página
+    updateSystemUsage();
 
 })();
 

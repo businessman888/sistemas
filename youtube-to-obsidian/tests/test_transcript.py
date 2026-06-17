@@ -62,3 +62,33 @@ class TestFetchTranscript:
 
         with pytest.raises(LookupError):
             fetch_transcript("test123")
+
+    @patch("app.modules.youtube.transcript._api")
+    def test_ip_blocked_on_list_raises(self, mock_api):
+        """Levanta ConnectionError quando o YouTube bloqueia o IP na listagem."""
+        from youtube_transcript_api._errors import IpBlocked
+
+        mock_api.list.side_effect = IpBlocked("test123")
+
+        with pytest.raises(ConnectionError, match="IP bloqueado"):
+            fetch_transcript("test123")
+
+    @patch("app.modules.youtube.transcript._api")
+    def test_ip_blocked_on_fetch_raises(self, mock_api):
+        """Levanta ConnectionError quando o YouTube bloqueia o IP no fetch da transcrição."""
+        from youtube_transcript_api._errors import IpBlocked
+
+        mock_transcript_list = MagicMock()
+        mock_api.list.return_value = mock_transcript_list
+
+        mock_transcript = MagicMock()
+        mock_transcript.fetch.side_effect = IpBlocked("test123")
+        mock_transcript_list.find_transcript.return_value = mock_transcript
+
+        # Mock __iter__ para _build_language_priority
+        mock_lang = MagicMock()
+        mock_lang.language_code = "pt"
+        mock_transcript_list.__iter__ = MagicMock(return_value=iter([mock_lang]))
+
+        with pytest.raises(ConnectionError, match="IP bloqueado"):
+            fetch_transcript("test123", preferred_language="pt")

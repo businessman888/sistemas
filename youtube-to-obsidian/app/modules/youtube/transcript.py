@@ -7,6 +7,9 @@ from youtube_transcript_api._errors import (
     NoTranscriptFound,
     TranscriptsDisabled,
     VideoUnavailable,
+    IpBlocked,
+    RequestBlocked,
+    YouTubeTranscriptApiException,
 )
 
 from app.models.video import TranscriptResult, TranscriptSegment
@@ -32,50 +35,28 @@ def fetch_transcript(video_id: str, preferred_language: str = "pt") -> Transcrip
     )
 
     try:
-        transcript_list = _api.list(video_id)
-    except TranscriptsDisabled:
-        raise ValueError("Este vídeo não possui legendas em nenhum idioma (legendas desabilitadas).")
-    except VideoUnavailable:
-        raise LookupError("Vídeo não encontrado ou indisponível no YouTube.")
-    except Exception as e:
-        raise ConnectionError(f"Erro ao conectar com o YouTube para buscar transcrição: {e}") from e
-
-    # Tenta na ordem de preferência
-    language_priority = _build_language_priority(preferred_language, transcript_list)
-
-    for lang_code in language_priority:
         try:
-            transcript = transcript_list.find_transcript([lang_code])
-            fetched = transcript.fetch()
+            transcript_list = _api.list(video_id)
+        except TranscriptsDisabled:
+            raise ValueError("Este vídeo não possui legendas em nenhum idioma (legendas desabilitadas).")
+        except VideoUnavailable:
+            raise LookupError("Vídeo não encontrado ou indisponível no YouTube.")
+        except (IpBlocked, RequestBlocked) as e:
+            raise ConnectionError(
+                "O YouTube está bloqueando as requisições deste servidor (IP bloqueado). "
+                "Tente novamente mais tarde ou configure um proxy/cookies."
+            ) from e
+        except Exception as e:
+            raise ConnectionError(f"Erro ao conectar com o YouTube para buscar transcrição: {e}") from e
 
-            segments = [
-                TranscriptSegment(
-                    text=entry.text,
-                    start=entry.start,
-                    duration=entry.duration,
-                )
-                for entry in fetched
-            ]
+        # Tenta na ordem de preferência
+        language_priority = _build_language_priority(preferred_language, transcript_list)
 
-            logger.info(
-                "Transcrição obtida: idioma=%s, segmentos=%d",
-                lang_code,
-                len(segments),
-            )
-            return TranscriptResult(segments=segments, language=lang_code)
+        for lang_code in language_priority:
+            try:
+                transcript = transcript_list.find_transcript([lang_code])
+                fetched = transcript.fetch()
 
-        except NoTranscriptFound:
-            continue
-
-    # Se nenhum idioma funcionou, tenta tradução automática
-    try:
-        available = list(transcript_list)
-        if available:
-            first = available[0]
-            # Tenta traduzir para o idioma preferido
-            if first.is_translatable:
-                translated = first.translate(preferred_language)
-                fetched = translated.fetch()
                 segments = [
                     TranscriptSegment(
                         text=entry.text,
@@ -84,20 +65,68 @@ def fetch_transcript(video_id: str, preferred_language: str = "pt") -> Transcrip
                     )
                     for entry in fetched
                 ]
+
                 logger.info(
-                    "Transcrição traduzida de %s para %s, segmentos=%d",
-                    first.language_code,
-                    preferred_language,
+                    "Transcrição obtida: idioma=%s, segmentos=%d",
+                    lang_code,
                     len(segments),
                 )
-                return TranscriptResult(
-                    segments=segments,
-                    language=f"{first.language_code}→{preferred_language}",
-                )
-    except Exception as e:
-        logger.warning("Falha ao tentar tradução automática: %s", e)
+                return TranscriptResult(segments=segments, language=lang_code)
 
-    raise ValueError("Este vídeo não possui legendas em nenhum idioma disponível.")
+            except NoTranscriptFound:
+                continue
+            except (IpBlocked, RequestBlocked) as e:
+                raise ConnectionError(
+                    "O YouTube está bloqueando as requisições deste servidor (IP bloqueado). "
+                    "Tente novamente mais tarde ou configure um proxy/cookies."
+                ) from e
+            except Exception as e:
+                logger.warning("Erro ao baixar transcrição para o idioma %s: %s", lang_code, e)
+                continue
+
+        # Se nenhum idioma funcionou, tenta tradução automática
+        try:
+            available = list(transcript_list)
+            if available:
+                first = available[0]
+                # Tenta traduzir para o idioma preferido
+                if first.is_translatable:
+                    translated = first.translate(preferred_language)
+                    fetched = translated.fetch()
+                    segments = [
+                        TranscriptSegment(
+                            text=entry.text,
+                            start=entry.start,
+                            duration=entry.duration,
+                        )
+                        for entry in fetched
+                    ]
+                    logger.info(
+                        "Transcrição traduzida de %s para %s, segmentos=%d",
+                        first.language_code,
+                        preferred_language,
+                        len(segments),
+                    )
+                    return TranscriptResult(
+                        segments=segments,
+                        language=f"{first.language_code}→{preferred_language}",
+                    )
+        except (IpBlocked, RequestBlocked) as e:
+            raise ConnectionError(
+                "O YouTube está bloqueando as requisições deste servidor (IP bloqueado). "
+                "Tente novamente mais tarde ou configure um proxy/cookies."
+            ) from e
+        except Exception as e:
+            logger.warning("Falha ao tentar tradução automática: %s", e)
+
+        raise ValueError("Este vídeo não possui legendas em nenhum idioma disponível.")
+
+    except (ValueError, LookupError, ConnectionError):
+        raise
+    except YouTubeTranscriptApiException as e:
+        raise ConnectionError(f"Erro na biblioteca do YouTube Transcript: {e}") from e
+    except Exception as e:
+        raise ConnectionError(f"Erro inesperado ao buscar transcrição: {e}") from e
 
 
 def _build_language_priority(
