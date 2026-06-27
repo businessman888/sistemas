@@ -236,18 +236,20 @@
     const navClone = document.getElementById('nav-clone');
     const navBrain = document.getElementById('nav-brain');
     const navOrchestrator = document.getElementById('nav-orchestrator');
+    const navCreativeHub = document.getElementById('nav-creative-hub');
     const moduleYoutube = document.getElementById('module-youtube');
     const moduleSocialMedia = document.getElementById('module-social-media');
     const moduleClone = document.getElementById('module-clone');
     const moduleBrain = document.getElementById('module-brain');
     const moduleOrchestrator = document.getElementById('module-orchestrator');
+    const moduleCreativeHub = document.getElementById('module-creative-hub');
 
     // Troca de módulo na Sidebar
     function switchModule(activeNav, activeModule) {
-        [navYoutube, navSocialMedia, navClone, navBrain, navOrchestrator].forEach(nav => {
+        [navYoutube, navSocialMedia, navClone, navBrain, navOrchestrator, navCreativeHub].forEach(nav => {
             if (nav) nav.classList.remove('active');
         });
-        [moduleYoutube, moduleSocialMedia, moduleClone, moduleBrain, moduleOrchestrator].forEach(mod => {
+        [moduleYoutube, moduleSocialMedia, moduleClone, moduleBrain, moduleOrchestrator, moduleCreativeHub].forEach(mod => {
             if (mod) mod.style.display = 'none';
         });
         activeNav.classList.add('active');
@@ -257,10 +259,10 @@
             activeModule.style.display = 'block';
         }
 
-        // Toggle wide layout for Orchestrator or Brain
+        // Toggle wide layout for Orchestrator, Brain or Creative Hub
         const osContent = document.querySelector('.os-content');
         if (osContent) {
-            if (activeModule === moduleOrchestrator || activeModule === moduleBrain) {
+            if (activeModule === moduleOrchestrator || activeModule === moduleBrain || activeModule === moduleCreativeHub) {
                 osContent.classList.add('wide-layout');
             } else {
                 osContent.classList.remove('wide-layout');
@@ -297,6 +299,45 @@
             loadProjects();
         });
     }
+
+    if (navCreativeHub) {
+        navCreativeHub.addEventListener('click', () => {
+            switchModule(navCreativeHub, moduleCreativeHub);
+        });
+    }
+
+    // --- Lógica do Modal do Creative Hub ---
+    const creativeHubOverlay = document.getElementById('creative-hub-overlay');
+    const creativeTemplates = document.getElementById('creative-templates');
+    const creativeModalTitle = document.getElementById('creative-modal-title');
+    const creativeModalMeta = document.getElementById('creative-modal-meta');
+    const creativeModalBody = document.getElementById('creative-modal-body');
+
+    window.openCreativeModal = function(id) {
+        if (!creativeTemplates || !creativeModalTitle || !creativeModalMeta || !creativeModalBody || !creativeHubOverlay) return;
+        const tpl = creativeTemplates.querySelector(`[data-tpl="${id}"]`);
+        if (!tpl) return;
+
+        creativeModalTitle.textContent = tpl.getAttribute('data-title') || '';
+        creativeModalMeta.innerHTML = tpl.getAttribute('data-meta') || '';
+        creativeModalBody.innerHTML = tpl.innerHTML;
+
+        creativeHubOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeCreativeModal = function() {
+        if (!creativeHubOverlay) return;
+        creativeHubOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+    };
+
+    // Fechar ao pressionar Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            window.closeCreativeModal();
+        }
+    });
 
 
     // Troca de abas secundárias (sub-tabs)

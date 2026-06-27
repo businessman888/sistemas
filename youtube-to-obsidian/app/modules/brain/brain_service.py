@@ -189,9 +189,37 @@ async def synthesize_vault_knowledge() -> str:
         
         return synthesis_content
 
+def _get_title_overlap(query: str, title: str) -> float:
+    import re
+    import unicodedata
+    
+    def normalize(text: str) -> List[str]:
+        text = text.lower()
+        text = "".join(c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')
+        text = re.sub(r'[^a-z0-9\s]', ' ', text)
+        words = text.split()
+        # Filtrar partículas gramaticais muito comuns
+        stopwords = {
+            'o', 'a', 'os', 'as', 'um', 'uma', 'uns', 'umas', 'de', 'do', 'da', 'dos', 'das',
+            'em', 'no', 'na', 'nos', 'nas', 'para', 'por', 'com', 'sem', 'sob', 'sobre',
+            'e', 'ou', 'mas', 'que', 'se', 'como', 'the', 'and', 'or', 'to', 'of', 'in', 'on',
+            'at', 'with', 'by', 'for', 'from', 'about', 'an'
+        }
+        return [w for w in words if len(w) > 2 and w not in stopwords]
+        
+    query_words = set(normalize(query))
+    title_words = set(normalize(title))
+    
+    if not title_words:
+        return 0.0
+        
+    overlap = title_words.intersection(query_words)
+    return len(overlap) / len(title_words)
+
 def perform_rag_search(query: str, notes: List[Dict[str, Any]], top_k: int, min_similarity: float) -> List[Tuple[Dict[str, Any], float]]:
     """
     Calcula similaridade TF-IDF entre a query e as notas do vault.
+    Aplica um boost de similaridade se palavras significativas do título da nota estiverem na query.
     Retorna uma lista ordenada de tuplas (nota, score).
     """
     if not notes:
@@ -209,17 +237,24 @@ def perform_rag_search(query: str, notes: List[Dict[str, Any]], top_k: int, min_
         # Calcula similaridade cosseno
         similarities = cosine_similarity(query_vec, tfidf_matrix).flatten()
         
-        # Ordena por similaridade decrescente
-        top_indices = np.argsort(similarities)[::-1]
-        
         results = []
-        for idx in top_indices:
-            score = float(similarities[idx])
+        for idx, note in enumerate(notes):
+            base_score = float(similarities[idx])
+            
+            # Boost por sobreposição de termos do título
+            overlap_ratio = _get_title_overlap(query, note['title'])
+            if overlap_ratio >= 0.5:
+                # Se pelo menos 50% das palavras do título estão na query, eleva o score
+                score = max(base_score, overlap_ratio)
+            else:
+                score = base_score
+                
             if score >= min_similarity:
-                results.append((notes[idx], score))
-                if len(results) >= top_k:
-                    break
-        return results
+                results.append((note, score))
+                
+        # Ordena por similaridade decrescente
+        results.sort(key=lambda x: x[1], reverse=True)
+        return results[:top_k]
     except Exception as e:
         logger.exception("Erro ao executar similaridade TF-IDF no RAG: %s", e)
         return []

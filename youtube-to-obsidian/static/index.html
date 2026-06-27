@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/style.css?v=1.3.0">
+    <link rel="stylesheet" href="/static/style.css?v=1.4.0">
     <link rel="icon" href="/static/assets/oyto-o.svg" type="image/svg+xml">
 </head>
 <body>
@@ -46,6 +46,10 @@
                     <button class="nav-item" id="nav-orchestrator">
                         <span class="material-symbols-outlined nav-icon">apps</span>
                         <span>Orquestrador</span>
+                    </button>
+                    <button class="nav-item" id="nav-creative-hub">
+                        <span class="material-symbols-outlined nav-icon">palette</span>
+                        <span>Creative Hub</span>
                     </button>
                     <!-- Add new modules here in the future -->
                 </div>
@@ -655,6 +659,289 @@
                     </div>
                 </div>
             </div>
+            <!-- Creative Hub Module Content -->
+            <div class="module-content" id="module-creative-hub" style="display: none;">
+                <header class="module-header">
+                    <h2><span class="material-symbols-outlined nav-icon" style="font-size: 2rem; vertical-align: middle;">palette</span> Creative Hub</h2>
+                    <p class="module-subtitle">Planejamento criativo completo e central de roteiros da RunEasy</p>
+                </header>
+
+                <section class="creative-hero">
+                    <div class="creative-hero-desc">
+                        <p class="creative-eyebrow"><span class="creative-tick"></span> Central de conteúdo · todas as redes · clique em cada formato</p>
+                        <p class="creative-sub">Tudo que a RunEasy vai produzir, num lugar só. Clique em qualquer formato pra ver os <strong>roteiros completos, beat a beat</strong> — não apenas os títulos. Embaixo: o calendário da semana com horários e a rotina diária de quem toca as redes. Norte de tudo: <strong>conversão em download e fidelidade — não views vazias.</strong></p>
+                    </div>
+                    <div class="creative-hero-stats">
+                        <div class="stat-card"><div class="stat-num">11</div><div class="stat-label">formatos<br>mapeados</div></div>
+                        <div class="stat-card"><div class="stat-num">54</div><div class="stat-label">roteiros/peças<br>completos</div></div>
+                        <div class="stat-card"><div class="stat-num">7 dias</div><div class="stat-label">calendário com<br>horário &amp; frequência</div></div>
+                        <div class="stat-card"><div class="stat-num">1 norte</div><div class="stat-label">download<br>&amp; retenção</div></div>
+                    </div>
+                </section>
+
+                <section class="creative-section">
+                    <div class="creative-kicker"><span class="kicker-dot"></span> regras da casa · valem pra todo post</div>
+                    <h3 class="section-title">3 regras inegociáveis</h3>
+                    <div class="rules-grid">
+                        <div class="rule-card">
+                            <div class="rule-num">Regra 01 · identidade</div>
+                            <div class="rule-title">A paleta é a do app</div>
+                            <p>Azul RunEasy, azul escuro, preto e branco. O feed tem que parecer o produto. Outras cores são <strong>exceção pontual</strong> — ex.: o semáforo verde/âmbar/vermelho só aparece <em>dentro do print do app</em>, nunca como fundo do post.</p>
+                            <div class="color-swatches"><i style="background:#1CB5D6"></i><i style="background:#0C2236"></i><i style="background:#070C11"></i><i style="background:#FFFFFF"></i></div>
+                        </div>
+                        <div class="rule-card rule-warn">
+                            <div class="rule-num">Regra 02 · compliance</div>
+                            <div class="rule-title">Nunca prometer "evita lesão"</div>
+                            <p>Não há prova validada disso — então <strong>nenhum post afirma</strong> que a RunEasy previne ou evita lesões. Pode comunicar o benefício real: treinar com dado, saber quando forçar ou pegar leve, parar de adivinhar, ouvir o corpo. A conclusão fica na cabeça de quem vê — sem a gente escrever.</p>
+                        </div>
+                        <div class="rule-card">
+                            <div class="rule-num">Regra 03 · norte</div>
+                            <div class="rule-title">Conversão &gt; viralização</div>
+                            <p>View sem download não paga conta. Todo post tem uma função no funil (veja a Bússola no fim). O produto aparece nos primeiros segundos, e todo conteúdo aponta — direto ou indireto — pra baixar e <strong>continuar usando</strong>.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="creative-section">
+                    <div class="creative-kicker"><span class="kicker-dot"></span> mapa de formatos · clique pra abrir os roteiros</div>
+                    <h3 class="section-title">Todos os formatos</h3>
+                    <p class="creative-sec-desc">Cada card é um formato. Clique e veja os roteiros/peças <strong>na íntegra</strong> — beat a beat, slide a slide — com o ângulo de conversão de cada um.</p>
+
+                    <div class="format-group-title">Vídeo curto · o alcance</div>
+                    <div class="format-cards-grid">
+                        <div class="format-card" onclick="openCreativeModal('virais')">
+                            <span class="format-badge">Reels · TikTok</span>
+                            <div class="format-icon">🎬</div>
+                            <h4 class="format-name">Virais</h4>
+                            <p class="format-desc">Roteiros de loop aberto e arquétipos virais. O anzol pra estranho.</p>
+                            <div class="format-foot"><span class="format-count">15 roteiros</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('organicos')">
+                            <span class="format-badge">Reels · TikTok</span>
+                            <div class="format-icon">🌱</div>
+                            <h4 class="format-name">Orgânicos</h4>
+                            <p class="format-desc">História antes de feature. O app aparece natural, sem cara de anúncio.</p>
+                            <div class="format-foot"><span class="format-count">15 roteiros</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('influ')">
+                            <span class="format-badge">Influencers</span>
+                            <div class="format-icon">🤝</div>
+                            <h4 class="format-name">Vídeos c/ Criadores</h4>
+                            <p class="format-desc">Embaixadores e criadores de volume replicando formatos validados.</p>
+                            <div class="format-foot"><span class="format-count">sistema</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('trends')">
+                            <span class="format-badge">TikTok</span>
+                            <div class="format-icon">🔥</div>
+                            <h4 class="format-name">Trends</h4>
+                            <p class="format-desc">Mineração diária do que está viral + encaixe da RunEasy no contexto.</p>
+                            <div class="format-foot"><span class="format-count">sistema diário</span><span class="format-action">ver →</span></div>
+                        </div>
+                    </div>
+
+                    <div class="format-group-title">Estático &amp; carrossel · a prova e a marca</div>
+                    <div class="format-cards-grid">
+                        <div class="format-card" onclick="openCreativeModal('estaticos')">
+                            <span class="format-badge">Instagram</span>
+                            <div class="format-icon">🖼️</div>
+                            <h4 class="format-name">Posts Estáticos</h4>
+                            <p class="format-desc">Card de dado, frase de marca, prova de tela. Na paleta do app.</p>
+                            <div class="format-foot"><span class="format-count">10 prontos</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('carrosseis')">
+                            <span class="format-badge">Instagram</span>
+                            <div class="format-icon">↔️</div>
+                            <h4 class="format-name">Carrosséis</h4>
+                            <p class="format-desc">O formato que mais salva e educa. Slide a slide já escrito.</p>
+                            <div class="format-foot"><span class="format-count">6 prontos</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('phototiktok')">
+                            <span class="format-badge">TikTok</span>
+                            <div class="format-icon">📸</div>
+                            <h4 class="format-name">Photo / Carrossel TT</h4>
+                            <p class="format-desc">Reaproveita os carrosséis do IG no photo mode do TikTok.</p>
+                            <div class="format-foot"><span class="format-count">reuso</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('shorts')">
+                            <span class="format-badge">YouTube</span>
+                            <div class="format-icon">▶️</div>
+                            <h4 class="format-name">YouTube Shorts</h4>
+                            <p class="format-desc">Captura intenção de compra ("melhor app de corrida 2026").</p>
+                            <div class="format-foot"><span class="format-count">reuso + 3</span><span class="format-action">ver →</span></div>
+                        </div>
+                    </div>
+
+                    <div class="format-group-title">Stories · o relacionamento diário</div>
+                    <div class="format-cards-grid">
+                        <div class="format-card" onclick="openCreativeModal('storiesinflu')">
+                            <span class="format-badge">Influencers</span>
+                            <div class="format-icon">📲</div>
+                            <h4 class="format-name">Stories de Criador</h4>
+                            <p class="format-desc">Sagas roteirizadas pros embaixadores (dias ou 1 mês inteiro).</p>
+                            <div class="format-foot"><span class="format-count">10 prontos</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('storiesruneasy')">
+                            <span class="format-badge">IG RunEasy</span>
+                            <div class="format-icon">⭕</div>
+                            <h4 class="format-name">Stories da Marca</h4>
+                            <p class="format-desc">Conta oficial: ritual do sinal, enquetes, UGC, tutoriais, link.</p>
+                            <div class="format-foot"><span class="format-count">8 novos</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('x')">
+                            <span class="format-badge">X / Twitter</span>
+                            <div class="format-icon">🧵</div>
+                            <h4 class="format-name">Threads</h4>
+                            <p class="format-desc">Autoridade e PR. Opinião forte que vira matéria/pauta.</p>
+                            <div class="format-foot"><span class="format-count">3 ângulos</span><span class="format-action">ver →</span></div>
+                        </div>
+                        <div class="format-card" onclick="openCreativeModal('ugc')">
+                            <span class="format-badge">Comunidade</span>
+                            <div class="format-icon">💬</div>
+                            <h4 class="format-name">UGC &amp; Comunidade</h4>
+                            <p class="format-desc">Desafio com hashtag, repost de usuário, Reddit, assessorias.</p>
+                            <div class="format-foot"><span class="format-count">canais</span><span class="format-action">ver →</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="creative-section">
+                    <div class="creative-kicker"><span class="kicker-dot"></span> calendário · semana padrão</div>
+                    <h3 class="section-title">A semana, hora a hora</h3>
+                    <p class="creative-sec-desc">Cadência sustentável pra 1 pessoa: <strong>~1 post de feed/dia, 3–4 stories/dia, 3 TikToks/semana, 2 vídeos/semana</strong>. Horários pensados pra rotina de corredor: cedo (pré/pós treino), almoço e noite. Ajuste após 2–3 semanas vendo seus próprios insights.</p>
+                    <div class="table-container" style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Dia</th>
+                                    <th>06–08h · manhã</th>
+                                    <th>12–13h · almoço</th>
+                                    <th>18–21h · noite</th>
+                                    <th>Stories (3–4×/dia)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Seg</strong></td>
+                                    <td><span class="creative-empty">—</span></td>
+                                    <td><span class="creative-pill pill-car">Carrossel</span><div class="table-desc">Educação · "5 sinais"</div></td>
+                                    <td><span class="creative-pill pill-tt">TikTok trend</span><div class="table-desc">do dia</div></td>
+                                    <td><div class="table-desc">Enquete "seu sinal hoje 🟢🟡🔴" + bastidor</div></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ter</strong></td>
+                                    <td><span class="creative-pill pill-vid">Reels orgânico</span><div class="table-desc">rotina 5h</div></td>
+                                    <td><span class="creative-pill pill-est">Estático</span><div class="table-desc">Prova · feedback coach</div></td>
+                                    <td><span class="creative-empty">—</span></td>
+                                    <td><div class="table-desc">Caixa de pergunta + repost UGC</div></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Qua</strong></td>
+                                    <td><span class="creative-empty">—</span></td>
+                                    <td><span class="creative-pill pill-car">Carrossel</span><div class="table-desc">Prova · "decidir em 20s"</div></td>
+                                    <td><span class="creative-pill pill-tt">TikTok trend</span><div class="table-desc">do dia</div></td>
+                                    <td><div class="table-desc">Tutorial check-in (3 frames) + enquete</div></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Qui</strong></td>
+                                    <td><span class="creative-pill pill-vid">Reels viral</span><div class="table-desc">do banco</div></td>
+                                    <td><span class="creative-pill pill-est">Estático</span><div class="table-desc">Identidade · frase de marca</div></td>
+                                    <td><span class="creative-empty">—</span></td>
+                                    <td><div class="table-desc">Repost UGC + bastidor do dia</div></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sex</strong></td>
+                                    <td><span class="creative-empty">—</span></td>
+                                    <td><span class="creative-pill pill-est">Estático</span><div class="table-desc">Educação · mito vs verdade</div></td>
+                                    <td><span class="creative-pill pill-inf">Vídeo influencer</span><div class="table-desc">entrega da semana</div></td>
+                                    <td><div class="table-desc">Mito ou verdade (enquete) + link do app</div></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sáb</strong></td>
+                                    <td><span class="creative-pill pill-vid">Reels day-in-life</span><div class="table-desc">9h</div></td>
+                                    <td><span class="creative-pill pill-car">Carrossel</span><div class="table-desc">Iniciante · "começando a correr"</div></td>
+                                    <td><span class="creative-pill pill-tt">TikTok trend</span><div class="table-desc">do dia</div></td>
+                                    <td><div class="table-desc">Stories da corrida do dia (real)</div></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Dom</strong></td>
+                                    <td><span class="creative-empty">—</span></td>
+                                    <td><span class="creative-pill pill-story">Post aspiracional</span><div class="table-desc">11h · frase</div></td>
+                                    <td><span class="creative-empty">— (planejar semana)</span></td>
+                                    <td><div class="table-desc">Atualização da saga + prévia da semana</div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="creative-note-box" style="margin-top: 16px;">
+                        <span class="material-symbols-outlined note-icon">info</span>
+                        <p><strong>Por que esses horários:</strong> Corredor está no celular cedo (antes/depois de correr), no almoço e à noite. Sinal do dia de manhã, educação no almoço (tempo de ler/salvar), entretenimento/trend à noite (scroll de descanso).</p>
+                    </div>
+                </section>
+
+                <section class="creative-section">
+                    <div class="creative-kicker"><span class="kicker-dot"></span> operação · quem toca as redes</div>
+                    <h3 class="section-title">Rotina do orquestrador</h3>
+                    <p class="creative-sec-desc">Produzir arte e gravar vídeo é só metade do trabalho. A outra metade — a que gera ideias certeiras e conversão — é <strong>escutar o público e alimentar o relacionamento</strong>.</p>
+                    <div class="routine-grid">
+                        <div class="routine-card">
+                            <h4 class="routine-title">Todo dia</h4>
+                            <div class="routine-sub">~60–90 min, fora produção</div>
+                            <ul class="routine-list">
+                                <li><strong>Mineração de trend (10 min)</strong> <span class="platform-tag">TikTok</span> — rolar o FYP de corrida/fitness, salvar sons em alta e formatos que se repetem. Janela de uso: 48h.</li>
+                                <li><strong>Mineração de dor (15 min)</strong> <span class="platform-tag">Reddit/grupos</span> — r/corredores, r/running, r/C25K, grupos de WhatsApp/Facebook. Copiar <em>frases exatas</em> que descrevem dores e desejos pro banco de hooks.</li>
+                                <li><strong>Engajamento (20 min)</strong> — responder TODO comentário e DM, em especial os "que app é esse?". Conversa puxa alcance e converte curioso.</li>
+                                <li><strong>Repost de UGC</strong> — qualquer um que marcou a RunEasy vai pro story. Prova social grátis + incentiva mais gente a postar.</li>
+                                <li><strong>1 peça produzida</strong> — alternar: 1 arte OU gravar 1 vídeo OU editar. Não tudo no mesmo dia.</li>
+                            </ul>
+                        </div>
+                        <div class="routine-card">
+                            <h4 class="routine-title">Toda semana / mês</h4>
+                            <div class="routine-sub">planejamento &amp; escala</div>
+                            <ul class="routine-list">
+                                <li><strong>Briefar criadores (sem)</strong> — mandar 1–2 roteiros do banco pros embaixadores; cobrar entregas; repostar o melhor.</li>
+                                <li><strong>Revisar 3 números (sem)</strong> — salvamentos, cliques na bio → instalações, e volume de "que app é esse?". Cortar o que não converte.</li>
+                                <li><strong>Atualizar banco de hooks (sem)</strong> — transformar as dores mineradas em 5 novas ideias de post/roteiro.</li>
+                                <li><strong>Planejar a semana (dom)</strong> — encaixar peças no calendário, escolher a trend-âncora.</li>
+                                <li><strong>Achar o formato validado (mês)</strong> — o que é viral + reproduzível + <em>converte</em>. Dobrar nele e escalar com criadores.</li>
+                                <li><strong>Parcerias (mês)</strong> — fechar 2–3 assessorias/clubes de corrida (distribuição B2B2C de alta confiança).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="creative-section">
+                    <div class="creative-kicker"><span class="kicker-dot"></span> o norte · cada formato tem um trabalho</div>
+                    <h3 class="section-title">Bússola de conversão</h3>
+                    <p class="creative-sec-desc">Antes de postar, pergunte: <strong>que etapa do funil esse post serve?</strong> Se a resposta é "nenhuma, mas pode viralizar" — repense. Views sem função no funil são vaidade.</p>
+                    <div class="funnel-grid">
+                        <div class="funnel-stage stage-1">
+                            <div class="stage-h">Atrair</div>
+                            <div class="stage-sub">topo · estranho</div>
+                            <p>Trends, virais, day-in-life. Param o dedo e apresentam a marca.</p>
+                            <div class="stage-metric">métrica: alcance, views &gt;3s</div>
+                        </div>
+                        <div class="funnel-stage stage-2">
+                            <div class="stage-h">Convencer</div>
+                            <div class="stage-sub">meio · curioso</div>
+                            <p>Carrosséis de educação/prova, estáticos de dado, stories de utilidade.</p>
+                            <div class="stage-metric">métrica: salvamentos, seguidores, visitas ao perfil</div>
+                        </div>
+                        <div class="funnel-stage stage-3">
+                            <div class="stage-h">Converter</div>
+                            <div class="stage-sub">fundo · decidido</div>
+                            <p>CTA posts, comparativos, carrossel de lançamento, link na bio e sticker de link.</p>
+                            <div class="stage-metric">métrica: cliques na bio → instalações</div>
+                        </div>
+                        <div class="funnel-stage stage-4">
+                            <div class="stage-h">Fidelizar</div>
+                            <div class="stage-sub">pós · usuário</div>
+                            <p>UGC, gamificação (patente/ranking), desafio de 30 dias, ritual do sinal nos stories.</p>
+                            <div class="stage-metric">métrica: ordem de retenção, recompartilhamento, volta ao app</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
         </main>
     </div>
 
@@ -751,6 +1038,600 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=1.3.0"></script>
+    
+    <!-- Modal: Creative Hub Roteiros -->
+    <div id="creative-hub-overlay" class="os-modal-overlay" style="display: none;" onclick="if(event.target===this)closeCreativeModal()">
+        <div class="creative-modal-card">
+            <div class="creative-modal-header">
+                <div>
+                    <h3 id="creative-modal-title">Título do Formato</h3>
+                    <div id="creative-modal-meta" class="creative-modal-meta">Metadados</div>
+                </div>
+                <button class="btn-close-modal" onclick="closeCreativeModal()" aria-label="Fechar"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="creative-modal-body" id="creative-modal-body">
+                <!-- Conteúdo do roteiro injetado aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates do Creative Hub -->
+    <div id="creative-templates" style="display:none">
+        <div data-tpl="virais" data-title="Reels &amp; TikTok — Virais" data-meta="15 roteiros completos · <b>arquétipos virais + loop aberto</b>">
+  <div class="conv"><b>Função no funil</b> Atrair · o produto entra nos 3 primeiros segundos; "prova vence elogio". Legenda sempre queimada (85% assistem sem som).</div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 01 · história + demo "herói resolve problema"</div><div class="sc-t">Eu desisti de correr — até um amigo me mostrar isso</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels · Shorts</span><span><b>Duração:</b> 35–45s</span><span><b>Formato:</b> talking head + demo</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · quebra de padrão visual</div><div class="hk-line">Close no pé amarrando o tênis <span class="hot">pelo calcanhar</span> — a câmera sobe até o rosto: "Eu já desisti de correr uma vez. E quase não voltei."</div><div class="chips"><span class="c2">Quebra de padrão</span><span class="c2">Loop aberto</span><span class="c2 e">Redenção</span><span class="c2">Demo</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Câmera baixa, close estranho no calcanhar amarrando o tênis. Sobe até o rosto.</p><p class="vo"><b>FALA:</b> "Eu já desisti de correr uma vez — e quase não voltei."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:14<br><span class="tg">Conflito</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Comecei animado, sem saber nada. Forcei demais, me machuquei, e parei. Faltava alguém me dizer COMO treinar sem me destruir."</p><p class="dir">Jump cuts; b-roll de tênis guardado encostado.</p></div></div>
+    <div class="bt"><div class="tc">0:14–0:22<br><span class="tg">Virada</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Aí um amigo me mostrou um app com um check-in de prontidão: ele me diz quando posso treinar forte, quando pegar leve e quando é dia de recuperar."</p></div></div>
+    <div class="bt"><div class="tc">0:22–0:35<br><span class="tg wow">Wow / demo</span></div><div class="bb"><p class="dir">Corte: terminando a corrida, ofegante. Foca no celular.</p><p class="vo"><b>FALA:</b> "Olha aqui: acabaram meus 5km, e no celular eu tenho o feedback do meu coach inteligente sobre o desempenho e o que melhorar. E o mais interessante: o relatório de prontidão de hoje me deu sinal verde."</p><p class="os">LEGENDA: "✅ Prontidão alta — pode treinar"</p></div></div>
+    <div class="bt"><div class="tc">0:35–0:43<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Semana passada esse app até me mandou pegar leve, pra eu recuperar melhor. Tá na Google Play e na App Store e dá pra começar grátis. Eu não perderia essa. Valeu."</p><p class="dir">Sai caminhando, distanciando. Corte seco.</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>A quebra de padrão segura o dedo antes da fala; o loop ("quase não voltei") só fecha na virada; a demo é "prova vence elogio".</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 02 · confissão contraintuitiva</div><div class="sc-t">Esse app me proibiu de treinar ontem</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 25–35s</span><span><b>Formato:</b> POV, câmera frontal</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · loop aberto + contraintuitivo</div><div class="hk-line">"Esse app de corrida me proibiu de treinar ontem. E o motivo <span class="hot">me fez agradecer por ele existir.</span>"</div><div class="chips"><span class="c2">Loop aberto</span><span class="c2 r">Contraintuitivo</span><span class="c2">Vulnerabilidade</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:03<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">De roupa de corrida, prestes a sair. Para e olha pra câmera.</p><p class="vo"><b>FALA:</b> "Esse app me proibiu de treinar ontem — e o motivo me fez agradecer."</p></div></div>
+    <div class="bt"><div class="tc">0:03–0:12<br><span class="tg">Tensão</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Eu tava decidido a fazer 10km. Aí abri o check-in de prontidão, respondi sobre sono, energia, dor muscular…"</p><p class="dir">Mostra o quiz rápido na tela.</p></div></div>
+    <div class="bt"><div class="tc">0:12–0:22<br><span class="tg wow">Payoff</span></div><div class="bb"><p class="os">LEGENDA: "⚠️ Hoje não — seu corpo está em recuperação"</p><p class="vo"><b>FALA:</b> "Ele cruzou meu sono do relógio com a carga da semana e disse: hoje não. Eu tava forçando sem perceber."</p></div></div>
+    <div class="bt"><div class="tc">0:22–0:32<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Descansei. Hoje voltei voando. Um app que às vezes te manda parar é o que faltava. Tá grátis na App Store e Play — link na bio."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>"App de corrida que proíbe de correr" quebra a expectativa e o loop "me fez agradecer" só fecha aos 12s. Curto, fechado, alto índice de reassistir.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 03 · opinião polêmica (isca de comentário)</div><div class="sc-t">Não fui correr na chuva (o povo vai me xingar)</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels</span><span><b>Duração:</b> 30–40s</span><span><b>Formato:</b> esteira, app sincronizado</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · polêmico / isca de julgamento</div><div class="hk-line">Na esteira: "Não fui correr na rua hoje porque tá chovendo e eu <span class="hot">tenho medo de pegar gripe.</span> Pode me xingar nos comentários."</div><div class="chips"><span class="c2 r">Polêmico</span><span class="c2 r">Isca de comentário</span><span class="c2">Reviravolta</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Correndo na esteira, tom provocador, meio sorrindo.</p><p class="vo"><b>FALA:</b> "Não fui pra rua na chuva porque tenho medo de gripe. Já pode comentar 'frescura'."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:14<br><span class="tg twist">Reviravolta</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Brincadeira. O motivo real é melhor: meu app marcou hoje como dia de treino leve, e a esteira tá sincronizada com ele em tempo real."</p><p class="dir">Mostra a tela do app registrando a esteira.</p></div></div>
+    <div class="bt"><div class="tc">0:14–0:26<br><span class="tg wow">Wow</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Ele lê meu ritmo e minha frequência aqui dentro igual lê lá fora, e ajusta a intensidade ao que meu corpo aguenta hoje. Correr no automático é o que atrapalha."</p></div></div>
+    <div class="bt"><div class="tc">0:26–0:36<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Treinar com cabeça &gt; treinar com teimosia. App grátis na bio. (E sim, continua me xingando, ajuda o vídeo.)"</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>A frase polêmica é isca calculada: gera comentário (sinal de alcance). A reviravolta aos 5s converte a "frescura" em treino inteligente. <em>Cuidado:</em> mantenha o "medo de gripe" como brincadeira; não afirme que chuva causa gripe.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 04 · antes/depois (skincare, emagrecimento)</div><div class="sc-t">Dia 1 vs Dia 90 correndo com uma IA</div><div class="sc-m"><span><b>Plataforma:</b> Reels · Shorts · TikTok</span><span><b>Duração:</b> 30–40s</span><span><b>Formato:</b> split screen / montagem com datas</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · resultado primeiro</div><div class="hk-line">Tela dividida: à esquerda, ofegante andando; à direita, correndo leve. "<span class="hot">Mesma pessoa. 90 dias de diferença.</span> Sem treinar mais — treinando certo."</div><div class="chips"><span class="c2">Resultado primeiro</span><span class="c2">Lacuna de curiosidade</span><span class="c2 e">Transformação</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="os">LEGENDA: "DIA 1  ·  DIA 90"</p><p class="vo"><b>VOZ:</b> "Mesma pessoa, 90 dias depois — e eu corri MENOS do que você imagina."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:14<br><span class="tg">Processo</span></div><div class="bb"><p class="dir">Montagem de telas: relatórios verde/amarelo/vermelho ao longo das semanas.</p><p class="vo"><b>VOZ:</b> "O app decidia a intensidade de cada dia. Dia ruim de sono? Treino leve. Recuperado? Podia forçar."</p></div></div>
+    <div class="bt"><div class="tc">0:14–0:26<br><span class="tg wow">Prova</span></div><div class="bb"><p class="dir">Tela do gráfico de evolução de pace/FC.</p><p class="vo"><b>VOZ:</b> "Resultado: meu pace caiu, a frequência cardíaca no mesmo ritmo despencou. Descanso na hora certa também é treino."</p></div></div>
+    <div class="bt"><div class="tc">0:26–0:36<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>VOZ:</b> "Se você treina todo dia e não evolui, o problema não é esforço. Link na bio, começa grátis."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Antes/depois responde "isso funciona pra mim?" — o formato de maior conversão em fitness. O resultado vem nos 3s e a curiosidade "corri menos?" segura até a prova.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 05 · POV com reviravolta (dating — Muzz)</div><div class="sc-t">POV: você jura que vai largar a corrida hoje</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels</span><span><b>Duração:</b> 25–35s</span><span><b>Formato:</b> POV encenado, reviravolta no fim</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · POV / tensão</div><div class="hk-line">Pessoa jogando o tênis no chão, frustrada: "<span class="hot">Chega. Corro há meses e só pioro. Tô fora.</span>" (POV: você é o amigo filmando.)</div><div class="chips"><span class="c2 p">POV / reviravolta</span><span class="c2">Tensão emocional</span><span class="c2">Prova social</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:06<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Drama real: pessoa sentada, exausta, jogando o tênis. Câmera tremida, POV de quem filma.</p><p class="vo"><b>PERSONAGEM:</b> "Eu corro há meses e só fico mais cansado. Acho que corrida não é pra mim."</p></div></div>
+    <div class="bt"><div class="tc">0:06–0:16<br><span class="tg twist">Reviravolta</span></div><div class="bb"><p class="vo"><b>VOZ (quem filma):</b> "Cara… você não tá correndo errado, você tá correndo SEM informação. Baixa esse app aqui."</p><p class="dir">Vira o celular mostrando o relatório de prontidão.</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:26<br><span class="tg wow">Prova social</span></div><div class="bb"><p class="vo"><b>VOZ:</b> "Ele te diz quando treinar e quando descansar, com os teus dados. Tem gente que voltou a amar correr por causa disso."</p><p class="os">LEGENDA: "milhares de corredores treinando no ritmo certo"</p></div></div>
+    <div class="bt"><div class="tc">0:26–0:34<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>VOZ:</b> "Antes de desistir, testa. É grátis. Link na bio."</p><p class="dir">O personagem pega o tênis de novo, meio sorrindo.</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Bait-and-switch do anúncio viral do Muzz: começa como mini-drama e vira o produto no susto, com prova social. A tensão dos 0–6s é o que prende.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 06 · day-in-the-life (lifestyle)</div><div class="sc-t">5h12. A rotina de quem leva a corrida a sério</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 30–45s</span><span><b>Formato:</b> vlog estético, app na rotina</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · aspiracional + lacuna</div><div class="hk-line">Despertador, 5h12, quarto escuro. "<span class="hot">Antes de calçar o tênis, eu faço uma pergunta de 20 segundos</span> que mudou a minha corrida."</div><div class="chips"><span class="c2">Lacuna de curiosidade</span><span class="c2 e">Aspiracional</span><span class="c2">Lifestyle</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">B-roll cinematográfico: despertador 5h12, café, luz da manhã.</p><p class="vo"><b>VOZ:</b> "Antes de calçar o tênis, eu faço uma pergunta de 20 segundos que mudou tudo."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:16<br><span class="tg wow">Reveal</span></div><div class="bb"><p class="dir">Abre o app, responde o check-in de prontidão.</p><p class="vo"><b>VOZ:</b> "Eu pergunto ao app como meu corpo tá. Ele cruza meu sono, minha frequência e a semana, e decide o treino de hoje por mim."</p><p class="os">LEGENDA: "Prontidão: moderada → treino leve"</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:30<br><span class="tg">Rotina</span></div><div class="bb"><p class="dir">Corrida no nascer do sol, ritmo tranquilo, sorriso.</p><p class="vo"><b>VOZ:</b> "Hoje ele mandou pegar leve. Antes eu forçaria e pagaria caro depois. Agora cada treino tem propósito."</p></div></div>
+    <div class="bt"><div class="tc">0:30–0:40<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>VOZ:</b> "Disciplina é treinar certo, não treinar no sacrifício. App na bio, grátis pra começar."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Day-in-the-life vende sem parecer venda: o app aparece "naturalmente" na rotina. A estética aspiracional atrai e a lacuna ("pergunta de 20s") segura até o reveal. Ótimo pra salvar.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 07 · entrevista de rua (finanças, fitness)</div><div class="sc-t">Perguntei a corredores se eles deviam treinar hoje</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels · Shorts</span><span><b>Duração:</b> 30–45s</span><span><b>Formato:</b> entrevista no parque, vox pop</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · pergunta direta</div><div class="hk-line">Microfone na cara de um corredor no parque: "<span class="hot">Como você sabe se HOJE é dia de treinar forte ou descansar?</span>"</div><div class="chips"><span class="c2">Pergunta direta</span><span class="c2">Ignorância relatável</span><span class="c2">Entrevista</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Aborda corredores reais no parque (com consentimento).</p><p class="vo"><b>VOCÊ:</b> "Como você sabe se hoje é dia de treinar forte ou de descansar?"</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:16<br><span class="tg">Respostas</span></div><div class="bb"><p class="dir">Cortes rápidos de respostas hesitantes.</p><p class="os">LEGENDAS: "ah… no feeling" · "se eu tô disposto" · "sei lá kkk"</p><p class="vo"><b>VOZ:</b> "Quase ninguém sabe responder. E é exatamente aí que mora o erro."</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:30<br><span class="tg wow">Reveal</span></div><div class="bb"><p class="vo"><b>VOCÊ:</b> "Esse app responde por você." Mostra o relatório. "Ele cruza sono, frequência e carga e te dá um sinal: treina, pega leve, ou descansa."</p></div></div>
+    <div class="bt"><div class="tc">0:30–0:42<br><span class="tg cta">CTA</span></div><div class="bb"><p class="dir">Volta a um entrevistado vendo o próprio relatório, surpreso.</p><p class="vo"><b>ENTREVISTADO:</b> "Nossa, isso é genial." <b>VOZ:</b> "Grátis na bio. Testa amanhã antes de correr."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>A pergunta interpela quem assiste (responde mentalmente e erra também). A ignorância relatável cria identificação, e o reveal entrega a solução.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 08 · subversão de resultado (feedback do coach)</div><div class="sc-t">Meu treino foi perfeito. Aí a IA me mostrou isto</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 25–35s</span><span><b>Formato:</b> reação pós-treino, celular na mão</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · loop + subversão</div><div class="hk-line">Suado, sorrindo depois de correr: "Achei que tinha feito o treino perfeito hoje. <span class="hot">Aí meu coach de IA me mostrou uma coisa.</span>"</div><div class="chips"><span class="c2">Loop aberto</span><span class="c2">Subversão</span><span class="c2">Demo de prova</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Logo após a corrida, ofegante, feliz.</p><p class="vo"><b>FALA:</b> "Achei que tinha feito o treino perfeito. Aí a IA me mostrou isto."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:16<br><span class="tg wow">Reveal</span></div><div class="bb"><p class="dir">Tela do feedback pós-treino do coach.</p><p class="vo"><b>FALA:</b> "Minha cadência caiu 12% nos últimos 800 metros — eu nem senti. E a IA já me disse exatamente o que treinar amanhã pra corrigir."</p><p class="os">LEGENDA: "Cadência -12% no fim · foco amanhã: tiros curtos"</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:26<br><span class="tg">Contraste</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Outros apps falam 'bom treino, 5km 🎉'. Esse me diz o que eu não vi e como ficar melhor."</p></div></div>
+    <div class="bt"><div class="tc">0:26–0:34<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Não é registrar a corrida. É melhorar a próxima. Link na bio, grátis."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>A subversão "treino perfeito → tinha um problema" abre um loop irresistível. Mostra a feature de feedback (não a de prontidão) — variar a feature evita saturar a audiência.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 09 · demo contraintuitiva (6 wearables)</div><div class="sc-t">Todo app escolhe 1 relógio. Esse funciona com 6</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Shorts</span><span><b>Duração:</b> 25–35s</span><span><b>Formato:</b> demo rápida, vários relógios na mesa</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · contraintuitivo + visual</div><div class="hk-line">Vários relógios na mesa: "Todo app de corrida te obriga a escolher UM relógio. <span class="hot">Esse aqui funciona com todos.</span>"</div><div class="chips"><span class="c2 r">Contraintuitivo</span><span class="c2">Demo rápida</span><span class="c2">Quebra de padrão</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Mesa com Garmin, Apple Watch, Galaxy, Polar, Coros, Fitbit alinhados.</p><p class="vo"><b>FALA:</b> "Você já teve que trocar de app porque mudou de relógio? Esse resolve isso."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:18<br><span class="tg wow">Demo</span></div><div class="bb"><p class="dir">Pega cada relógio e mostra sincronizando — cortes rápidos.</p><p class="vo"><b>FALA:</b> "Garmin, Apple Watch, Galaxy, Polar, Coros, Fitbit — todos conversam com o mesmo coach de IA. Seus dados num lugar só."</p></div></div>
+    <div class="bt"><div class="tc">0:18–0:28<br><span class="tg">Benefício</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Não importa o relógio que você tem — a análise de prontidão e o feedback funcionam igual."</p></div></div>
+    <div class="bt"><div class="tc">0:28–0:34<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Liberdade de escolher o relógio. App grátis na bio."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Ataca uma dor concreta e pouco falada (lock-in de wearable) com afirmação contraintuitiva. O ritmo de demo rápida mostra o moat real do produto.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 10 · problema-solução (foco em iniciantes)</div><div class="sc-t">Os apps famosos não foram feitos pra quem tá começando</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 30–40s</span><span><b>Formato:</b> talking head + telas comparativas</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · contraintuitivo / problema</div><div class="hk-line">"Se você tá começando a correr, os apps mais famosos <span class="hot">não foram feitos pra você</span> — e isso te faz desistir."</div><div class="chips"><span class="c2 r">Contraintuitivo</span><span class="c2">Problema-solução</span><span class="c2">Identificação</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Se você tá começando, os apps mais famosos não foram feitos pra você — e é por isso que muita gente desiste na 1ª semana."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:16<br><span class="tg">Problema</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Eles assumem que você já sabe pace, zona de frequência, volume… O iniciante abre, não entende nada e some."</p><p class="dir">Mostra telas cheias de gráficos confusos (genéricas, sem marca).</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:28<br><span class="tg wow">Solução</span></div><div class="bb"><p class="dir">Abre o RunEasy, interface simples, check-in de prontidão.</p><p class="vo"><b>FALA:</b> "Esse aqui te trata como atleta desde o dia 1: pergunta como você tá e te diz o que fazer hoje, em português de gente. Sem você decifrar nada."</p></div></div>
+    <div class="bt"><div class="tc">0:28–0:38<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Começar a correr não precisa ser confuso. Link na bio, grátis."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Fala direto com o maior público (iniciantes) e nomeia a dor real (intimidação). Mostre telas genéricas no "problema" — sem difamar concorrente, só contrastando clareza.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 11 · relatável + loop (plano que se adapta)</div><div class="sc-t">Dormi 4 horas e meu app refez meu treino sozinho</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels</span><span><b>Duração:</b> 25–35s</span><span><b>Formato:</b> POV manhã cansada</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · relatável + loop</div><div class="hk-line">Cara de sono, café na mão: "Dormi 4 horas, tava estressado, e meu app <span class="hot">mudou meu treino de hoje sozinho.</span> Olha o que ele fez."</div><div class="chips"><span class="c2">Relatável</span><span class="c2">Loop aberto</span><span class="c2">Demo de prova</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Manhã, olheira, voz baixa.</p><p class="vo"><b>FALA:</b> "Dormi 4 horas e meu app refez meu treino sozinho. Olha isso."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:16<br><span class="tg wow">Reveal</span></div><div class="bb"><p class="dir">Tela: o plano que era "intervalado forte" virou "regenerativo leve".</p><p class="vo"><b>FALA:</b> "Era pra ser tiro forte hoje. Mas ele leu meu sono ruim do relógio e trocou por um treino regenerativo — pra eu respeitar o meu dia."</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:26<br><span class="tg">Insight</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Plano fixo ignora a vida real. Esse se molda ao dia que você teve."</p></div></div>
+    <div class="bt"><div class="tc">0:26–0:34<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Treino que entende seu dia. Grátis na bio."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>"Dormi 4 horas" é universal. O loop "olha o que ele fez" entrega rápido, e a adaptação diferencia de planos estáticos.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 12 · dado chocante (saúde/fitness)</div><div class="sc-t">O erro que 7 em cada 10 corredores cometem</div><div class="sc-m"><span><b>Plataforma:</b> Reels · Shorts · TikTok</span><span><b>Duração:</b> 25–35s</span><span><b>Formato:</b> talking head + tela</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · dado chocante + loop</div><div class="hk-line">"7 em cada 10 corredores cometem um erro <span class="hot">antes de calçar o tênis</span> — e não é alongamento."</div><div class="chips"><span class="c2">Dado chocante</span><span class="c2">Loop aberto</span><span class="c2 r">Negação ("não é…")</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="os">LEGENDA: "o erro começa ANTES do treino"</p><p class="vo"><b>FALA:</b> "A maioria dos corredores erra antes de sair de casa. E não é falta de alongamento."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:14<br><span class="tg">Escalada</span></div><div class="bb"><p class="vo"><b>FALA:</b> "É treinar num dia em que o corpo já pedia descanso — e você nem percebeu. Cansaço acumulado não dói até atrapalhar tudo."</p></div></div>
+    <div class="bt"><div class="tc">0:14–0:24<br><span class="tg wow">Solução</span></div><div class="bb"><p class="dir">Abre o check-in de prontidão.</p><p class="vo"><b>FALA:</b> "Por isso eu checo a prontidão antes de treinar. O app cruza sono, frequência e carga e me diz se hoje é dia de forçar ou segurar."</p></div></div>
+    <div class="bt"><div class="tc">0:24–0:33<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Antes do próximo treino, deixa o app decidir. Grátis na bio."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Dado contraintuitivo + negação ("não é alongamento") elimina o palpite óbvio e aprofunda a curiosidade. Use o número como estimativa ilustrativa honesta, não estatística cravada.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 13 · quebra de mito / reação</div><div class="sc-t">Pare de correr todos os dias</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels</span><span><b>Duração:</b> 25–35s</span><span><b>Formato:</b> opinião forte, talking head</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · contraintuitivo / mito</div><div class="hk-line">Olhando firme pra câmera: "<span class="hot">Pare de correr todos os dias.</span> Se você quer evoluir, isso tá te segurando."</div><div class="chips"><span class="c2 r">Quebra de mito</span><span class="c2">Contraintuitivo</span><span class="c2 r">Polêmico</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Pare de correr todos os dias. Sério. Se você quer evoluir, correr todo dia tá te atrapalhando."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:16<br><span class="tg">Argumento</span></div><div class="bb"><p class="vo"><b>FALA:</b> "A evolução não acontece na corrida — acontece na recuperação. Treinar no vermelho todo dia só acumula fadiga e atrasa o progresso."</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:28<br><span class="tg wow">Solução</span></div><div class="bb"><p class="dir">Mostra o relatório de prontidão.</p><p class="vo"><b>FALA:</b> "O segredo é treinar forte no dia certo e descansar no dia certo. Eu não adivinho isso — o app me diz, com base no meu corpo."</p></div></div>
+    <div class="bt"><div class="tc">0:28–0:34<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Menos teimosia, mais estratégia. Link na bio."</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Quebra de mito desafia uma crença forte da comunidade ("correr todo dia é dedicação") → gera comentário e defesa nos dois lados. A polêmica controlada vira alcance.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 14 · unboxing / 1ª impressão (gadgets)</div><div class="sc-t">Baixei o app que tá bombando entre corredores</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels · Shorts</span><span><b>Duração:</b> 30–40s</span><span><b>Formato:</b> 1ª impressão, tela + rosto</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · curiosidade / 1ª impressão</div><div class="hk-line">"Todo mundo no meu grupo de corrida tá falando desse app. <span class="hot">Baixei agora — primeira impressão sem filtro.</span>"</div><div class="chips"><span class="c2">Lacuna de curiosidade</span><span class="c2">Prova social</span><span class="c2">Unboxing</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "O pessoal do meu grupo não para de falar desse app. Baixei agora — bora ver se é hype."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:18<br><span class="tg wow">Onboarding</span></div><div class="bb"><p class="dir">Gravação de tela do onboarding real, reagindo.</p><p class="vo"><b>FALA:</b> "Ele já pergunta meu nível, meu objetivo, se já tive lesão… e olha: antes mesmo de pagar, me mostra um preview do relatório de prontidão. Isso é diferente."</p></div></div>
+    <div class="bt"><div class="tc">0:18–0:30<br><span class="tg">Reação</span></div><div class="bb"><p class="dir">Faz o primeiro check-in.</p><p class="vo"><b>FALA:</b> "Respondi como tô hoje e ele já me deu o treino certo pra agora. Em 1 minuto eu já entendi o valor."</p></div></div>
+    <div class="bt"><div class="tc">0:30–0:38<br><span class="tg cta">CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Veredito: vale o hype. Tá grátis pra testar — link na bio. Depois te conto como foi minha 1ª semana."</p><p class="dir">Abre loop pra um vídeo 2 (sequência).</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Unboxing usa a curiosidade de "ver alguém abrir" + prova social. O preview do relatório no onboarding é "prova vence elogio". O gancho final encadeia uma série.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 15 · loop perfeito / "wait for it"</div><div class="sc-t">Espera o sinal…</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels · Shorts</span><span><b>Duração:</b> 8–15s (loop) · série diária</span><span><b>Formato:</b> ritual rápido, feito pra reassistir</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–2s · teaser de payoff</div><div class="hk-line">Dedo sobre o botão do check-in: "Todo dia eu deixo um app decidir se eu treino. <span class="hot">Espera o sinal de hoje…</span>"</div><div class="chips"><span class="c2">Teaser de payoff</span><span class="c2">Loop perfeito</span><span class="c2 e">Série</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:03<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Todo dia eu deixo um app decidir se eu posso treinar. Espera o sinal de hoje…"</p><p class="dir">Tensão: dedo sobre o botão, respiração.</p></div></div>
+    <div class="bt"><div class="tc">0:03–0:08<br><span class="tg wow">Payoff</span></div><div class="bb"><p class="dir">Toca. A tela revela o veredito.</p><p class="os">LEGENDA: "🟢 SINAL VERDE — pode treinar forte"</p><p class="vo"><b>FALA:</b> "Verde! Hoje pode forçar."</p></div></div>
+    <div class="bt"><div class="tc">0:08–0:12<br><span class="tg cta">Loop/CTA</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Ontem foi vermelho e eu descansei. É isso que me mantém no ritmo certo."</p><p class="dir">O último quadro emenda no primeiro (loop perfeito). Texto fixo: "app na bio".</p></div></div>
+    <div class="sc-why"><b>Por que funciona</b>Curtíssimo = alta taxa de reassistir. O "wait for it" cria micro-loop instantâneo, o veredito muda a cada dia (série infinita e barata), e o loop perfeito infla a visualização. Ideal pra postar diariamente.</div>
+  </div></div>
+
+  <div class="conv"><b>Sistema</b> Teste 1 ângulo por vídeo · leia o gráfico de retenção (queda aos 3s = hook fraco; no meio = falta pattern interrupt) · ache o vencedor antes de escalar criadores · varie os arquétipos · legenda sempre, produto nos 3s, prova &gt; elogio.</div>
+</div>
+<div data-tpl="organicos" data-title="Reels &amp; TikTok — Orgânicos" data-meta="15 roteiros completos · <b>história antes de feature · CTA suave</b>">
+  <div class="conv"><b>Função no funil</b> Atrair → Convencer · o "baixa aí" nunca é dito; a vontade nasce da história. O app é o "como", não o "o quê".</div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 01 · ranking · drama esportivo / rivalidade</div><div class="sc-t">Tem um cara que eu nunca vi que é #1 na minha cidade</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels</span><span><b>Duração:</b> 45–60s (série)</span><span><b>Tom:</b> obsessão esportiva</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–4s · personagem misterioso + tensão</div><div class="hk-line">"Tem um cara que eu <span class="hot">nunca vi na vida</span> que é o número 1 da minha cidade há 3 semanas. Hoje eu decidi que isso acaba."</div><div class="chips"><span class="c2">Lacuna de curiosidade</span><span class="c2">Rivalidade</span><span class="c2 g">Drama esportivo</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:06<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Indo pra rua de roupa de corrida, tom de quem vai pra guerra.</p><p class="vo"><b>FALA:</b> "Tem um cara que eu nunca vi que é o #1 da minha cidade há 3 semanas. 'JR_Runner'. Hoje acaba."</p></div></div>
+    <div class="bt"><div class="tc">0:06–0:18<br><span class="tg">Contexto</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Faz um mês comecei a usar um app que tem ranking dos corredores da sua cidade. Achei que ia ser bobo. Virou a coisa mais competitiva da minha vida. Eu acordo pensando nesse ranking."</p><p class="dir">Mostra a tela do ranking — ele em 2º, JR_Runner em 1º.</p></div></div>
+    <div class="bt"><div class="tc">0:18–0:34<br><span class="tg">Conflito</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Eu tô a 12 pontos dele. Pra passar, preciso de uns 8km hoje num pace que eu nunca segurei. Olha minha mão tremendo, tô levando isso a sério demais pra um app de graça."</p><p class="dir">Cortes da corrida, ofegante, sofrendo.</p></div></div>
+    <div class="bt"><div class="tc">0:34–0:48<br><span class="tg wow">Clímax</span></div><div class="bb"><p class="dir">Termina a corrida, abre o app, suspense na tela.</p><p class="vo"><b>FALA:</b> "Atualizou… e…"</p><p class="os">LEGENDA: "Seu ritmo da cidade: 2º 😤"</p><p class="vo"><b>FALA:</b> "NÃO. Faltaram 3 pontos. TRÊS. Esse JR me deve uma."</p></div></div>
+    <div class="bt"><div class="tc">0:48–0:58<br><span class="tg soft">Gancho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Amanhã eu volto. E dessa vez ele cai. Me segue se você quiser ver eu destronar um homem que eu nunca conheci na vida."</p><p class="dir">Sai de cena decidido. NADA de "baixa o app".</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Ele nunca manda baixar — convida a <em>acompanhar a saga</em>. A competição cria desejo de estar na arena, e os comentários estouram com "que app é esse??". O download nasce da curiosidade.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 02 · gamificação (XP/patente) · confissão relatável</div><div class="sc-t">Eu só saio de casa por causa de uma barrinha de XP</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 35–45s</span><span><b>Tom:</b> autodepreciativo, honesto</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · confissão contraintuitiva</div><div class="hk-line">"Vou ser sincero: eu não corro por saúde. Eu corro porque <span class="hot">uma barrinha de XP precisa encher.</span> É patético e eu não consigo parar."</div><div class="chips"><span class="c2">Vulnerabilidade</span><span class="c2 r">Confissão</span><span class="c2 e">Humor relatável</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Sincero: não corro por saúde. Corro porque uma barra de XP precisa encher. É ridículo e eu não consigo parar."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:18<br><span class="tg">Desenvolvimento</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Sempre falharam comigo: 'corra pela sua saúde', 'pelo seu coração'. Nada me tirava da cama. Aí baixei um app que dá XP por corrida e te faz subir de patente, tipo videogame. E o jogo virou."</p><p class="dir">Mostra a tela: XP subindo, patente "Prata II".</p></div></div>
+    <div class="bt"><div class="tc">0:18–0:30<br><span class="tg wow">Clímax cômico</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Ontem tava chovendo, 21h, eu cansado. Sabe o que me fez sair? Faltavam 40 pontos pra Prata I. Eu corri na chuva por pontos que não existem. E me senti REALIZADO."</p></div></div>
+    <div class="bt"><div class="tc">0:30–0:42<br><span class="tg soft">Reflexão/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "No fim, tanto faz o motivo. Eu corri 18 dias seguidos por causa de uma barrinha. Se 'saúde' nunca te convenceu… talvez você também só precise de um joguinho. Não vou nem falar o nome, senão parece propaganda."</p><p class="dir">Encolhe os ombros, sorri, corta.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Curiosidade reversa: ele <em>se recusa</em> a falar o nome — e isso multiplica os "qual app?? 😭". A confissão honesta faz quem não se motiva se identificar.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 03 · feedback do coach IA · reflexão / humildade</div><div class="sc-t">Achei que eu corria bem. 4 anos. Aí vi isto</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 40–50s</span><span><b>Tom:</b> reflexivo, sincero</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–4s · subversão + humildade</div><div class="hk-line">"Eu corro há 4 anos. Achava que me conhecia. Aí uma IA analisou <span class="hot">uma corrida só</span> e me mostrou o quanto eu tava errado."</div><div class="chips"><span class="c2">Loop aberto</span><span class="c2">Subversão</span><span class="c2">Reflexão</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:06<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Sentado no meio-fio depois de correr, suado, pensativo.</p><p class="vo"><b>FALA:</b> "Corro há 4 anos. Achei que me conhecia. Uma IA olhou uma corrida e me mostrou o quanto eu tava errado."</p></div></div>
+    <div class="bt"><div class="tc">0:06–0:20<br><span class="tg">Contexto</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Sempre corri 'no feeling'. Achava que feeling era experiência. Terminei meu treino, achei que tinha sido ótimo, e fui ver o que o coach do app tinha a dizer. Esperava um 'parabéns'."</p></div></div>
+    <div class="bt"><div class="tc">0:20–0:36<br><span class="tg wow">Revelação</span></div><div class="bb"><p class="dir">Mostra o feedback, lê em voz alta, meio sem acreditar.</p><p class="vo"><b>FALA:</b> "Ele me mostrou que eu acelero demais no primeiro km e pago caro no fim — minha frequência cardíaca disparava enquanto meu ritmo CAÍA. Eu fazia isso há 4 anos e nunca tinha enxergado. Tava nos meus próprios dados."</p><p class="os">LEGENDA: "FC subindo · pace caindo após km 1 — você começa rápido demais"</p></div></div>
+    <div class="bt"><div class="tc">0:36–0:48<br><span class="tg soft">Desfecho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Estranho descobrir que você passou anos sem entender uma coisa que você ama. Hoje foi a primeira vez que eu corri sabendo o que tava fazendo. E foi diferente de tudo."</p><p class="dir">Olha pro horizonte, levanta, sai andando. Sem pedir nada.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Termina na emoção da descoberta. A prova ("tava nos meus próprios dados") fala sozinha, e a vulnerabilidade faz qualquer corredor pensar "será que eu também?".</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 04 · prontidão + plano adaptativo · experimento / mini-doc</div><div class="sc-t">Diário: dia 1 de deixar uma IA mandar no meu treino</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels · YouTube</span><span><b>Duração:</b> 50–60s (vira saga)</span><span><b>Tom:</b> documental, curioso</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–4s · experimento + entrega de controle</div><div class="hk-line">"Pelos próximos 30 dias eu <span class="hot">não decido mais nada</span> sobre minha corrida. Uma IA decide se eu treino, quanto e como. Dia 1."</div><div class="chips"><span class="c2">Saga / experimento</span><span class="c2">Lacuna de curiosidade</span><span class="c2 e">Documental</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:06<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Por 30 dias eu não decido mais nada sobre minha corrida. Uma IA decide se treino, quanto e como. Dia 1, bora."</p></div></div>
+    <div class="bt"><div class="tc">0:06–0:18<br><span class="tg">Premissa</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Eu sou teimoso. Treino demais, descanso de menos, e vivo travado. Então resolvi entregar o volante. Todo dia eu faço um check-in, ele lê meu sono e meu corpo, e fala: hoje é dia de quê."</p><p class="dir">Mostra o check-in da manhã.</p></div></div>
+    <div class="bt"><div class="tc">0:18–0:34<br><span class="tg twist">Primeiro conflito</span></div><div class="bb"><p class="os">LEGENDA: "Dia 1 — Prontidão baixa: descanse hoje"</p><p class="vo"><b>FALA:</b> "Primeiro dia e ele JÁ mandou eu descansar. Eu tava doido pra correr. Detestei. Mas o trato é o trato — não vou trapacear na frente de vocês. Hoje, nada."</p></div></div>
+    <div class="bt"><div class="tc">0:34–0:50<br><span class="tg">Salto no tempo</span></div><div class="bb"><p class="dir">Montagem: dia 3 treino leve, dia 7 tiros (verde), dia 12 ele segura de novo.</p><p class="vo"><b>FALA:</b> "Pulando alguns dias: teve dia que ele me liberou pra forçar e eu voei. Teve dia que me segurou quando eu juraria que tava 100%. E olha… faz uma semana que eu não sinto aquela dor no joelho."</p></div></div>
+    <div class="bt"><div class="tc">0:50–0:60<br><span class="tg soft">Gancho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Faltam 18 dias. Tô curioso e meio assustado com o que isso vai virar. Salva esse vídeo e me acompanha — no dia 30 eu mostro tudo, sem corte."</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>É uma saga: ele pede pra <em>acompanhar o experimento</em>, não pra baixar. Quem segue se investe e quer fazer o próprio. O download é a conclusão natural.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 05 · gamificação (patente/streak) · comédia / aversão à perda</div><div class="sc-t">Minha patente caiu e eu entrei em luto</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 30–40s</span><span><b>Tom:</b> comédia dramática, exagero</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · drama cômico</div><div class="hk-line">Cara de velório: "Semana passada eu era Ouro. <span class="hot">Viajei, parei 6 dias, e caí pra Prata.</span> Não tô conseguindo dormir."</div><div class="chips"><span class="c2">Humor / exagero</span><span class="c2 r">Aversão à perda</span><span class="c2">Relatável</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Tom dramático fingido, quase rindo por dentro.</p><p class="vo"><b>FALA:</b> "Semana passada eu era Ouro. Viajei, parei 6 dias, e caí pra Prata. Não consigo dormir."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:18<br><span class="tg">Desenvolvimento</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Pra quem não entende: tem um app que te dá patente conforme você corre. Demorei 3 meses pra chegar no Ouro. Aí a vida aconteceu, viajei a trabalho, e quando voltei… Prata. O app não perdoa, e sinceramente? Eu respeito."</p><p class="dir">Mostra a patente rebaixada, indignado.</p></div></div>
+    <div class="bt"><div class="tc">0:18–0:30<br><span class="tg">Virada</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Sabe o que isso fez? Me botou de volta na rua HOJE, 6h da manhã, friozinho, recuperando minha honra. Nenhum personal me motivou tanto quanto a vergonha de ser Prata."</p></div></div>
+    <div class="bt"><div class="tc">0:30–0:38<br><span class="tg soft">Fechamento/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Enfim, tô em luto, mas tô correndo. Se você também é movido a ego e não a saúde, bem-vindo ao clube. Tô voltando pro Ouro custe o que custar."</p><p class="dir">Aperta o cadarço, corta.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>O humor carrega tudo — ele só convida pro "clube de quem é movido a ego". A graça e a identificação fazem a pessoa querer entrar nessa brincadeira que exige o app.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 06 · prontidão · ritual / amigo sábio</div><div class="sc-t">Por que eu paro e respondo 5 perguntas antes de cada corrida</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 35–45s</span><span><b>Tom:</b> calmo, conselho de amigo</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–4s · ritual + lacuna pessoal</div><div class="hk-line">"Tem um motivo pra eu nunca calçar o tênis sem antes responder 5 perguntas. E o motivo <span class="hot">tem nome: foi uma lesão que me parou por 4 meses.</span>"</div><div class="chips"><span class="c2">Lacuna de curiosidade</span><span class="c2">Stakes pessoais</span><span class="c2 e">Amigo sábio</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:06<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Sentado, calçando o tênis devagar, tom tranquilo.</p><p class="vo"><b>FALA:</b> "Eu nunca calço o tênis sem antes responder 5 perguntas. E tem um motivo: uma lesão que me parou 4 meses."</p></div></div>
+    <div class="bt"><div class="tc">0:06–0:20<br><span class="tg">História</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Há dois anos eu corri num dia que meu corpo gritava 'para'. Ignorei, achei que era preguiça. Resultado: lesão por estresse, 4 meses sem correr, e uma raiva de mim mesmo que não passa fácil."</p></div></div>
+    <div class="bt"><div class="tc">0:20–0:34<br><span class="tg wow">Ritual</span></div><div class="bb"><p class="dir">Abre o app, faz o check-in com calma.</p><p class="vo"><b>FALA:</b> "Então hoje eu tenho um ritual. Antes de sair, respondo como dormi, como tá o corpo, e o app cruza com minha semana e me dá um sinal. Hoje é verde. Mas quando é vermelho, eu escuto. Aprendi do jeito difícil que descanso também é treino."</p></div></div>
+    <div class="bt"><div class="tc">0:34–0:44<br><span class="tg soft">Desfecho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Não tô dizendo o que você tem que fazer. Só que, se eu tivesse esse ritual há dois anos, talvez não tivesse perdido 4 meses. Pensa nisso antes da sua próxima corrida."</p><p class="dir">Levanta, sai correndo leve. Sem venda.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>"Idea prompt", não comando. A história da lesão dá peso emocional e faz o espectador projetar o próprio medo. A vontade nasce da reflexão, não do pedido.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 07 · prontidão · conto de advertência / stakes</div><div class="sc-t">O dia em que ignorei o app — e me arrependi na hora</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels</span><span><b>Duração:</b> 35–45s</span><span><b>Tom:</b> honesto, arrependimento</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · confissão + consequência</div><div class="hk-line">"O app me disse pra descansar. Eu, espertão, <span class="hot">achei que sabia mais.</span> 20 minutos depois eu tava sentado no chão."</div><div class="chips"><span class="c2">Loop aberto</span><span class="c2 r">Consequência</span><span class="c2">Honestidade</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "O app me mandou descansar. Eu, espertão, achei que sabia mais. 20 minutos depois eu tava sentado no chão."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:20<br><span class="tg">Setup</span></div><div class="bb"><p class="dir">Mostra o print: "Prontidão baixa — recupere hoje".</p><p class="vo"><b>FALA:</b> "Tinha dormido mal a semana toda. O check-in deu vermelho, pediu descanso. Mas era sábado, sol, meus amigos iam correr. 'Um dia não vai me matar', pensei. Saí mesmo assim."</p></div></div>
+    <div class="bt"><div class="tc">0:20–0:32<br><span class="tg">Consequência</span></div><div class="bb"><p class="vo"><b>FALA:</b> "No km 4 minha panturrilha travou. Não foi nada grave, mas me tirou 10 dias. Dez dias por causa de uma corrida que eu nem precisava fazer, num dia que tudo me avisou pra não fazer."</p></div></div>
+    <div class="bt"><div class="tc">0:32–0:44<br><span class="tg soft">Lição/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "A parte chata? O dado tava ali, na minha frente, e eu ignorei achando que feeling vence ciência. Hoje quando dá vermelho, eu descanso e pronto. Aprende com o meu erro, não com o seu."</p><p class="dir">Encolhe os ombros, sorriso sem graça, corta.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>A lição é o fechamento, não um pedido. O conto de advertência prova o valor pela <em>ausência</em>. Ninguém quer perder 10 dias; o desejo de ter o aviso surge sozinho.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 08 · coach IA · imersivo / cinematográfico</div><div class="sc-t">POV: você tem um treinador no bolso que nunca dorme</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 30–40s</span><span><b>Tom:</b> cinematográfico, atmosférico</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · POV imersivo</div><div class="hk-line">Texto sobre imagem de corrida no amanhecer: "POV: você nunca mais corre sozinho. <span class="hot">Tem um treinador no seu bolso — e ele não dorme.</span>"</div><div class="chips"><span class="c2 p">POV imersivo</span><span class="c2 e">Atmosférico</span><span class="c2">Aspiracional</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">B-roll: tênis no chão, primeiro raio de sol, fone no ouvido. Música crescente.</p><p class="os">TEXTO: "POV: você não corre mais sozinho."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:16<br><span class="tg">Manhã</span></div><div class="bb"><p class="dir">Tela ao acordar: o sinal de prontidão do dia.</p><p class="os">TEXTO: "06:14 — ele já sabe como você dormiu. Hoje: ritmo leve."</p><p class="dir">Ele lê, respira, vai.</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:28<br><span class="tg">Durante / depois</span></div><div class="bb"><p class="dir">Corrida tranquila. Corte pro fim, ofegante, sorrindo. Tela do feedback.</p><p class="os">TEXTO: "fim da corrida — ele te diz o que melhorar amanhã."</p><p class="os">LEGENDA: "ótima constância · amanhã: trabalhe a cadência"</p></div></div>
+    <div class="bt"><div class="tc">0:28–0:38<br><span class="tg soft">Fechamento/CTA suave</span></div><div class="bb"><p class="dir">Plano final: guardando o celular no bolso, caminhando ao sol.</p><p class="os">TEXTO: "não é um app. é alguém do seu lado em cada quilômetro."</p><p class="dir">Fade. Nenhuma fala de venda.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Puro clima e aspiração. O vídeo vende um <em>sentimento</em> (nunca mais correr sozinho). Quem se emociona procura o app no perfil. A prova é a vibe.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 09 · gamificação (patente) · progressão / glow-up</div><div class="sc-t">De bronze a ouro em 5 meses — cada corrida tá aqui</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok · Shorts</span><span><b>Duração:</b> 35–45s</span><span><b>Tom:</b> montagem emocionante</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · resultado/transformação primeiro</div><div class="hk-line">Tela "Patente: Ouro": "Há 5 meses eu era o bronze mais sem fôlego do app. <span class="hot">Hoje cheguei no ouro.</span> Deixa eu te mostrar cada passo."</div><div class="chips"><span class="c2">Resultado primeiro</span><span class="c2 e">Transformação</span><span class="c2">Aspiração de status</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Close na tela: "Patente: Ouro 🥇", reação de orgulho.</p><p class="vo"><b>FALA:</b> "Há 5 meses eu era bronze e não corria 2km sem parar. Hoje, ouro. Deixa eu te mostrar."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:22<br><span class="tg">Montagem</span></div><div class="bb"><p class="dir">Montagem com datas: 1ª corrida arrastada → primeiras patentes → quedas e recuperações → evolução do pace.</p><p class="vo"><b>FALA:</b> "Bronze, e cada corrida valia XP. Aí prata, e eu já queria mais. Teve recaída, teve semana que quase parei. Mas a barrinha enchendo, a patente subindo… vira um vício do bem. Você não quer quebrar a sequência."</p></div></div>
+    <div class="bt"><div class="tc">0:22–0:34<br><span class="tg wow">Pico emocional</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Hoje, na corrida que me deu o ouro, olhei pra trás e percebi: não mudou só meu pace. Mudou quem eu sou. Eu virei 'a pessoa que corre'."</p><p class="dir">Tela da patente Ouro com o XP completando.</p></div></div>
+    <div class="bt"><div class="tc">0:34–0:44<br><span class="tg soft">Fechamento/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Bronze não te define — é só o começo da barra. Se você tá no seu 'dia 1', salva esse vídeo e me marca quando chegar no seu ouro. Vou estar aqui."</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Aspiração de identidade pura: a pessoa quer <em>ser</em> alguém que evoluiu de bronze a ouro. O pedido é emocional ("me marca quando chegar no seu ouro"), não "baixe".</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 10 · ranking / comunidade · pertencimento</div><div class="sc-t">Eu corria sozinho há anos. Hoje tenho 200 "rivais"</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 40–50s</span><span><b>Tom:</b> emocional, sobre pertencimento</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–4s · contraste emocional</div><div class="hk-line">"Eu corri sozinho por 6 anos. Gostava assim. Aí, sem querer, <span class="hot">ganhei 200 rivais — e nunca corri tão acompanhado.</span>"</div><div class="chips"><span class="c2">Contraste emocional</span><span class="c2">Pertencimento</span><span class="c2 e">Conexão</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:06<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Correndo sozinho numa rua vazia, tom reflexivo.</p><p class="vo"><b>FALA:</b> "Corri sozinho por 6 anos. Gostava assim. Aí, sem querer, ganhei 200 rivais — e nunca corri tão acompanhado."</p></div></div>
+    <div class="bt"><div class="tc">0:06–0:22<br><span class="tg">História</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Sempre fui o cara solitário da corrida. Fone, cabeça baixa, meu mundo. Aí um app me jogou num ranking com outros corredores da minha cidade. No começo achei competitivo demais pro meu gosto."</p><p class="dir">Mostra o ranking, vários nomes, ele no meio.</p></div></div>
+    <div class="bt"><div class="tc">0:22–0:36<br><span class="tg wow">Virada</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Mas aí algo estranho aconteceu. Comecei a torcer por gente que nunca vi. A 'Marina_Run' subiu 3 posições e eu fiquei feliz por ela. Um cara comentou que voltou de uma lesão e a galera foi à loucura. Sozinho, mas juntos. Eu não esperava sentir isso."</p></div></div>
+    <div class="bt"><div class="tc">0:36–0:48<br><span class="tg soft">Desfecho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Continuo correndo sozinho de fone. Mas agora tem 200 pessoas correndo comigo sem estar do meu lado. Engraçado como a gente acha que quer solidão até descobrir que não."</p><p class="dir">Sorri, segue correndo. Sem pedir nada.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Termina numa reflexão sobre pertencimento. Quem se sente sozinho na corrida vai querer esses "200 rivais". O app é o meio, não o anúncio.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 11 · coach IA · micro-história causa→efeito</div><div class="sc-t">Uma IA me disse uma frase que mudou minha corrida</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok · Shorts</span><span><b>Duração:</b> 30–40s</span><span><b>Tom:</b> direto, "aha moment"</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · loop + específico</div><div class="hk-line">"Um coach de IA me falou <span class="hot">uma frase de 8 palavras</span> e meus 5km nunca mais foram os mesmos."</div><div class="chips"><span class="c2">Loop aberto</span><span class="c2">Específico</span><span class="c2">Causa → efeito</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Uma IA me falou uma frase de 8 palavras e meus 5km nunca mais foram os mesmos."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:16<br><span class="tg">Contexto</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Eu travava sempre no mesmo lugar: 24 minutos nos 5km, fazia meses. Tentava de tudo, treinava mais, e nada. Até que terminei uma corrida e o feedback do app apontou uma coisa que eu fazia sem perceber."</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:28<br><span class="tg wow">A frase</span></div><div class="bb"><p class="os">LEGENDA: "Você gasta 80% do esforço nos primeiros 40%."</p><p class="vo"><b>FALA:</b> "'Você gasta 80% do esforço nos primeiros 40%.' Eu saía voando e morria no meio. Comecei a segurar o início. Duas semanas depois: 22:40. Anos travado, resolvido com uma observação que eu não via sozinho."</p></div></div>
+    <div class="bt"><div class="tc">0:28–0:38<br><span class="tg soft">Fechamento/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Às vezes não falta esforço — falta alguém te mostrar o óbvio que você não enxerga. Na sua próxima corrida, repara se você não tá fazendo a mesma coisa que eu fazia."</p><p class="dir">Corta no meio de uma passada leve.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Entrega valor real e termina com conselho aplicável — não um "baixe". A especificidade ("22:40", "8 palavras") dá credibilidade e faz a pessoa querer o "olho" que viu o que ela não vê.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 12 · features combinadas · conversa com amigo</div><div class="sc-t">Tentei explicar pro meu amigo por que virou meu vício saudável</div><div class="sc-m"><span><b>Plataforma:</b> TikTok · Reels</span><span><b>Duração:</b> 40–50s</span><span><b>Tom:</b> conversa casual</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · recomendação de amigo</div><div class="hk-line">"Meu amigo me perguntou por que eu fiquei <span class="hot">obcecado por corrida do nada.</span> Eu tentei explicar e ele baixou na hora. Olha o que eu falei."</div><div class="chips"><span class="c2">Pessoa-como-eu</span><span class="c2">Prova social</span><span class="c2 e">Conversa</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Falando pra câmera como se contasse pra um amigo.</p><p class="vo"><b>FALA:</b> "Meu amigo perguntou por que eu virei obcecado por corrida do nada. Tentei explicar, e ele baixou na hora. Olha o que eu disse."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:20<br><span class="tg">Explicação 1</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Falei: cara, todo dia o app me dá um sinal — verde, amarelo ou vermelho — se eu devia treinar. Parece bobo, mas tirou o 'será que vou hoje?' da minha cabeça. Ele decide, eu só obedeço."</p><p class="dir">Mostra o sinal do dia, rápido.</p></div></div>
+    <div class="bt"><div class="tc">0:20–0:34<br><span class="tg">Explicação 2</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Aí mostrei que eu ganho XP e subo de patente, tipo jogo. O olho dele brilhou. E o que matou foi o ranking da cidade — quando ele viu que dava pra competir, falou 'tá, me manda esse app agora'."</p></div></div>
+    <div class="bt"><div class="tc">0:34–0:48<br><span class="tg soft">Desfecho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Resumindo: virou jogo, virou hábito, virou identidade. Tô há 3 meses sem furar. Não tô recomendando nada — só contei pro meu amigo o que mudou pra mim. O que ele faz com isso é problema dele."</p><p class="dir">Dá de ombros sorrindo, corta.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Enquadra como conversa privada que "vazou" — "não tô recomendando, só contei pro meu amigo". A prova social ("ele baixou na hora") faz o trabalho. Cobre 3 features de forma natural.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 13 · coach IA + prontidão · lições / valor puro</div><div class="sc-t">3 coisas que um app me ensinou que nenhum treino ensinou</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok · Shorts</span><span><b>Duração:</b> 35–45s</span><span><b>Tom:</b> valor direto</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · valor + lacuna</div><div class="hk-line">"3 coisas sobre corrida que eu só entendi quando uma IA me mostrou nos meus dados — e a número 3 <span class="hot">me deixou puto de não saber antes.</span>"</div><div class="chips"><span class="c2">Lista de valor</span><span class="c2">Loop ("a nº3…")</span><span class="c2">Revelação</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:04<br><span class="tg hook">Hook</span></div><div class="bb"><p class="vo"><b>FALA:</b> "3 coisas que eu só entendi quando uma IA me mostrou nos meus dados. A número 3 me deixou puto de não saber antes."</p></div></div>
+    <div class="bt"><div class="tc">0:04–0:16<br><span class="tg">Lição 1</span></div><div class="bb"><p class="os">TEXTO: "1 · descanso é treino"</p><p class="vo"><b>FALA:</b> "Um: descanso é treino. Eu achava que dia parado era dia perdido. O sinal de prontidão me provou o contrário — eu evoluía nos dias que descansava."</p></div></div>
+    <div class="bt"><div class="tc">0:16–0:28<br><span class="tg">Lição 2 e 3</span></div><div class="bb"><p class="os">TEXTO: "2 · meu 'leve' era rápido demais"</p><p class="vo"><b>FALA:</b> "Dois: meu treino leve era rápido demais — por isso eu vivia cansado. Três, a que dói: eu corria desperdiçando energia na largada, todo treino, há anos. A IA viu em 1 corrida o que eu não vi em centenas."</p></div></div>
+    <div class="bt"><div class="tc">0:28–0:40<br><span class="tg soft">Fechamento/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "O engraçado é que tava tudo nos meus próprios dados o tempo todo. Eu só não tinha quem traduzisse. Se você corre 'no escuro' também, talvez valha deixar alguém acender a luz. Faz o que quiser com isso."</p><p class="dir">Corta.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Entrega 3 lições genuínas de graça. "Faz o que quiser com isso" devolve o controle. O valor real gera a confiança que faz a pessoa procurar o app por conta própria.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 14 · plano adaptativo · momento relatável / quieto</div><div class="sc-t">Meu treino de hoje mudou sozinho às 6 da manhã</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok</span><span><b>Duração:</b> 30–40s</span><span><b>Tom:</b> calmo, manhã real</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–3s · momento + lacuna</div><div class="hk-line">Cara de sono: "Dormi 4 horas. Tava pronto pra furar meu treino hoje. Aí abri o app e <span class="hot">ele já tinha mudado tudo por mim.</span>"</div><div class="chips"><span class="c2">Relatável</span><span class="c2">Loop aberto</span><span class="c2 e">Momento real</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:05<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Manhã, luz fraca, voz baixa, café na mão.</p><p class="vo"><b>FALA:</b> "Dormi 4 horas. Tava pronto pra furar o treino. Aí abri o app e ele já tinha mudado tudo por mim."</p></div></div>
+    <div class="bt"><div class="tc">0:05–0:18<br><span class="tg">Contexto</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Era pra ser dia de tiro forte, daqueles que eu temo. Mas o app leu meu sono ruim do relógio e, sem eu pedir, trocou por um treino regenerativo leve. Tipo: 'não desiste, só ajusta'."</p><p class="dir">Mostra a tela: o treino de hoje, antes vs depois.</p></div></div>
+    <div class="bt"><div class="tc">0:18–0:30<br><span class="tg">Reflexão</span></div><div class="bb"><p class="vo"><b>FALA:</b> "E isso mudou minha cabeça. Plano fixo é cruel — te faz sentir fracassado quando a vida acontece. Esse se molda ao dia que eu tive. Num dia ruim, ele não me cobra perfeição. Ele me mantém andando."</p></div></div>
+    <div class="bt"><div class="tc">0:30–0:40<br><span class="tg soft">Desfecho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Fui correr leve. Voltei melhor do que entrei. Tem dia que vencer é só não parar. Bom dia."</p><p class="dir">Sorri cansado, sai pra correr. Sem venda.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Termina num "bom dia" gentil, sem pedido. O momento ("dormi 4h") é universal, e um plano que "não te cobra perfeição num dia ruim" gera desejo emocional.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Roteiro 15 · features combinadas · reflexão honesta / "review"</div><div class="sc-t">3 meses depois: o que mudou (e não é só a corrida)</div><div class="sc-m"><span><b>Plataforma:</b> Reels · TikTok · YouTube</span><span><b>Duração:</b> 45–60s</span><span><b>Tom:</b> sincero, "sem patrocínio"</span></div></div><div class="sc-b">
+    <div class="hookl"><div class="hk-top">Hook · 0–4s · balanço honesto</div><div class="hk-line">"Faz 3 meses que mudei como eu corro. E o que mudou de verdade <span class="hot">não foi o pace — foi uma coisa que eu não esperava.</span>"</div><div class="chips"><span class="c2">Loop aberto</span><span class="c2">Autenticidade</span><span class="c2 e">Balanço pessoal</span></div></div>
+    <div class="bt"><div class="tc">0:00–0:06<br><span class="tg hook">Hook</span></div><div class="bb"><p class="dir">Tom calmo, conversa honesta com a câmera.</p><p class="vo"><b>FALA:</b> "Faz 3 meses que mudei como eu corro. E o que mudou de verdade não foi o pace — foi uma coisa que eu não esperava."</p></div></div>
+    <div class="bt"><div class="tc">0:06–0:22<br><span class="tg">O óbvio</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Sim, melhorei. Meu 5km caiu, aprendi a descansar no dia certo, e a IA me corrigiu vícios de anos. Isso eu esperava. Tudo bonito."</p></div></div>
+    <div class="bt"><div class="tc">0:22–0:38<br><span class="tg wow">O inesperado</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Mas o que pegou foi outra coisa: eu virei consistente. Pela primeira vez na vida eu não abandonei algo no mês 2. E isso vazou pro resto — comecei a dormir melhor, a me sentir mais no controle do meu dia. Uma barrinha de XP e um sinal verde me ensinaram disciplina que terapia nenhuma ensinou."</p></div></div>
+    <div class="bt"><div class="tc">0:38–0:55<br><span class="tg soft">Desfecho/CTA suave</span></div><div class="bb"><p class="vo"><b>FALA:</b> "Eu não tô sendo pago pra falar isso — queria estar, dava um help. Só que de vez em quando uma coisa muda a sua relação com algo que você achava que conhecia. Foi o que aconteceu comigo. Não vou linkar, mas se você reparar, tá ali no meu perfil. Faz sentido pra você, ótimo. Se não, segue correndo do seu jeito."</p><p class="dir">Sorriso tranquilo, corta.</p></div></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Autenticidade radical: "não tô sendo pago" + "não vou linkar, mas tá no meu perfil". Devolve 100% a decisão. A reflexão holística cria desejo profundo, e a ausência de pedido aumenta os comentários pedindo o nome.</div>
+  </div></div>
+
+  <div class="conv"><b>Como rodar</b> Reels/TikTok pra alcançar, Stories pra converter · uma saga por vez · o app deve ser usado e amado de verdade por quem grava — é o que separa orgânico de anúncio.</div>
+</div>
+<div data-tpl="influ" data-title="Vídeos com Criadores" data-meta="sistema de 3 camadas · <b>a máquina de escala</b>">
+  <div class="conv"><b>Função no funil</b> Atrair em escala · só ligar DEPOIS de 1–2 formatos validados pela conta própria.</div>
+  <div class="block-h">As 3 camadas</div>
+  <ul class="items">
+    <li><span class="ix">T1</span><div><p class="ti">Embaixadores · 2–3 pessoas</p><p class="hk">50K–200K seguidores · contrato mensal · 2–4 vídeos/mês · premium + fixo + bônus por performance.</p></div></li>
+    <li><span class="ix">T2</span><div><p class="ti">Criadores de volume · 10–20 pessoas</p><p class="hk">5K–50K · pagamento por vídeo + bônus por marcos de views · replicam os formatos validados.</p></div></li>
+    <li><span class="ix">T3</span><div><p class="ti">Usuários reais · orgânico puro</p><p class="hk">Incentivar usuário satisfeito a postar · desafio com hashtag · repostar o melhor na conta principal.</p></div></li>
+  </ul>
+  <div class="block-h">O que entregar pra eles</div>
+  <p style="font-size:14px;color:var(--ink-soft)">Não peça "faça um vídeo". Mande <strong>roteiros do banco</strong> (Virais e Orgânicos deste painel) + acesso premium grátis. Perfil ideal: posta sobre corrida, comentários reais de corredores (não emoji vazio), base no Brasil. Onde achar: #corrida #corridaderua #corredores #treinodecorrida, perfis públicos do Strava, grupos de WhatsApp/Telegram, clubes físicos.</p>
+  <div class="block-h">Pagamento que motiva</div>
+  <p style="font-size:14px;color:var(--ink-soft)">Base fixa por vídeo + bônus crescente por marcos de views (20K, 100K, 500K, 1M), não cumulativo, qualquer plataforma conta. Resultado: CPM efetivo abaixo de $1 e criador motivado. É máquina, não sorte.</p>
+  <div class="conv"><b>Filtro de formato validado</b> É viral (acima da mediana)? É reproduzível (qualquer criador replica)? Converte (gera download, não só views)? Os 3 = vira template pros criadores.</div>
+</div>
+<div data-tpl="trends" data-title="TikTok Trends" data-meta="sistema de mineração diária · <b>rouba a estrutura, não o vídeo</b>">
+  <div class="conv"><b>Função no funil</b> Atrair · trend é o veículo, a RunEasy é o destino. Produto nos primeiros segundos.</div>
+  <div class="src"><b>Aviso do algoritmo:</b> cópia crua de trend perdeu 40–60% de alcance (set/2025). Rouba a estrutura (som, formato, piada), não o clipe.</div>
+  <div class="block-h">O ritual diário (10 min) — o que mais funciona</div>
+  <div class="step"><span class="sn">1</span><div><b>Role o FYP de corrida/fitness</b> e marque sons com a setinha "↗" subindo e formatos que se repetem. Salve 3–5 por semana na pasta de favoritos.</div></div>
+  <div class="step"><span class="sn">2</span><div><b>Teste do encaixe:</b> dá pra plugar a RunEasy <em>naturalmente</em> nesse trend? Se for forçado, pula — anúncio forçado num trend é o pior dos mundos.</div></div>
+  <div class="step"><span class="sn">3</span><div><b>Grave e poste em 48h.</b> Trend tem validade curta. Insira o app no meio (não só no fim) e mantenha o tom da trend, não o de vendedor.</div></div>
+  <div class="step"><span class="sn">4</span><div><b>O que viralizar, marque pra Spark Ads</b> depois (validar orgânico → escalar pago).</div></div>
+  <div class="block-h">Âncoras que sempre encaixam (quando o trend permite)</div>
+  <ul class="items">
+    <li><span class="ix">★</span><div><p class="ti">Green flag / Red flag</p><p class="hk">"Green flag: um app de corrida que te manda pegar leve quando precisa." Mostra o sinal na tela. O trend já é sobre verde/vermelho.</p></div></li>
+    <li><span class="ix">★</span><div><p class="ti">"Tell me you're a runner without telling me"</p><p class="hk">Provas de corredor; clímax = abrir o app de manhã pra ver o sinal antes de decidir o dia.</p></div></li>
+    <li><span class="ix">★</span><div><p class="ti">"Rating my [x] as a runner"</p><p class="hk">Avalia apps que já usou; o último ganha nota alta pelo sinal diário. Honesto, sem exagero.</p></div></li>
+    <li><span class="ix">★</span><div><p class="ti">GRWM pra correr 6h da manhã</p><p class="hk">Primeiro passo do ritual = abrir o app e ver o sinal. Naturaliza o app na rotina.</p></div></li>
+  </ul>
+  <div class="conv"><b>Lembrete</b> A maior parte do conteúdo de trend é <strong>reembalagem</strong> de roteiros/carrosséis que você já tem — só na trend da semana. Volume sem queimar.</div>
+</div>
+<div data-tpl="estaticos" data-title="Posts Estáticos — Instagram" data-meta="10 templates completos · <b>paleta do app · 1080×1350</b>">
+  <div class="conv"><b>Função no funil</b> Convencer &amp; Converter · "mostra, não conta". Atalho: 2 templates-mãe no Canva (card de dado escuro + frase de marca) geram 80% do feed.</div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 01 · prova · card de dado</div><div class="pt">O sinal do dia</div></div><div class="pst-b">
+    <p class="lblk">Arte (dentro do print do app)</p><div class="art">🔴 <span class="big">Hoje pega leve</span> <span style="color:var(--ink-soft);font-size:12.5px">Você dormiu 5h12 e sua carga da semana está alta. Hoje é recuperar — amanhã você voa.</span></div>
+    <p class="lblk">Legenda</p><div class="cap">Um app de corrida que às vezes te manda <em>pegar leve</em>? Sim. Porque treinar no dia errado é o que mais trava sua evolução. 🟢🟡🔴 Qual foi seu sinal hoje? · <strong>RunEasy — grátis na Play Store e App Store.</strong></div>
+    <p class="trg"><b>Gatilho</b> Contraintuição ("app de corrida que manda pegar leve") para o dedo. É a ideia central em 1 imagem — o post mais repostável da marca.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 02 · educação · dado chocante</div><div class="pt">O número que assusta</div></div><div class="pst-b">
+    <p class="lblk">Arte</p><div class="art">você sabia? <span class="big">7 em 10</span> corredores treinam num dia em que o corpo já pedia descanso — e nem percebem.</div>
+    <p class="lblk">Legenda</p><div class="cap">A diferença entre evoluir e estagnar muitas vezes está na <strong>decisão</strong> de treinar num dia ruim. O problema é que ninguém sabe diferenciar "preguiça" de "meu corpo precisa parar". É isso que a RunEasy calcula pra você todo dia. Salva esse post. ⬇️</div>
+    <p class="trg"><b>Gatilho</b> Dado contraintuitivo = alto salvamento e compartilhamento. Use um número que você consiga sustentar.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 03 · educação · mito vs verdade (série)</div><div class="pt">Mito da corrida</div></div><div class="pst-b">
+    <p class="lblk">Arte</p><div class="art">MITO ❌ <span class="big">"Correr todo dia = evoluir"</span> Quem evolui descansa na hora certa. Volume sem recuperação trava o progresso.</div>
+    <p class="lblk">Legenda</p><div class="cap">"Mas se eu correr todo dia eu melhoro mais rápido, né?" Errado — e é o erro que mais estagna corredor. Descanso é parte do treino, não pausa dele. A RunEasy te diz <em>quando</em> é o dia. Qual mito você ainda acreditava? 👇</div>
+    <p class="trg"><b>Gatilho</b> Quebra de crença + formato de série ("Mito #1, #2…"). Convida comentário = alcance.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 04 · prova · screenshot real</div><div class="pt">O feedback do coach</div></div><div class="pst-b">
+    <p class="lblk">Arte (print do app)</p><div class="art">coach IA · pós-treino <span style="display:block;margin-top:6px;font-size:14px;color:#fff">"Sua cadência caiu 12% nos últimos 800m. Você começou rápido demais. Amanhã: tiros curtos pra firmar o final."</span></div>
+    <p class="lblk">Legenda</p><div class="cap">A diferença entre "Bom treino! 5km 🎉" e isto aqui ⬆️. Um te dá um troféu. O outro te deixa melhor amanhã. Qual app você quer no bolso? · <strong>RunEasy.</strong></div>
+    <p class="trg"><b>Gatilho</b> Especificidade = credibilidade. "12%", "800m" provam que a IA é real, não marketing.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 05 · aspiracional · frase de marca</div><div class="pt">Manifesto em uma linha</div></div><div class="pst-b">
+    <p class="lblk">Arte (fundo carvão, só a frase)</p><div class="art"><span class="big">Disciplina é treinar certo — não treinar no sacrifício.</span> <span style="color:var(--blue);font-size:11px">runeasy</span></div>
+    <p class="lblk">Banco de frases</p><div class="cap">"Correr no escuro acaba hoje." · "Seu corpo já sabe. Agora você também." · "Treine com dado, não com teimosia."</div>
+    <p class="lblk">Legenda</p><div class="cap">A gente cresceu achando que sofrer = evoluir. Na corrida é o contrário: quem treina com inteligência passa quem treina só com força de vontade. ✦ Marca um teimoso que precisa ler isso.</div>
+    <p class="trg"><b>Gatilho</b> Identidade + "marca alguém" = compartilhamento no DM. Posts de frase são os mais enviados.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 06 · prova · antes/depois de dado</div><div class="pt">Mesmo esforço, outro corredor</div></div><div class="pst-b">
+    <p class="lblk">Arte</p><div class="art">90 dias · mesma pessoa <span class="big">pace 6'40"→5'52"</span> <span class="big" style="font-size:20px">FC no mesmo ritmo: -14 bpm</span> Correndo menos. Treinando certo.</div>
+    <p class="lblk">Legenda</p><div class="cap">90 dias. Não corri mais — corri <strong>certo</strong>. A IA decidia a intensidade de cada dia: dormiu mal? leve. Recuperado? podia forçar. O resultado fala sozinho. (Quer ver seu dia 1 vs dia 90? Tá na bio.)</div>
+    <p class="trg"><b>Gatilho</b> Transformação responde "isso funciona pra mim?" — a pergunta nº1 antes de baixar.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 07 · educação · pergunta direta</div><div class="pt">A pergunta que ninguém sabe responder</div></div><div class="pst-b">
+    <p class="lblk">Arte</p><div class="art"><span class="big">Você sabe se devia treinar HOJE?</span> Se a resposta é "no feeling", esse post é pra você.</div>
+    <p class="lblk">Legenda</p><div class="cap">90% dos corredores respondem "no feeling". E feeling é exatamente o que te coloca no dia errado sem perceber. Sono, frequência, carga da semana — tem dado pra responder isso com precisão. A RunEasy responde por você, todo dia, em 20 segundos. Comenta seu sinal de hoje: 🟢 🟡 🔴</div>
+    <p class="trg"><b>Gatilho</b> Pergunta interpela quem lê + comentário com emoji (baixíssima fricção) = engajamento fácil.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 08 · identidade · gamificação</div><div class="pt">Subiu de patente</div></div><div class="pst-b">
+    <p class="lblk">Arte (tela de conquista)</p><div class="art">nova patente desbloqueada <span class="big">OURO</span> 18 dias de streak · ranking #2 da sua cidade. Quem chega aqui não corre por acaso.</div>
+    <p class="lblk">Legenda</p><div class="cap">Tem gente que corre por saúde. E tem gente que corre porque uma patente precisa subir. 🥇 Sem julgamento — funciona. Em que patente você está? (E sim, a queda pra Prata dói.)</div>
+    <p class="trg"><b>Gatilho</b> Status + identidade. O pilar mais "screenshotável" — vira UGC de graça.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 09 · bastidor · founder / humano</div><div class="pt">Por que eu construí isto</div></div><div class="pst-b">
+    <p class="lblk">Arte (foto real + frase)</p><div class="art">bastidores · do fundador <span class="big">"Me cansei de treinar no escuro. Aí construí a RunEasy."</span></div>
+    <p class="lblk">Legenda</p><div class="cap">História real: [conte em 3-4 linhas a frustração/momento que deu origem ao app]. Eu não achei um app que me dissesse <em>quando</em> forçar e quando segurar — então passei [X meses] construindo um. Hoje a RunEasy está no ar nas duas lojas. Se você corre no escuro como eu corria, ela é pra você. 🖤</div>
+    <p class="trg"><b>Gatilho</b> História de origem = confiança. No lançamento, "quem está por trás" reduz o atrito de baixar de uma marca nova.</p>
+  </div></div>
+
+  <div class="pst"><div class="pst-h"><div class="pn">Post 10 · prova · comparativo (sem atacar)</div><div class="pt">Bom treino 🎉 vs. o que importa</div></div><div class="pst-b">
+    <p class="lblk">Arte (dois balões)</p><div class="art"><span style="color:var(--ink-dim)">Outros apps: "Bom treino! Você correu 5 km 🎉"</span> <span style="display:block;margin-top:8px;color:#fff">🟢 RunEasy: "Você começou rápido demais e pagou no fim. Amanhã, faça isto."</span></div>
+    <p class="lblk">Legenda</p><div class="cap">Um troféu não te deixa mais rápido. Análise de verdade, sim. A pergunta não é "quantos km você correu" — é "o que você vai fazer melhor amanhã". 👀 · <strong>RunEasy, grátis nas lojas.</strong></div>
+    <p class="trg"><b>Gatilho</b> Contraste posiciona sem difamar. Define a categoria pelos seus termos ("análise &gt; registro").</p>
+  </div></div>
+</div>
+<div data-tpl="carrosseis" data-title="Carrosséis — Instagram" data-meta="6 carrosséis completos · <b>capa para o dedo → tensão → payoff → CTA</b>">
+  <div class="conv"><b>Função no funil</b> Convencer · maior salvamento e tempo de permanência do IG; cada deslize é nova chance de fisgar.</div>
+
+  <div class="crl"><div class="crl-h"><div class="cn">Carrossel 01 · educação → produto · 7 slides</div><div class="ct">5 sinais de que você treina demais (e não percebe)</div></div>
+    <div class="sld"><div class="sn cover">CAPA 01</div><div><p class="sh">5 sinais de que você treina demais</p><p class="sx">…e o seu corpo vem avisando. Deslize antes de calçar o tênis amanhã.</p><p class="vis">Fundo carvão, título gigante, anel vermelho no canto.</p></div></div>
+    <div class="sld"><div class="sn">02</div><div><p class="sh">FC alta em ritmo fácil</p><p class="sx">Seu pace de sempre, mas o coração a mais. Sinal clássico de fadiga acumulada.</p><p class="vis">Número grande de bpm.</p></div></div>
+    <div class="sld"><div class="sn">03</div><div><p class="sh">Sono piorando</p><p class="sx">Treinar pesado e dormir mal junto? O corpo não recupera. A conta chega.</p><p class="vis">Ícone de lua + linha caindo.</p></div></div>
+    <div class="sld"><div class="sn">04</div><div><p class="sh">Vontade zero</p><p class="sx">Desânimo constante raramente é preguiça — costuma ser overtraining.</p><p class="vis">Foto real, tênis no chão.</p></div></div>
+    <div class="sld"><div class="sn">05</div><div><p class="sh">Dor que não passa + estagnação</p><p class="sx">Dorzinha que vira rotina e tempos que não melhoram por mais que você corra.</p><p class="vis">Dois mini-cards.</p></div></div>
+    <div class="sld"><div class="sn">06</div><div><p class="sh">O problema não é esforço. É timing.</p><p class="sx">Esses 5 sinais são dados. Dá pra ler todo dia, antes de decidir treinar.</p><p class="vis">Semáforo completo.</p></div></div>
+    <div class="sld"><div class="sn cta">CTA 07</div><div><p class="sh">A RunEasy lê esses sinais por você</p><p class="sx">Sono + FC + carga, todo dia, num sinal. Grátis nas lojas — link na bio. Salva pra não esquecer.</p><p class="vis">Logo + selos das lojas.</p></div></div>
+    <div class="crl-cap"><p class="lblk">Legenda</p><div class="cap">Você não está sem evoluir por falta de esforço. Tá treinando por cima da fadiga. Esses 5 sinais ⬆️ são o seu corpo pedindo timing, não força. Salva e relê antes do próximo treino pesado. 🟢🟡🔴</div></div>
+  </div>
+
+  <div class="crl"><div class="crl-h"><div class="cn">Carrossel 02 · prova · explica o wow factor · 6 slides</div><div class="ct">Como saber se você deve treinar hoje em 20 segundos</div></div>
+    <div class="sld"><div class="sn cover">CAPA 01</div><div><p class="sh">Eu decido se treino em 20 segundos. Assim:</p><p class="sx">O ritual que substituiu o "no feeling".</p><p class="vis">Print do check-in da manhã.</p></div></div>
+    <div class="sld"><div class="sn">02</div><div><p class="sh">Acordo e abro o app</p><p class="sx">Antes do café, antes do tênis. Vira hábito em 3 dias.</p><p class="vis">Mão segurando o celular, luz da manhã.</p></div></div>
+    <div class="sld"><div class="sn">03</div><div><p class="sh">Respondo 4 perguntas</p><p class="sx">Como dormi, energia, humor, dor muscular. 20 segundos.</p><p class="vis">Tela do quiz.</p></div></div>
+    <div class="sld"><div class="sn">04</div><div><p class="sh">A IA cruza com meu relógio</p><p class="sx">Sono e FC do wearable + minha carga da semana. Dado, não achismo.</p><p class="vis">Ícones dos 6 relógios.</p></div></div>
+    <div class="sld"><div class="sn">05</div><div><p class="sh">Recebo o sinal do dia</p><p class="sx">Verde: pode forçar. Âmbar: leve. Vermelho: descansa. Com o porquê.</p><p class="vis">Semáforo grande.</p></div></div>
+    <div class="sld"><div class="sn cta">CTA 06</div><div><p class="sh">Faça o seu amanhã de manhã</p><p class="sx">Grátis na Play Store e App Store. Link na bio. Volta e me conta seu sinal.</p><p class="vis">Logo + CTA.</p></div></div>
+    <div class="crl-cap"><p class="lblk">Legenda</p><div class="cap">Parei de decidir treino "no feeling" e comecei a decidir com dado. Leva 20 segundos e mudou minha corrida. Passo a passo aí ⬆️. Testa amanhã antes de sair.</div></div>
+  </div>
+
+  <div class="crl"><div class="crl-h"><div class="cn">Carrossel 03 · diagnóstico → solução · 6 slides</div><div class="ct">Por que você corre há meses e não evolui</div></div>
+    <div class="sld"><div class="sn cover">CAPA 01</div><div><p class="sh">Corre há meses e empacou? Não é falta de esforço.</p><p class="sx">São 3 erros invisíveis. Deslize.</p><p class="vis">Linha de pace plana ("estagnada").</p></div></div>
+    <div class="sld"><div class="sn">02</div><div><p class="sh">Você corre tudo no mesmo ritmo</p><p class="sx">Nem fácil, nem forte. O "meio-termo" não gera adaptação.</p><p class="vis">Gráfico de zona única.</p></div></div>
+    <div class="sld"><div class="sn">03</div><div><p class="sh">Você nunca descansa de verdade</p><p class="sx">Sem recuperação, não tem evolução — só desgaste acumulado.</p><p class="vis">Semáforo vermelho ignorado.</p></div></div>
+    <div class="sld"><div class="sn">04</div><div><p class="sh">Você não mede nada</p><p class="sx">Sem feedback, você repete o mesmo erro por anos sem ver.</p><p class="vis">Interrogação sobre dados.</p></div></div>
+    <div class="sld"><div class="sn">05</div><div><p class="sh">Os 3 se resolvem com uma coisa: timing guiado por dado</p><p class="sx">Intensidade certa, descanso na hora, feedback a cada treino.</p><p class="vis">3 erros virando 3 checks.</p></div></div>
+    <div class="sld"><div class="sn cta">CTA 06</div><div><p class="sh">É o que a RunEasy faz</p><p class="sx">Plano que se adapta + sinal diário + coach que te corrige. Grátis na bio.</p><p class="vis">Logo.</p></div></div>
+    <div class="crl-cap"><p class="lblk">Legenda</p><div class="cap">Doeu escrever isso porque eu cometia os 3. 👀 Se você corre e não sai do lugar, o problema quase nunca é "esforço". Salva, marca um parceiro de corrida e leiam juntos.</div></div>
+  </div>
+
+  <div class="crl"><div class="crl-h"><div class="cn">Carrossel 04 · educação · foco iniciante · 7 slides</div><div class="ct">Começando a correr? O que ninguém te conta</div></div>
+    <div class="sld"><div class="sn cover">CAPA 01</div><div><p class="sh">Começando a correr? Leia antes</p><p class="sx">5 verdades que os apps famosos assumem que você já sabe.</p><p class="vis">Tênis novo, foto real.</p></div></div>
+    <div class="sld"><div class="sn">02</div><div><p class="sh">Devagar é o caminho certo</p><p class="sx">Se você consegue conversar correndo, está no ritmo certo. Sério.</p><p class="vis">Ícone de conversa.</p></div></div>
+    <div class="sld"><div class="sn">03</div><div><p class="sh">Descanso não é trapaça</p><p class="sx">Corpo melhora no descanso, não na corrida. Dia de folga é treino.</p><p class="vis">Semáforo vermelho amigável.</p></div></div>
+    <div class="sld"><div class="sn">04</div><div><p class="sh">Mais não é melhor</p><p class="sx">A pressa de evoluir é a maior causa de frustração de iniciante.</p><p class="vis">Linha subindo gradual.</p></div></div>
+    <div class="sld"><div class="sn">05</div><div><p class="sh">Pace não importa ainda + constância &gt; intensidade</p><p class="sx">Aparecer 3x por semana vence "matar" um treino e sumir.</p><p class="vis">Calendário com 3 marcações.</p></div></div>
+    <div class="sld"><div class="sn">06</div><div><p class="sh">O difícil é saber aplicar tudo isso sozinho</p><p class="sx">É aí que a maioria desiste na 1ª semana.</p><p class="vis">Foto pensativa.</p></div></div>
+    <div class="sld"><div class="sn cta">CTA 07</div><div><p class="sh">A RunEasy te guia desde o dia 1</p><p class="sx">Te trata como atleta desde o começo, em português de gente. Grátis na bio.</p><p class="vis">Logo.</p></div></div>
+    <div class="crl-cap"><p class="lblk">Legenda</p><div class="cap">Pra quem vai começar agora (ou voltar depois de anos): isso aqui evita 90% das frustrações. Salva, e bem-vindo ao clube. 🏃 A parte difícil — saber o que fazer a cada dia — a gente resolve por você.</div></div>
+  </div>
+
+  <div class="crl"><div class="crl-h"><div class="cn">Carrossel 05 · saga em swipe · 8 slides</div><div class="ct">Deixei uma IA decidir meus treinos por 30 dias</div></div>
+    <div class="sld"><div class="sn cover">CAPA 01</div><div><p class="sh">30 dias deixando uma IA mandar na minha corrida</p><p class="sx">Spoiler: o dia 1 já me irritou. Deslize.</p><p class="vis">Capa estilo diário.</p></div></div>
+    <div class="sld"><div class="sn">02</div><div><p class="sh">Dia 1 — mandou eu descansar</p><p class="sx">Tava doido pra correr. Detestei. Mas o trato é o trato.</p><p class="vis">Sinal vermelho.</p></div></div>
+    <div class="sld"><div class="sn">03</div><div><p class="sh">Dia 7 — liberou os tiros</p><p class="sx">Sinal verde, voei. Melhor treino em semanas.</p><p class="vis">Sinal verde + pace.</p></div></div>
+    <div class="sld"><div class="sn">04</div><div><p class="sh">Dia 12 — me segurou de novo</p><p class="sx">Eu juraria que tava 100%. Ela viu o que eu não vi.</p><p class="vis">Sinal âmbar.</p></div></div>
+    <div class="sld"><div class="sn">05</div><div><p class="sh">Dia 20 — a dor no joelho sumiu</p><p class="sx">Primeira vez em meses sem aquele incômodo.</p><p class="vis">Foto correndo leve.</p></div></div>
+    <div class="sld"><div class="sn">06</div><div><p class="sh">Dia 30 — melhor pace do ano</p><p class="sx">Correndo menos dias. Treinando melhor.</p><p class="vis">Gráfico de evolução.</p></div></div>
+    <div class="sld"><div class="sn">07</div><div><p class="sh">Eu era o que mais atrapalhava meu progresso</p><p class="sx">Entregar a decisão pro dado foi o melhor que fiz.</p><p class="vis">Frase de marca.</p></div></div>
+    <div class="sld"><div class="sn cta">CTA 08</div><div><p class="sh">Faça seus 30 dias</p><p class="sx">RunEasy, grátis nas lojas. Link na bio. Me conta no dia 30.</p><p class="vis">Logo.</p></div></div>
+    <div class="crl-cap"><p class="lblk">Legenda</p><div class="cap">Documentei 30 dias entregando minha corrida pra uma IA. Do "que ódio, deixa eu correr" ao melhor pace do ano. Print do dia 1 e do dia 30 aí ⬆️. Salva e faz o teu — depois compara.</div></div>
+  </div>
+
+  <div class="crl"><div class="crl-h"><div class="cn">Carrossel 06 · marca · post de lançamento (D1) · 6 slides</div><div class="ct">A RunEasy está no ar (o que ela é)</div></div>
+    <div class="sld"><div class="sn cover">CAPA 01</div><div><p class="sh">Hoje a RunEasy nasceu</p><p class="sx">O app de corrida que te diz, todo dia, se você deve treinar — e como.</p><p class="vis">Logo grande, fundo carvão.</p></div></div>
+    <div class="sld"><div class="sn">02</div><div><p class="sh">Todo corredor corre no escuro</p><p class="sx">"Treino hoje? Forço ou pego leve?" No feeling — e o feeling erra.</p><p class="vis">Pessoa em dúvida.</p></div></div>
+    <div class="sld"><div class="sn">03</div><div><p class="sh">E se um coach lesse seu corpo todo dia?</p><p class="sx">Sono, FC, carga — e te desse um sinal claro.</p><p class="vis">Semáforo.</p></div></div>
+    <div class="sld"><div class="sn">04</div><div><p class="sh">Sinal diário · coach que te corrige · plano que se adapta</p><p class="sx">E funciona com 6 relógios diferentes.</p><p class="vis">3 mini-telas.</p></div></div>
+    <div class="sld"><div class="sn">05</div><div><p class="sh">Do primeiro 5K à maratona</p><p class="sx">Trata você como atleta desde o dia 1.</p><p class="vis">Foto real diversa.</p></div></div>
+    <div class="sld"><div class="sn cta">CTA 06</div><div><p class="sh">Baixe grátis e comece hoje</p><p class="sx">Play Store e App Store. Link na bio. Bem-vindo. 🖤</p><p class="vis">Selos das lojas.</p></div></div>
+    <div class="crl-cap"><p class="lblk">Legenda</p><div class="cap">É oficial: a RunEasy está nas lojas. 🎉 [1-2 linhas pessoais do fundador]. Se você corre e quer parar de adivinhar, ela é pra você. Link na bio — e me conta o que achou. Bora correr certo.</div></div>
+  </div>
+</div>
+<div data-tpl="phototiktok" data-title="Photo / Carrossel — TikTok" data-meta="reuso · <b>esforço quase zero, segundo canal</b>">
+  <div class="conv"><b>Função no funil</b> Atrair &amp; Convencer · o TikTok empurra muito photo mode agora, e tem menos concorrência que vídeo.</div>
+  <p style="font-size:14px;color:var(--ink-soft)">Pegue os <strong>6 carrosséis do Instagram</strong> (mesmo texto, mesma arte) e publique como <strong>photo mode no TikTok</strong>, com um som em alta por baixo. Cada peça passa a trabalhar em duas redes.</p>
+  <div class="block-h">Os que melhor funcionam em photo mode</div>
+  <ul class="items">
+    <li><span class="ix">▸</span><div><p class="ti">5 sinais de que você treina demais</p><p class="hk">Lista "relatável" — formato campeão de conclusão no photo mode.</p></div></li>
+    <li><span class="ix">▸</span><div><p class="ti">Começando a correr? O que ninguém te conta</p><p class="hk">Conteúdo de iniciante salva e compartilha muito.</p></div></li>
+    <li><span class="ix">▸</span><div><p class="ti">Deixei uma IA decidir meus treinos por 30 dias</p><p class="hk">Saga em swipe — o usuário desliza pra ver o desfecho.</p></div></li>
+  </ul>
+  <div class="conv"><b>Regra</b> Som em alta + 1ª foto que para o dedo (texto-isca grande). Legenda curta com a promessa do swipe.</div>
+</div>
+<div data-tpl="shorts" data-title="YouTube Shorts" data-meta="reuso + 3 nativos · <b>captura intenção de compra</b>">
+  <div class="conv"><b>Função no funil</b> Converter · corredor pesquisa no YouTube antes de escolher app/tênis. Shorts aparece nessa busca.</div>
+  <p style="font-size:14px;color:var(--ink-soft)">Reaproveite os Reels verticais aqui. Além disso, 3 Shorts pensados pra <strong>busca</strong> (alta intenção). O título deve ser a própria query.</p>
+  <ul class="items">
+    <li><span class="ix">01</span><div><p class="ti">"Melhor app de corrida em 2026 — testei os principais"</p><p class="hk">45s mostrando a RunEasy ganhando pelo sinal diário. Pega quem está decidindo.</p></div></li>
+    <li><span class="ix">02</span><div><p class="ti">"Como saber se devo treinar ou descansar hoje"</p><p class="hk">Responde uma busca real. Demonstra o check-in.</p></div></li>
+    <li><span class="ix">03</span><div><p class="ti">"App de corrida que funciona com Garmin, Apple Watch e mais 4"</p><p class="hk">Captura busca por compatibilidade de wearable (o moat).</p></div></li>
+  </ul>
+</div>
+<div data-tpl="storiesinflu" data-title="Stories de Criador" data-meta="10 sagas completas · <b>escada de engajamento → link</b>">
+  <div class="conv"><b>Função no funil</b> Convencer &amp; Fidelizar · Reels/TikTok pra alcançar, stories pra converter. Escada: slider (fricção zero) → enquete (1 toque) → link só no fim.</div>
+  <div class="src"><b>Regra dos stories:</b> todo sticker tem 2 objetivos (engajar E servir à história) · stickers na zona do dedo · saga &gt; story solto · salve as sagas nos Destaques (convertem por meses).</div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 01 · prontidão + plano adaptativo · saga 30 dias (1–2 frames/dia)</div><div class="sc-t">30 dias deixando uma IA treinar por mim</div><div class="sc-m"><span><b>Objetivo:</b> investimento diário → link no dia 30</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Dia 1 · frame 1</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Selfie animada, roupa de corrida.</span><br>"Decisão maluca: pelos próximos 30 dias um app decide se eu treino. Eu obedeço sem questionar. Bora documentar."</p><span class="stk">? caixa: "alguém já tentou algo assim?"</span></div>
+    <div class="frame"><div class="fl">Dia 1 · frame 2</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Tela do check-in carregando, cobre o veredito com o dedo.</span><br>"Antes de eu mostrar o que ele decidiu hoje… chuta:"</p><span class="stk">▣ enquete: "hoje é treino ou descanso?"</span></div>
+    <div class="frame"><div class="fl">Dia 1 · frame 3</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Revela: "Prontidão baixa — descanse".</span><br>"DESCANSO no primeiro dia 😩 quem votou treino errou junto comigo. Tá bom, IA, confio. Amanhã tem mais."</p></div>
+    <div class="frame"><div class="fl">Dias 2–29 · rotina diária</div><p style="margin:0;font-size:13.5px">Mesmo padrão: clipe curto + enquete "treino ou descanso?" + revelação. Intercala drama (dia 9: "ele me segurou e eu queria MUITO correr") e vitória (dia 14: "liberou tiro e eu voei, recorde 🔥"). <span class="dir" style="font-style:italic;color:var(--ink-soft)">[ex. dia 18]</span> "18 dias. Faz 2 semanas que meu joelho não dói. Não tô acreditando."</p><span class="stk">▣ enquete diária</span><span class="stk">◐ slider ocasional</span></div>
+    <div class="frame"><div class="fl">Dia 30 · desfecho + link</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Selfie emocionada pós-corrida. Mostra antes/depois do pace.</span><br>"Dia 30. Resumo: pace melhor, e eu finalmente parei de treinar no escuro. Obrigado a quem votou comigo 🥹 Muita gente perguntou — o app que usei é esse aqui."</p><span class="stk">↗ link: "o app dos 30 dias 👟"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>O link só aparece no dia 30, depois de um mês de enquetes diárias. O público co-criou a jornada. Não é "baixe": é "o app que vocês me viram usar".</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 02 · prontidão · saga 7 dias · ângulo emocional (pós-lesão)</div><div class="sc-t">A volta por cima</div><div class="sc-m"><span><b>Objetivo:</b> empatia → torcida → link no dia 7</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Dia 1 · abertura</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Tom vulnerável, segurando o tênis.</span><br>"4 meses parado por lesão. Hoje eu volto a correr e tô com medo. Vou levar vocês comigo nessa semana."</p><span class="stk">? caixa: "qual foi sua pior lesão? 🤕"</span></div>
+    <div class="frame"><div class="fl">Dia 1 · frame 2</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Compartilha 2-3 respostas da caixa (empatia coletiva).</span><br>"Vocês me quebraram com essas histórias. Não tô sozinho nisso. Hoje o app me deu sinal amarelo — vou bem devagar, 2km só."</p></div>
+    <div class="frame"><div class="fl">Dias 2–6 · reconstrução</div><p style="margin:0;font-size:13.5px">Cada dia: o sinal + uma vitória ou recuo honesto. Dia 3: "ele mandou descansar e dessa vez eu OBEDECI". Dia 5: "sinal verde, primeiros 4km, chorei um pouco não vou mentir".</p><span class="stk">▣ enquete: "acham que tô indo rápido demais?"</span></div>
+    <div class="frame"><div class="fl">Dia 7 · desfecho + link</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Pós-corrida, emocionado, sem dor.</span><br>"Dia 7. 5km. Há um mês isso parecia impossível. O que mudou dessa vez foi escutar os sinais em vez de ignorar. Pra quem perguntou o que tô usando pra treinar escutando meu corpo:"</p><span class="stk">↗ link: "o que me trouxe de volta"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>A caixa no dia 1 cria empatia; a torcida durante a semana transforma o público em parte da volta por cima. O link surge como resposta a "o que te trouxe de volta?".</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 03 · qualquer feature · single ~60s · responde demanda</div><div class="sc-t">Respondendo a pergunta que mais cai na minha DM</div><div class="sc-m"><span><b>Objetivo:</b> converter demanda existente</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Frame 1 · setup</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Print de várias DMs "que app é esse??" ao fundo.</span><br>"Gente, minha DM tá assim faz uma semana. Tá bom, EU CONTO. Mas deixa eu mostrar por que eu uso, antes do link."</p></div>
+    <div class="frame"><div class="fl">Frame 2 · mini-tour</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Tour casual pela tela: sinal de prontidão, feedback do coach, a patente.</span><br>"É isso: ele me diz se devo treinar, me dá feedback do coach depois, e ainda tem ranking e patente que me viciaram."</p><span class="stk">◐ slider: "quão curioso você tava? 👀"</span></div>
+    <div class="frame"><div class="fl">Frame 3 · link</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Sorriso, gesto de "toma".</span><br>"Pronto, parei de fazer suspense. Tá aqui. Agora para de encher minha DM 😂"</p><span class="stk">↗ link: "o tal app 👟"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Inverte a lógica: o público pediu, ele só atende. O link vira um favor bem-humorado. Funciona melhor com demanda real já acumulada.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 04 · feedback do coach IA · sequência (5–6 frames)</div><div class="sc-t">Tour pelo meu pós-treino (agora, suado)</div><div class="sc-m"><span><b>Objetivo:</b> mostrar o coach em ação</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Frame 1 · chegando</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Ofegante, suado, câmera na mão.</span><br>"Acabei AGORA. Vem ver o que o coach do app vai falar do meu treino — eu nunca sei o que esperar."</p><span class="stk">◐ slider: "quão nerd de dados você é?"</span></div>
+    <div class="frame"><div class="fl">Frames 2–4 · reação ao feedback</div><p style="margin:0;font-size:13.5px">[2] "Ele diz que minha constância de ritmo foi a melhor da semana." [3] "Mas apontou que minha cadência caiu no fim. De novo isso." [4] "E já me deu o foco de amanhã: tiros curtos. É como ter um treinador olhando cada corrida."</p></div>
+    <div class="frame"><div class="fl">Frame 5 · engajar</div><p style="margin:0;font-size:13.5px">"Vocês olham esses dados depois de correr ou só largam o tênis e vão pro banho?"</p><span class="stk">▣ enquete: "olho os dados / largo tudo kkk"</span></div>
+    <div class="frame"><div class="fl">Frame 6 · link casual</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Indo pro banho.</span><br>"Quem quiser ver o que o coach fala do SEU treino, é esse que eu uso. Vou tomar banho 🚿"</p><span class="stk">↗ link: "tô usando esse 👇"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Crueza total (suado, reação ao vivo) faz parecer bastidor. O slider e a enquete sobem a escada antes do link casual.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 05 · ranking · saga semanal + clímax</div><div class="sc-t">O duelo pelo topo da cidade</div><div class="sc-m"><span><b>Objetivo:</b> drama esportivo → torcida → link no clímax</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Dia 1 · o desafio</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Print do ranking: ele em 2º.</span><br>"Tem um tal de 'JR_Runner' em 1º na minha cidade há semanas. Essa semana eu vou atrás. Acompanha."</p><span class="stk">▣ enquete: "consigo ultrapassar ele? 👀"</span></div>
+    <div class="frame"><div class="fl">Dias 2–5 · a perseguição</div><p style="margin:0;font-size:13.5px">[dia 3] "Cheguei a 8 pontos! Mas o desgraçado correu 10km ontem e abriu vantagem 😤" [dia 5] "Tô colado. Amanhã é a corrida decisiva."</p><span class="stk">⧗ contagem: "corrida decisiva"</span></div>
+    <div class="frame"><div class="fl">Dia 6 · clímax + link</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Pós-corrida, suspense, abre o ranking.</span><br>"Corri o melhor 10km da vida. Atualizou e… #1 DA CIDADE! 🏆 Muita gente perguntou onde rola esse ranking:"</p><span class="stk">↗ link: "a 'arena' 🏅"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>A enquete diária e a contagem transformam o público em torcida investida. O link vem na euforia da vitória, como resposta a "onde rola isso?".</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 06 · gamificação (patente) · sequência curta · humor</div><div class="sc-t">Meu ranking caiu e eu não tô bem 😭</div><div class="sc-m"><span><b>Objetivo:</b> humor relatável → link leve</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Frame 1 · luto</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Cara de velório fingido, print da patente rebaixada.</span><br>"Informo com pesar que caí de Ouro pra Prata por ter ousado viajar 6 dias. Recebam meus sentimentos."</p></div>
+    <div class="frame"><div class="fl">Frame 2 · identificação</div><p style="margin:0;font-size:13.5px">"Um app me deu vergonha o suficiente pra me botar correndo 6h da manhã hoje. Saúde nunca fez isso. Ego fez."</p><span class="stk">▣ enquete: "você é movido a ego? 🙋/🙅"</span></div>
+    <div class="frame"><div class="fl">Frame 3 · link leve</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Apertando o cadarço com determinação cômica.</span><br>"Volto pro Ouro custe o que custar. Se você também precisa de um joguinho pra sair de casa, sabe onde me achar 👇 (sofra comigo)"</p><span class="stk">↗ link: "o jogo (app)"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>O humor carrega — o link é "sofra comigo". A enquete engaja e segmenta quem se identifica. Leveza faz o link parecer convite pra piada interna.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 07 · prontidão · sequência · educativo-pessoal</div><div class="sc-t">Como eu decido se treino (bastidores)</div><div class="sc-m"><span><b>Objetivo:</b> valor + ritual → link como recurso</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Frame 1 · abertura</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Manhã, café, luz suave.</span><br>"Todo mundo me pergunta como eu sei se devo treinar ou descansar. Hoje mostro meu processo de 30 segundos."</p><span class="stk">? caixa: "como VOCÊ decide se treina?"</span></div>
+    <div class="frame"><div class="fl">Frames 2–3 · o ritual</div><p style="margin:0;font-size:13.5px">[2] "Respondo como dormi, energia, dor. Leva 30s." [3] "O app cruza com meu relógio e minha semana e dá um sinal. Hoje: verde. Se fosse vermelho, eu descansaria sem culpa."</p></div>
+    <div class="frame"><div class="fl">Frame 4 · Q&amp;A</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Reposta respostas da caixa.</span><br>"Vocês responderam 'no feeling' e 'se não tô com preguiça' 😅 era exatamente eu antes de me lesionar. Feeling mente."</p></div>
+    <div class="frame"><div class="fl">Frame 5 · link como recurso</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Saindo pra correr.</span><br>"Se quiser trocar o 'feeling' por um sinal de verdade, é esse que eu uso pro check-in. Bom treino 👟"</p><span class="stk">↗ link: "meu check-in diário"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Educa primeiro e usa a caixa pra fazer o público confessar o próprio método falho — eles mesmos percebem a necessidade. O link vira "recurso pra quem quiser".</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 08 · gamificação (XP/patente) · saga 1 mês</div><div class="sc-t">Bronze → Ouro, ao vivo</div><div class="sc-m"><span><b>Objetivo:</b> aspiração de status → link no ouro</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Sem. 1 · largada</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Print da patente Bronze.</span><br>"Meta pública: chegar no Ouro em 1 mês. Hoje sou Bronze sem fôlego. Vamos ver se eu aguento o vexame ou a glória."</p><span class="stk">▣ enquete: "eu chego no ouro em 30 dias?"</span></div>
+    <div class="frame"><div class="fl">Sem. 2–3 · escalada</div><p style="margin:0;font-size:13.5px">[sem 2] "PRATA! O XP enchendo é mais viciante que rede social." [sem 3] "Quase Prata I. Quem diria que eu ia correr na chuva por pontos."</p><span class="stk">✸ quiz: "em que patente eu tô? 🥉🥈🥇"</span></div>
+    <div class="frame"><div class="fl">Sem. 4 · ouro + link</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Reação eufórica, print Ouro.</span><br>"OURO 🥇 Um mês atrás eu não corria 2km. Não foi a 'saúde' que me trouxe aqui — foi querer ver a barrinha encher. Pra quem quer começar a própria subida:"</p><span class="stk">↗ link: "bora subir junto 🥇"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>A meta pública + quizzes semanais transformam a evolução em torcida coletiva. O link é "bora subir junto", um convite pra mesma jornada.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 09 · feedback do coach IA · single ~60s</div><div class="sc-t">3 coisas que o app me mostrou essa semana</div><div class="sc-m"><span><b>Objetivo:</b> valor rápido → link opcional</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Frame 1 · hook</div><p style="margin:0;font-size:13.5px">"3 coisas que o coach do meu app me mostrou essa semana e que eu não fazia ideia. Vai:"</p><span class="stk">◐ slider: "tô prestando atenção 👀"</span></div>
+    <div class="frame"><div class="fl">Frames 2–3 · as 3 lições</div><p style="margin:0;font-size:13.5px">[2] "1: meu 'treino leve' tava rápido demais — por isso eu vivia cansado. 2: minha cadência despenca quando eu canso." [3] "3: eu gasto energia demais na largada. As três coisas, nos MEUS dados, que eu nunca tinha visto."</p></div>
+    <div class="frame"><div class="fl">Frame 4 · link opcional</div><p style="margin:0;font-size:13.5px">"De graça, sem baixar nada: tenta correr o início mais devagar amanhã. Se quiser ver o que o app fala do SEU treino, deixei aqui."</p><span class="stk">↗ link: "o coach (opcional)"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>Entrega valor aplicável de graça. O link é explicitamente "opcional". Generosidade gera a confiança que converte depois.</div>
+  </div></div>
+
+  <div class="sc"><div class="sc-h"><div class="sc-n">Story 10 · ranking / comunidade · sequência narrativa</div><div class="sc-t">A investigação: quem é o corredor #1?</div><div class="sc-m"><span><b>Objetivo:</b> intriga narrativa → link curioso</span></div></div><div class="sc-b">
+    <div class="frame"><div class="fl">Frame 1 · o mistério</div><p style="margin:0;font-size:13.5px"><span class="dir" style="font-style:italic;color:var(--ink-soft)">Tom de documentário de mistério, print do ranking.</span><br>"Tem uma pessoa que é #1 da minha cidade há 47 dias. Ninguém sabe quem é. Hoje começa a investigação."</p><span class="stk">▣ enquete: "querem que eu descubra? 🔍"</span></div>
+    <div class="frame"><div class="fl">Frames 2–4 · as pistas</div><p style="margin:0;font-size:13.5px">[2] "Pista 1: corre todo dia às 5h. Um maluco disciplinado." [3] "Pista 2: pace absurdo. É atleta ou robô." [4] "Pista 3: o nome é 'V_Costa'. Procurei e nada. Um fantasma veloz."</p><span class="stk">? caixa: "alguém conhece o V_Costa? 👀"</span></div>
+    <div class="frame"><div class="fl">Frames 5–6 · a decisão</div><p style="margin:0;font-size:13.5px">[5] "Cheguei numa conclusão: não importa quem é. Importa que ele me fez correr mais nessas 2 semanas do que no ano inteiro." [6] "Então em vez de descobrir, eu vou ALCANÇAR. A perseguição começa amanhã."</p></div>
+    <div class="frame"><div class="fl">Frame 7 · link curioso</div><p style="margin:0;font-size:13.5px">"Quem quiser entrar no ranking da PRÓPRIA cidade e arrumar o seu 'V_Costa' pra perseguir, tá aqui. Talvez o fantasma da sua cidade seja você 👀"</p><span class="stk">↗ link: "acha seu rival 🏃"</span></div>
+    <div class="sc-why soft"><b>Por que o CTA é suave</b>História de mistério que engaja por curiosidade narrativa. O link convida a "achar seu próprio rival" — transforma o desejo de competição em ação, sem dizer "baixe".</div>
+  </div></div>
+</div>
+<div data-tpl="storiesruneasy" data-title="Stories da Marca — IG RunEasy" data-meta="8 formatos novos · <b>conta oficial</b>">
+  <div class="conv"><b>Função no funil</b> Converter &amp; Fidelizar · a conta oficial transforma seguidor em usuário e usuário em fã. Link/sticker sempre presente.</div>
+  <div class="src"><b>Regra de ouro:</b> 1 a cada 3 stories deve ter um caminho de ação (link, enquete, pergunta). Stories sem interação somem do topo da barra.</div>
+  <div class="frame"><div class="fl">Story 01 · ritual diário</div><p style="margin:0;font-size:14px"><b>Enquete do sinal de hoje</b> — toda manhã. "Qual seu sinal hoje? 🟢 Bora · 🟡 Leve · 🔴 Descansa". Vira hábito coletivo e te dá um termômetro do público.</p><span class="stk">▣ enquete</span><div class="fcap">Legenda: "Bom dia, corredor. Antes de calçar o tênis: como tá o corpo hoje?"</div></div>
+  <div class="frame"><div class="fl">Story 02 · utilidade</div><p style="margin:0;font-size:14px"><b>Tutorial em 3 frames</b> — "Como fazer seu check-in em 20s". Print 1 (abrir) → print 2 (4 perguntas) → print 3 (o sinal). Fecha com sticker de link.</p><span class="stk">↗ link do app</span><div class="fcap">Reduz a fricção de quem baixou e não sabe começar = retenção.</div></div>
+  <div class="frame"><div class="fl">Story 03 · caixa de pergunta</div><p style="margin:0;font-size:14px"><b>"Qual sua maior dúvida na corrida?"</b> — responde 3–4 por dia em cards, conectando à RunEasy quando fizer sentido. Gera ideia de conteúdo e mostra autoridade.</p><span class="stk">? pergunta</span></div>
+  <div class="frame"><div class="fl">Story 04 · prova social (UGC)</div><p style="margin:0;font-size:14px"><b>Repost de quem marcou a RunEasy</b> — print de patente, de corrida, de sinal. Agradece e reposta. Incentiva mais gente a postar (bola de neve).</p><span class="stk">↗ marcação</span></div>
+  <div class="frame"><div class="fl">Story 05 · enquete de mito</div><p style="margin:0;font-size:14px"><b>"Mito ou verdade?"</b> — "Correr todo dia faz evoluir mais rápido." Enquete → revela a resposta no frame seguinte. Educa brincando.</p><span class="stk">▣ enquete</span></div>
+  <div class="frame"><div class="fl">Story 06 · bastidor</div><p style="margin:0;font-size:14px"><b>"Construindo a RunEasy"</b> — founder mostrando uma decisão de produto, um número da semana, um print engraçado. Humaniza a marca nova.</p></div>
+  <div class="frame"><div class="fl">Story 07 · contagem / desafio</div><p style="margin:0;font-size:14px"><b>Desafio "30 dias de RunEasy"</b> — sticker de contagem + hashtag própria. Quem entra documenta junto. Constrói comunidade e retenção.</p><span class="stk">⧗ contagem</span></div>
+  <div class="frame"><div class="fl">Story 08 · conversão direta</div><p style="margin:0;font-size:14px"><b>Teaser → link</b> — recorte de 1 carrossel/Reels do dia + "vê completo no post" ou sticker direto pras lojas. Sempre uma porta de saída pro download.</p><span class="stk">↗ link do app</span></div>
+</div>
+<div data-tpl="x" data-title="X / Twitter — Threads" data-meta="3 ângulos · <b>autoridade &amp; PR</b>">
+  <div class="conv"><b>Função no funil</b> Convencer (autoridade) · não é o maior canal de aquisição, mas é onde vivem jornalistas, podcasters e fundadores. Uma thread pode virar matéria.</div>
+  <ul class="items">
+    <li><span class="ix">01</span><div><p class="ti">"Analisei 30 dias do meu treino com IA e descobri o que eu fazia errado"</p><p class="hk">Thread de dados pessoais + insights. Tom técnico, sem vender o tempo todo.</p></div></li>
+    <li><span class="ix">02</span><div><p class="ti">"O erro que quase todo corredor iniciante comete na 1ª semana"</p><p class="hk">Opinião forte + utilidade. Convida resposta da comunidade técnica.</p></div></li>
+    <li><span class="ix">03</span><div><p class="ti">"Por que decidir treino 'no feeling' é o que mais trava sua evolução"</p><p class="hk">Tese polarizante (sem afirmar lesão). Gera debate = alcance + pauta de imprensa.</p></div></li>
+  </ul>
+</div>
+<div data-tpl="ugc" data-title="UGC &amp; Comunidade" data-meta="canais de confiança · <b>barato e converte</b>">
+  <div class="conv"><b>Função no funil</b> Converter &amp; Fidelizar · recomendação de pessoa/clube converte muito mais que anúncio.</div>
+  <ul class="items">
+    <li><span class="ix">01</span><div><p class="ti">Desafio de 30 dias com hashtag própria</p><p class="hk">Dentro e fora do app. Usuário documenta → conteúdo orgânico infinito.</p></div></li>
+    <li><span class="ix">02</span><div><p class="ti">Repost de UGC na conta principal</p><p class="hk">Reposta o melhor conteúdo de usuário. Prova social + incentivo a postar.</p></div></li>
+    <li><span class="ix">03</span><div><p class="ti">Mineração no Reddit / grupos</p><p class="hk">r/corredores, r/running, grupos de WhatsApp/Facebook. Escutar dor → ideia certeira + presença genuína (sem spam).</p></div></li>
+    <li><span class="ix">04</span><div><p class="ti">Parceria com assessorias e clubes</p><p class="hk">Treinador recomenda a alunos que confiam nele. Premium grátis + comissão. Distribuição B2B2C.</p></div></li>
+  </ul>
+</div>
+    </div>
+
+    <script src="/static/app.js?v=1.4.0"></script>
 </body>
 </html>
