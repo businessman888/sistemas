@@ -51,6 +51,10 @@
                         <span class="material-symbols-outlined nav-icon">palette</span>
                         <span>Creative Hub</span>
                     </button>
+                    <button class="nav-item" id="nav-documents">
+                        <span class="material-symbols-outlined nav-icon">folder_open</span>
+                        <span>Documentos</span>
+                    </button>
                     <!-- Add new modules here in the future -->
                 </div>
             </nav>
@@ -942,6 +946,65 @@
                 </section>
             </div>
 
+            <!-- Documentos Module Content -->
+            <div class="module-content" id="module-documents" style="display: none;">
+                <header class="module-header">
+                    <h2><span class="material-symbols-outlined nav-icon" style="font-size: 2rem; vertical-align: middle;">folder_open</span> Documentos</h2>
+                    <p class="module-subtitle">Organizador de arquivos pessoais, PDFs, imagens e documentos importantes</p>
+                </header>
+
+                <div class="documents-workspace">
+                    <!-- Left sidebar: categories tree -->
+                    <div class="documents-sidebar">
+                        <div class="documents-sidebar-header">
+                            <h3><span class="material-symbols-outlined section-title-icon">folder</span> Diretórios</h3>
+                            <button id="btn-new-category" class="btn-create-small"><span class="material-symbols-outlined">add</span> Nova</button>
+                        </div>
+                        <div class="categories-list-container">
+                            <div class="category-tree-item active" id="cat-all" data-id="all">
+                                <span class="material-symbols-outlined cat-icon">menu</span>
+                                <span class="cat-name">Todos os Arquivos</span>
+                            </div>
+                            <div class="category-tree-item" id="cat-avulsos" data-id="avulsos">
+                                <span class="material-symbols-outlined cat-icon">draft</span>
+                                <span class="cat-name">Arquivos Avulsos</span>
+                            </div>
+                            <div class="divider" style="margin: 8px 0; border-top: 1px solid var(--border-subtle);"></div>
+                            <div id="categories-tree" class="categories-tree-root">
+                                <!-- Gerado dinamicamente via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right panel: Active directory contents -->
+                    <div class="documents-main-panel">
+                        <div class="documents-panel-header">
+                            <div class="breadcrumbs" id="documents-breadcrumbs">
+                                <span>Todos os Arquivos</span>
+                            </div>
+                            
+                            <div class="documents-search-bar">
+                                <span class="material-symbols-outlined search-icon">search</span>
+                                <input type="text" id="documents-search-input" placeholder="Buscar nos arquivos...">
+                            </div>
+                        </div>
+
+                        <!-- Dropzone Area -->
+                        <div id="documents-dropzone" class="documents-dropzone-card">
+                            <span class="material-symbols-outlined dropzone-icon">upload_file</span>
+                            <h3>Arraste e solte arquivos aqui</h3>
+                            <p>Ou clique para selecionar do seu computador (PDF, Imagens, Documentos, etc.)</p>
+                            <input type="file" id="documents-file-input" style="display: none;" multiple>
+                        </div>
+
+                        <!-- Files list / grid -->
+                        <div id="documents-list-container" class="documents-list-grid">
+                            <!-- Gerado dinamicamente via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -1630,6 +1693,76 @@
     <li><span class="ix">04</span><div><p class="ti">Parceria com assessorias e clubes</p><p class="hk">Treinador recomenda a alunos que confiam nele. Premium grátis + comissão. Distribuição B2B2C.</p></div></li>
   </ul>
 </div>
+    </div>
+
+    <!-- Modal: Adicionar/Editar Categoria de Documentos -->
+    <div id="modal-category-edit" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card">
+            <div class="os-modal-header">
+                <h3 id="modal-category-title-action"><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">folder</span> Nova Categoria</h3>
+                <button id="btn-close-category-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <form id="category-edit-form" autocomplete="off">
+                <input type="hidden" id="category-id-input">
+                <input type="hidden" id="category-parent-input">
+                <div class="input-group">
+                    <label for="category-name-input">Nome da Categoria</label>
+                    <input type="text" id="category-name-input" class="input-url" placeholder="ex: Trabalho, Pessoal, Recibos" required style="margin-top: 6px;">
+                </div>
+                <div class="modal-footer-actions" style="margin-top: 20px;">
+                    <button type="button" id="btn-cancel-category" class="btn-chat-action" style="padding: 10px 18px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem;">Cancelar</button>
+                    <button type="submit" id="btn-save-category" class="btn-import" style="width: auto; padding: 10px 24px; margin-top: 0;">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Editar Documento -->
+    <div id="modal-document-edit" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card">
+            <div class="os-modal-header">
+                <h3><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">edit</span> Editar Arquivo</h3>
+                <button id="btn-close-document-edit-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <form id="document-edit-form" autocomplete="off">
+                <input type="hidden" id="document-id-input">
+                <div class="input-group">
+                    <label for="document-name-input">Nome do Arquivo</label>
+                    <input type="text" id="document-name-input" class="input-url" placeholder="Nome original do arquivo" required style="margin-top: 6px;">
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
+                    <label for="document-category-select">Categoria</label>
+                    <select id="document-category-select" class="select-language" style="margin-top: 6px;">
+                        <!-- Categorias populadas via JS -->
+                    </select>
+                </div>
+                <div class="modal-footer-actions" style="margin-top: 20px;">
+                    <button type="button" id="btn-cancel-document-edit" class="btn-chat-action" style="padding: 10px 18px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem;">Cancelar</button>
+                    <button type="submit" id="btn-save-document-edit" class="btn-import" style="width: auto; padding: 10px 24px; margin-top: 0;">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Visualizador de Arquivo -->
+    <div id="modal-document-viewer" class="os-modal-overlay" style="display: none;">
+        <div class="viewer-modal-card">
+            <div class="viewer-modal-header">
+                <div>
+                    <h3 id="viewer-document-title">Nome do Arquivo</h3>
+                    <div id="viewer-document-meta" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">Tipo: PDF | Tamanho: 2.3MB</div>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button id="btn-viewer-download" class="btn-chat-action" style="padding: 8px 16px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                        <span class="material-symbols-outlined" style="font-size: 1.1rem;">download</span> Baixar
+                    </button>
+                    <button id="btn-close-document-viewer" class="btn-close-modal" style="position: static;"><span class="material-symbols-outlined">close</span></button>
+                </div>
+            </div>
+            <div class="viewer-modal-body" id="viewer-document-body">
+                <!-- Conteúdo de visualização carregado aqui (iframe, img, etc) -->
+            </div>
+        </div>
     </div>
 
     <script src="/static/app.js?v=1.4.0"></script>

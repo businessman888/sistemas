@@ -237,32 +237,34 @@
     const navBrain = document.getElementById('nav-brain');
     const navOrchestrator = document.getElementById('nav-orchestrator');
     const navCreativeHub = document.getElementById('nav-creative-hub');
+    const navDocuments = document.getElementById('nav-documents');
     const moduleYoutube = document.getElementById('module-youtube');
     const moduleSocialMedia = document.getElementById('module-social-media');
     const moduleClone = document.getElementById('module-clone');
     const moduleBrain = document.getElementById('module-brain');
     const moduleOrchestrator = document.getElementById('module-orchestrator');
     const moduleCreativeHub = document.getElementById('module-creative-hub');
+    const moduleDocuments = document.getElementById('module-documents');
 
     // Troca de módulo na Sidebar
     function switchModule(activeNav, activeModule) {
-        [navYoutube, navSocialMedia, navClone, navBrain, navOrchestrator, navCreativeHub].forEach(nav => {
+        [navYoutube, navSocialMedia, navClone, navBrain, navOrchestrator, navCreativeHub, navDocuments].forEach(nav => {
             if (nav) nav.classList.remove('active');
         });
-        [moduleYoutube, moduleSocialMedia, moduleClone, moduleBrain, moduleOrchestrator, moduleCreativeHub].forEach(mod => {
+        [moduleYoutube, moduleSocialMedia, moduleClone, moduleBrain, moduleOrchestrator, moduleCreativeHub, moduleDocuments].forEach(mod => {
             if (mod) mod.style.display = 'none';
         });
         activeNav.classList.add('active');
-        if (activeModule === moduleOrchestrator) {
+        if (activeModule === moduleOrchestrator || activeModule === moduleDocuments) {
             activeModule.style.display = 'flex';
         } else {
             activeModule.style.display = 'block';
         }
 
-        // Toggle wide layout for Orchestrator, Brain or Creative Hub
+        // Toggle wide layout for Orchestrator, Brain, Creative Hub or Documents
         const osContent = document.querySelector('.os-content');
         if (osContent) {
-            if (activeModule === moduleOrchestrator || activeModule === moduleBrain || activeModule === moduleCreativeHub) {
+            if (activeModule === moduleOrchestrator || activeModule === moduleBrain || activeModule === moduleCreativeHub || activeModule === moduleDocuments) {
                 osContent.classList.add('wide-layout');
             } else {
                 osContent.classList.remove('wide-layout');
@@ -303,6 +305,13 @@
     if (navCreativeHub) {
         navCreativeHub.addEventListener('click', () => {
             switchModule(navCreativeHub, moduleCreativeHub);
+        });
+    }
+
+    if (navDocuments) {
+        navDocuments.addEventListener('click', () => {
+            switchModule(navDocuments, moduleDocuments);
+            initDocumentsModule();
         });
     }
 
@@ -2738,6 +2747,795 @@
         } catch (err) {
             console.error("Erro ao carregar custos do sistema:", err);
         }
+    }
+
+    // Inicializa carregamento do custo ao abrir a página
+    updateSystemUsage();
+
+    // ============================================================
+    // Lógica do Módulo de Documentos e Arquivos
+    // ============================================================
+    let activeCategoryId = 'all';
+    let allCategories = [];
+    let allDocuments = [];
+    let isDocumentsInitialized = false;
+    let currentViewerDoc = null;
+
+    // Helper para escapar HTML simples
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text
+            .toString()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // Debounce simples para a pesquisa
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    async function initDocumentsModule() {
+        // Carrega categorias e arquivos
+        await loadCategories();
+        await loadDocuments();
+
+        if (isDocumentsInitialized) return;
+        isDocumentsInitialized = true;
+
+        const documentsDropzone = document.getElementById('documents-dropzone');
+        const documentsFileInput = document.getElementById('documents-file-input');
+        const documentsSearchInput = document.getElementById('documents-search-input');
+        const btnNewCategory = document.getElementById('btn-new-category');
+        const categoryEditForm = document.getElementById('category-edit-form');
+        const documentEditForm = document.getElementById('document-edit-form');
+
+        // Navegação de categorias estáticas (Todos e Avulsos)
+        const catAll = document.getElementById('cat-all');
+        const catAvulsos = document.getElementById('cat-avulsos');
+
+        if (catAll) {
+            catAll.addEventListener('click', () => {
+                activeCategoryId = 'all';
+                updateCategorySelectionVisuals();
+                loadDocuments();
+            });
+        }
+
+        if (catAvulsos) {
+            catAvulsos.addEventListener('click', () => {
+                activeCategoryId = 'avulsos';
+                updateCategorySelectionVisuals();
+                loadDocuments();
+            });
+        }
+
+        // Eventos da Dropzone
+        if (documentsDropzone && documentsFileInput) {
+            documentsDropzone.addEventListener('click', () => {
+                documentsFileInput.click();
+            });
+
+            documentsFileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    uploadFiles(e.target.files);
+                }
+            });
+
+            documentsDropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                documentsDropzone.classList.add('drag-over');
+            });
+
+            documentsDropzone.addEventListener('dragleave', () => {
+                documentsDropzone.classList.remove('drag-over');
+            });
+
+            documentsDropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                documentsDropzone.classList.remove('drag-over');
+                if (e.dataTransfer.files.length > 0) {
+                    uploadFiles(e.dataTransfer.files);
+                }
+            });
+        }
+
+        // Pesquisa com debounce
+        if (documentsSearchInput) {
+            documentsSearchInput.addEventListener('input', debounce(() => {
+                loadDocuments();
+            }, 300));
+        }
+
+        // Nova categoria raiz
+        if (btnNewCategory) {
+            btnNewCategory.addEventListener('click', () => {
+                openCategoryModal(null, null);
+            });
+        }
+
+        // Submissão do Form de Categoria
+        if (categoryEditForm) {
+            categoryEditForm.addEventListener('submit', handleCategorySubmit);
+        }
+
+        // Submissão do Form de Edição de Documento
+        if (documentEditForm) {
+            documentEditForm.addEventListener('submit', handleDocumentEditSubmit);
+        }
+
+        // Fechamento de Modais
+        const btnCancelCategory = document.getElementById('btn-cancel-category');
+        const btnCloseCategoryModal = document.getElementById('btn-close-category-modal');
+        if (btnCancelCategory) btnCancelCategory.addEventListener('click', closeCategoryModal);
+        if (btnCloseCategoryModal) btnCloseCategoryModal.addEventListener('click', closeCategoryModal);
+
+        const btnCancelDocumentEdit = document.getElementById('btn-cancel-document-edit');
+        const btnCloseDocumentEditModal = document.getElementById('btn-close-document-edit-modal');
+        if (btnCancelDocumentEdit) btnCancelDocumentEdit.addEventListener('click', closeDocumentEditModal);
+        if (btnCloseDocumentEditModal) btnCloseDocumentEditModal.addEventListener('click', closeDocumentEditModal);
+
+        const btnCloseDocumentViewer = document.getElementById('btn-close-document-viewer');
+        const btnViewerDownload = document.getElementById('btn-viewer-download');
+        if (btnCloseDocumentViewer) btnCloseDocumentViewer.addEventListener('click', closeDocumentViewer);
+        if (btnViewerDownload) btnViewerDownload.addEventListener('click', downloadCurrentViewerDocument);
+
+        // Fecha dropdowns de card ao clicar fora
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.doc-menu-dropdown').forEach(d => {
+                d.style.display = 'none';
+            });
+        });
+    }
+
+    async function loadCategories() {
+        try {
+            allCategories = await apiFetch('/api/documents/categories');
+            renderCategoriesTree();
+            populateCategorySelect();
+        } catch (err) {
+            console.error("Erro ao carregar categorias:", err);
+            alert("Erro ao carregar categorias: " + err.message);
+        }
+    }
+
+    function renderCategoriesTree() {
+        const treeRoot = document.getElementById('categories-tree');
+        if (!treeRoot) return;
+        treeRoot.innerHTML = '';
+
+        // Filtra apenas categorias raiz (sem pai)
+        const roots = allCategories.filter(c => !c.parent_id);
+
+        if (roots.length === 0) {
+            treeRoot.innerHTML = '<div style="font-size: 0.8rem; color: var(--text-secondary); padding: 8px 10px;">Nenhuma categoria criada.</div>';
+            return;
+        }
+
+        roots.forEach(cat => {
+            const el = buildCategoryTreeHtml(cat, 0);
+            treeRoot.appendChild(el);
+        });
+    }
+
+    function buildCategoryTreeHtml(cat, level) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'category-node-wrapper';
+
+        const item = document.createElement('div');
+        item.className = 'category-tree-item';
+        if (String(activeCategoryId) === String(cat.id)) {
+            item.classList.add('active');
+        }
+        item.setAttribute('data-id', cat.id);
+        item.style.paddingLeft = `${level * 14 + 10}px`;
+
+        const children = allCategories.filter(c => c.parent_id === cat.id);
+        const hasChildren = children.length > 0;
+
+        item.innerHTML = `
+            <span class="material-symbols-outlined cat-icon">${hasChildren ? 'folder_open' : 'folder'}</span>
+            <span class="cat-name">${escapeHtml(cat.name)}</span>
+            <div class="cat-actions">
+                <button class="btn-cat-action btn-add-sub" title="Nova subcategoria"><span class="material-symbols-outlined" style="font-size: 1rem;">add</span></button>
+                <button class="btn-cat-action btn-rename-cat" title="Renomear"><span class="material-symbols-outlined" style="font-size: 1rem;">edit</span></button>
+                <button class="btn-cat-action btn-delete-cat" title="Excluir"><span class="material-symbols-outlined" style="font-size: 1rem;">delete</span></button>
+            </div>
+        `;
+
+        // Click na categoria para selecioná-la
+        item.addEventListener('click', (e) => {
+            if (e.target.closest('.cat-actions')) return;
+            activeCategoryId = cat.id;
+            updateCategorySelectionVisuals();
+            loadDocuments();
+        });
+
+        // Drag & Drop na pasta para mover arquivos ou fazer upload
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            item.classList.add('drag-over');
+        });
+
+        item.addEventListener('dragleave', () => {
+            item.classList.remove('drag-over');
+        });
+
+        item.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            item.classList.remove('drag-over');
+
+            if (e.dataTransfer.files.length > 0) {
+                // Drag and drop do desktop
+                uploadFiles(e.dataTransfer.files, cat.id);
+            } else {
+                // Drag de um card de arquivo existente
+                const docId = e.dataTransfer.getData('text/plain');
+                if (docId) {
+                    try {
+                        const formData = new FormData();
+                        formData.append('category_id', cat.id);
+                        const res = await fetch(`/api/documents/${docId}`, {
+                            method: 'PUT',
+                            body: formData
+                        });
+                        if (!res.ok) throw new Error("Erro na requisição.");
+                        
+                        // Atualiza a visualização
+                        loadDocuments();
+                    } catch (err) {
+                        alert("Erro ao mover arquivo: " + err.message);
+                    }
+                }
+            }
+        });
+
+        // Eventos dos botões de ação
+        const btnAddSub = item.querySelector('.btn-add-sub');
+        const btnRename = item.querySelector('.btn-rename-cat');
+        const btnDelete = item.querySelector('.btn-delete-cat');
+
+        btnAddSub.addEventListener('click', () => openCategoryModal(null, cat.id));
+        btnRename.addEventListener('click', () => openCategoryModal(cat.id, null));
+        btnDelete.addEventListener('click', () => confirmDeleteCategory(cat));
+
+        wrapper.appendChild(item);
+
+        if (hasChildren) {
+            const subtree = document.createElement('div');
+            subtree.className = 'category-subtree';
+            children.forEach(child => {
+                subtree.appendChild(buildCategoryTreeHtml(child, level + 1));
+            });
+            wrapper.appendChild(subtree);
+        }
+
+        return wrapper;
+    }
+
+    function updateCategorySelectionVisuals() {
+        // Remove class active de todos
+        document.querySelectorAll('.category-tree-item').forEach(el => {
+            el.classList.remove('active');
+        });
+
+        const activeId = activeCategoryId;
+        if (activeId === 'all') {
+            const el = document.getElementById('cat-all');
+            if (el) el.classList.add('active');
+        } else if (activeId === 'avulsos') {
+            const el = document.getElementById('cat-avulsos');
+            if (el) el.classList.add('active');
+        } else {
+            const el = document.querySelector(`.category-tree-item[data-id="${activeId}"]`);
+            if (el) el.classList.add('active');
+        }
+
+        updateBreadcrumbs();
+    }
+
+    function updateBreadcrumbs() {
+        const breadcrumbs = document.getElementById('documents-breadcrumbs');
+        if (!breadcrumbs) return;
+
+        if (activeCategoryId === 'all') {
+            breadcrumbs.innerHTML = '<span>Todos os Arquivos</span>';
+        } else if (activeCategoryId === 'avulsos') {
+            breadcrumbs.innerHTML = '<span>Arquivos Avulsos</span>';
+        } else {
+            const path = [];
+            let currentId = activeCategoryId;
+            while (currentId) {
+                const cat = allCategories.find(c => c.id === currentId);
+                if (cat) {
+                    path.unshift(cat);
+                    currentId = cat.parent_id;
+                } else {
+                    break;
+                }
+            }
+
+            let html = '<a id="breadcrumb-all" style="cursor:pointer; color:var(--accent);">Todos os Arquivos</a>';
+            path.forEach((cat, index) => {
+                html += ' <span class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle; color:var(--text-secondary);">chevron_right</span> ';
+                if (index === path.length - 1) {
+                    html += `<span style="color:var(--text-primary); font-weight:600;">${escapeHtml(cat.name)}</span>`;
+                } else {
+                    html += `<a class="breadcrumb-cat" data-id="${cat.id}" style="cursor:pointer; color:var(--accent);">${escapeHtml(cat.name)}</a>`;
+                }
+            });
+            breadcrumbs.innerHTML = html;
+
+            // Bind dos clicks dos links
+            const btnAll = document.getElementById('breadcrumb-all');
+            if (btnAll) {
+                btnAll.addEventListener('click', () => {
+                    activeCategoryId = 'all';
+                    updateCategorySelectionVisuals();
+                    loadDocuments();
+                });
+            }
+
+            breadcrumbs.querySelectorAll('.breadcrumb-cat').forEach(link => {
+                link.addEventListener('click', () => {
+                    activeCategoryId = parseInt(link.getAttribute('data-id'));
+                    updateCategorySelectionVisuals();
+                    loadDocuments();
+                });
+            });
+        }
+    }
+
+    async function loadDocuments() {
+        const searchInput = document.getElementById('documents-search-input');
+        const queryParams = [];
+
+        if (activeCategoryId === 'avulsos') {
+            queryParams.push('category_id=-1');
+        } else if (activeCategoryId !== 'all') {
+            queryParams.push(`category_id=${activeCategoryId}`);
+        }
+
+        if (searchInput && searchInput.value.trim() !== '') {
+            queryParams.push(`search=${encodeURIComponent(searchInput.value.trim())}`);
+        }
+
+        const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
+        try {
+            allDocuments = await apiFetch(`/api/documents${queryString}`);
+            renderDocumentsList();
+        } catch (err) {
+            console.error("Erro ao carregar documentos:", err);
+            alert("Erro ao carregar documentos: " + err.message);
+        }
+    }
+
+    function renderDocumentsList() {
+        const container = document.getElementById('documents-list-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (allDocuments.length === 0) {
+            container.innerHTML = `
+                <div class="empty-files-state">
+                    <span class="material-symbols-outlined empty-icon">folder_open</span>
+                    <h3>Nenhum arquivo encontrado</h3>
+                    <p>Arraste arquivos locais para a Dropzone ou selecione outra categoria.</p>
+                </div>
+            `;
+            return;
+        }
+
+        allDocuments.forEach(doc => {
+            const card = document.createElement('div');
+            card.className = 'document-card';
+            card.setAttribute('draggable', 'true');
+            card.setAttribute('data-id', doc.id);
+
+            let iconClass = 'text';
+            let iconName = 'description';
+            let hasPreview = false;
+
+            if (doc.mime_type) {
+                if (doc.mime_type.startsWith('image/')) {
+                    iconClass = 'image';
+                    iconName = 'image';
+                    hasPreview = true;
+                } else if (doc.mime_type.includes('pdf')) {
+                    iconClass = 'pdf';
+                    iconName = 'picture_as_pdf';
+                } else if (doc.mime_type.includes('sheet') || doc.mime_type.includes('excel') || doc.mime_type.includes('csv')) {
+                    iconClass = 'table';
+                    iconName = 'table_view';
+                }
+            }
+
+            const sizeKb = (doc.file_size / 1024).toFixed(1);
+            const dateStr = new Date(doc.created_at).toLocaleDateString('pt-BR');
+
+            let previewHtml = `<span class="material-symbols-outlined doc-icon ${iconClass}">${iconName}</span>`;
+            if (hasPreview) {
+                previewHtml = `<img src="/api/documents/${doc.id}/file" class="doc-img-preview" alt="${escapeHtml(doc.original_name)}">`;
+            }
+
+            card.innerHTML = `
+                <div class="doc-icon-wrapper">
+                    ${previewHtml}
+                </div>
+                <div class="doc-info">
+                    <span class="doc-name" title="${escapeHtml(doc.original_name)}">${escapeHtml(doc.original_name)}</span>
+                    <span class="doc-meta">${sizeKb} KB · ${dateStr}</span>
+                </div>
+                <div class="doc-card-actions">
+                    <button class="btn-doc-action" title="Ações"><span class="material-symbols-outlined" style="font-size: 1.1rem;">more_vert</span></button>
+                    <div class="doc-menu-dropdown" style="display: none;">
+                        <button class="btn-view-doc"><span class="material-symbols-outlined" style="font-size: 0.95rem;">visibility</span> Visualizar</button>
+                        <button class="btn-download-doc"><span class="material-symbols-outlined" style="font-size: 0.95rem;">download</span> Baixar</button>
+                        <button class="btn-edit-doc"><span class="material-symbols-outlined" style="font-size: 0.95rem;">edit</span> Renomear</button>
+                        <button class="btn-delete-doc btn-delete"><span class="material-symbols-outlined" style="font-size: 0.95rem;">delete</span> Excluir</button>
+                    </div>
+                </div>
+            `;
+
+            // Drag Start
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', doc.id);
+                card.style.opacity = '0.4';
+            });
+
+            card.addEventListener('dragend', () => {
+                card.style.opacity = '1';
+            });
+
+            // Card Click (Visualizar)
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.doc-card-actions')) return;
+                openDocumentViewer(doc);
+            });
+
+            // Menu Dropdown
+            const btnActions = card.querySelector('.btn-doc-action');
+            const dropdown = card.querySelector('.doc-menu-dropdown');
+
+            btnActions.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const wasOpen = dropdown.style.display === 'flex';
+                // Fecha outros dropdowns
+                document.querySelectorAll('.doc-menu-dropdown').forEach(d => {
+                    d.style.display = 'none';
+                });
+                dropdown.style.display = wasOpen ? 'none' : 'flex';
+            });
+
+            card.querySelector('.btn-view-doc').addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.style.display = 'none';
+                openDocumentViewer(doc);
+            });
+
+            card.querySelector('.btn-download-doc').addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.style.display = 'none';
+                downloadDocument(doc);
+            });
+
+            card.querySelector('.btn-edit-doc').addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.style.display = 'none';
+                openDocumentEditModal(doc);
+            });
+
+            card.querySelector('.btn-delete-doc').addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.style.display = 'none';
+                confirmDeleteDocument(doc);
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    async function uploadFiles(files, categoryId = null) {
+        // Se categoryId não foi passado, tenta usar a pasta selecionada
+        const catId = categoryId !== null ? categoryId : (activeCategoryId !== 'all' && activeCategoryId !== 'avulsos' ? activeCategoryId : null);
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const formData = new FormData();
+            formData.append('file', file);
+            if (catId) {
+                formData.append('category_id', catId);
+            }
+
+            try {
+                const response = await fetch('/api/documents', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errRes = await response.json();
+                    throw new Error(errRes.detail || "Erro no upload");
+                }
+                successCount++;
+            } catch (err) {
+                console.error("Erro no upload:", err);
+                failCount++;
+            }
+        }
+
+        if (successCount > 0) {
+            loadDocuments();
+        }
+
+        if (failCount > 0) {
+            alert(`Falha no upload de ${failCount} arquivo(s).`);
+        }
+    }
+
+    // Modais e Ações de Categoria
+    function openCategoryModal(catId = null, parentId = null) {
+        const modal = document.getElementById('modal-category-edit');
+        const titleEl = document.getElementById('modal-category-title-action');
+        const idInput = document.getElementById('category-id-input');
+        const parentInput = document.getElementById('category-parent-input');
+        const nameInput = document.getElementById('category-name-input');
+
+        if (!modal) return;
+
+        idInput.value = catId || '';
+        parentInput.value = parentId || '';
+        nameInput.value = '';
+
+        if (catId) {
+            const cat = allCategories.find(c => c.id === catId);
+            if (cat) {
+                nameInput.value = cat.name;
+                titleEl.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">edit</span> Renomear Categoria';
+            }
+        } else if (parentId) {
+            titleEl.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">create_new_folder</span> Nova Subcategoria';
+        } else {
+            titleEl.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">folder</span> Nova Categoria';
+        }
+
+        modal.style.display = 'flex';
+        nameInput.focus();
+    }
+
+    function closeCategoryModal() {
+        const modal = document.getElementById('modal-category-edit');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function handleCategorySubmit(e) {
+        e.preventDefault();
+        const id = document.getElementById('category-id-input').value;
+        const parentId = document.getElementById('category-parent-input').value;
+        const name = document.getElementById('category-name-input').value;
+
+        const formData = new FormData();
+        formData.append('name', name);
+        if (parentId) {
+            formData.append('parent_id', parentId);
+        }
+
+        try {
+            let res;
+            if (id) {
+                // UPDATE (Renomear)
+                res = await fetch(`/api/documents/categories/${id}`, {
+                    method: 'PUT',
+                    body: formData
+                });
+            } else {
+                // CREATE
+                res = await fetch('/api/documents/categories', {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.detail || "Erro ao salvar.");
+            }
+
+            closeCategoryModal();
+            loadCategories();
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+
+    function confirmDeleteCategory(cat) {
+        if (confirm(`Tem certeza que deseja excluir a categoria "${cat.name}"?\nSubcategorias também serão removidas e os arquivos vinculados a ela se tornarão avulsos.`)) {
+            deleteCategory(cat.id);
+        }
+    }
+
+    async function deleteCategory(id) {
+        try {
+            const res = await fetch(`/api/documents/categories/${id}`, {
+                method: 'DELETE'
+            });
+            if (!res.ok) throw new Error("Falha ao excluir.");
+            
+            // Se a categoria ativa foi excluída, volta pro raiz "all"
+            if (String(activeCategoryId) === String(id)) {
+                activeCategoryId = 'all';
+            }
+            loadCategories();
+            loadDocuments();
+        } catch (err) {
+            alert("Erro ao excluir categoria: " + err.message);
+        }
+    }
+
+    // Modal de Edição de Documento
+    function openDocumentEditModal(doc) {
+        const modal = document.getElementById('modal-document-edit');
+        const idInput = document.getElementById('document-id-input');
+        const nameInput = document.getElementById('document-name-input');
+
+        if (!modal) return;
+
+        idInput.value = doc.id;
+        nameInput.value = doc.original_name;
+
+        modal.style.display = 'flex';
+        nameInput.focus();
+    }
+
+    function populateCategorySelect() {
+        const select = document.getElementById('document-category-select');
+        if (!select) return;
+
+        select.innerHTML = '<option value="-1">Sem Categoria (Avulso)</option>';
+        allCategories.forEach(cat => {
+            let prefix = '';
+            let parentId = cat.parent_id;
+            while (parentId) {
+                prefix += '── ';
+                const parent = allCategories.find(c => c.id === parentId);
+                parentId = parent ? parent.parent_id : null;
+            }
+            select.innerHTML += `<option value="${cat.id}">${prefix}${escapeHtml(cat.name)}</option>`;
+        });
+    }
+
+    function closeDocumentEditModal() {
+        const modal = document.getElementById('modal-document-edit');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function handleDocumentEditSubmit(e) {
+        e.preventDefault();
+        const id = document.getElementById('document-id-input').value;
+        const name = document.getElementById('document-name-input').value;
+        const catSelect = document.getElementById('document-category-select');
+        const catId = catSelect ? catSelect.value : -1;
+
+        const formData = new FormData();
+        formData.append('original_name', name);
+        formData.append('category_id', catId);
+
+        try {
+            const res = await fetch(`/api/documents/${id}`, {
+                method: 'PUT',
+                body: formData
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.detail || "Erro ao salvar.");
+            }
+
+            closeDocumentEditModal();
+            loadDocuments();
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+
+    function confirmDeleteDocument(doc) {
+        if (confirm(`Tem certeza que deseja excluir definitivamente o arquivo "${doc.original_name}"?`)) {
+            deleteDocument(doc.id);
+        }
+    }
+
+    async function deleteDocument(id) {
+        try {
+            const res = await fetch(`/api/documents/${id}`, {
+                method: 'DELETE'
+            });
+            if (!res.ok) throw new Error("Falha ao excluir.");
+            loadDocuments();
+        } catch (err) {
+            alert("Erro ao excluir arquivo: " + err.message);
+        }
+    }
+
+    // Modal do Visualizador de Documento
+    async function openDocumentViewer(doc) {
+        currentViewerDoc = doc;
+        const modal = document.getElementById('modal-document-viewer');
+        const titleEl = document.getElementById('viewer-document-title');
+        const metaEl = document.getElementById('viewer-document-meta');
+        const bodyEl = document.getElementById('viewer-document-body');
+
+        if (!modal || !bodyEl) return;
+
+        titleEl.textContent = doc.original_name;
+        const sizeKb = (doc.file_size / 1024).toFixed(1);
+        metaEl.textContent = `Tipo: ${doc.mime_type || 'Desconhecido'} | Tamanho: ${sizeKb} KB | Criado em: ${new Date(doc.created_at).toLocaleDateString('pt-BR')}`;
+
+        bodyEl.innerHTML = '<div style="color:var(--text-secondary);">Carregando visualização...</div>';
+        modal.style.display = 'flex';
+
+        const fileUrl = `/api/documents/${doc.id}/file`;
+
+        if (doc.mime_type && doc.mime_type.startsWith('image/')) {
+            bodyEl.innerHTML = `<img src="${fileUrl}" alt="${escapeHtml(doc.original_name)}">`;
+        } else if (doc.mime_type && doc.mime_type.includes('pdf')) {
+            bodyEl.innerHTML = `<iframe src="${fileUrl}"></iframe>`;
+        } else if (doc.mime_type && (doc.mime_type.startsWith('text/') || doc.mime_type.includes('json') || doc.mime_type.includes('javascript') || doc.mime_type.includes('xml'))) {
+            try {
+                const text = await (await fetch(fileUrl)).text();
+                bodyEl.innerHTML = `<pre class="viewer-text-content">${escapeHtml(text)}</pre>`;
+            } catch (err) {
+                bodyEl.innerHTML = `<div style="color:var(--error);">Erro ao carregar texto: ${escapeHtml(err.message)}</div>`;
+            }
+        } else {
+            bodyEl.innerHTML = `
+                <div style="text-align: center; color: var(--text-secondary); padding: 40px 20px;">
+                    <span class="material-symbols-outlined" style="font-size: 3.5rem; margin-bottom: 12px; color: var(--border-default);">help_center</span>
+                    <h4>Visualização indisponível para este tipo de arquivo</h4>
+                    <p style="font-size: 0.8rem; margin: 8px 0 20px;">Você ainda pode baixar o arquivo físico para abri-lo no seu computador.</p>
+                    <button class="btn-import" id="btn-viewer-download-fallback" style="width: auto; padding: 10px 24px; margin: 0 auto; display: flex; align-items: center; gap: 8px; justify-content: center;">
+                        <span class="material-symbols-outlined">download</span> Baixar Arquivo
+                    </button>
+                </div>
+            `;
+            const btnFallback = document.getElementById('btn-viewer-download-fallback');
+            if (btnFallback) {
+                btnFallback.addEventListener('click', () => {
+                    downloadCurrentViewerDocument();
+                });
+            }
+        }
+    }
+
+    function closeDocumentViewer() {
+        const modal = document.getElementById('modal-document-viewer');
+        if (modal) modal.style.display = 'none';
+        currentViewerDoc = null;
+    }
+
+    function downloadCurrentViewerDocument() {
+        if (currentViewerDoc) {
+            downloadDocument(currentViewerDoc);
+        }
+    }
+
+    function downloadDocument(doc) {
+        const link = document.createElement('a');
+        link.href = `/api/documents/${doc.id}/file`;
+        link.download = doc.original_name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     // Inicializa carregamento do custo ao abrir a página

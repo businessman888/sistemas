@@ -14,6 +14,7 @@ from app.modules.social_media.routes import router as social_media_router
 from app.modules.clone.routes import router as clone_router
 from app.modules.orchestrator.routes import router as orchestrator_router
 from app.modules.brain.routes import router as brain_router
+from app.modules.documents.routes import router as documents_router
 
 # --- Logging estruturado ---
 logging.basicConfig(
@@ -42,6 +43,7 @@ app.include_router(social_media_router)
 app.include_router(clone_router)
 app.include_router(orchestrator_router)
 app.include_router(brain_router)
+app.include_router(documents_router)
 
 
 

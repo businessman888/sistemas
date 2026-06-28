@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     database_path: str = "data/oyto_os.db"
     database_url: str = ""
+    documents_storage_path: str = "data/documents"
 
     # Anthropic e RAG Settings
     anthropic_model_default: str = "claude-sonnet-4-6"

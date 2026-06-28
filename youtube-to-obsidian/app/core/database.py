@@ -325,6 +325,30 @@ def init_postgres():
             created_at VARCHAR(100) NOT NULL
         )
         """)
+
+        # 13. Tabela: document_categories
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS document_categories (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            parent_id INTEGER REFERENCES document_categories(id) ON DELETE CASCADE,
+            created_at VARCHAR(100) NOT NULL
+        )
+        """)
+
+        # 14. Tabela: documents
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS documents (
+            id SERIAL PRIMARY KEY,
+            filename VARCHAR(255) NOT NULL,
+            original_name VARCHAR(255) NOT NULL,
+            file_path TEXT NOT NULL,
+            file_size INTEGER NOT NULL,
+            mime_type VARCHAR(100),
+            category_id INTEGER REFERENCES document_categories(id) ON DELETE SET NULL,
+            created_at VARCHAR(100) NOT NULL
+        )
+        """)
         
         conn.commit()
     logger.info("Banco PostgreSQL inicializado com sucesso!")
@@ -496,6 +520,32 @@ def init_sqlite():
             cost_usd REAL DEFAULT 0.0,
             created_at TEXT NOT NULL,
             FOREIGN KEY(session_id) REFERENCES brain_chat_sessions(id) ON DELETE CASCADE
+        )
+        """)
+
+        # Tabela: Categorias de Documentos
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS document_categories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            parent_id INTEGER,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY(parent_id) REFERENCES document_categories(id) ON DELETE CASCADE
+        )
+        """)
+
+        # Tabela: Documentos / Arquivos
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT NOT NULL,
+            original_name TEXT NOT NULL,
+            file_path TEXT NOT NULL,
+            file_size INTEGER NOT NULL,
+            mime_type TEXT,
+            category_id INTEGER,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY(category_id) REFERENCES document_categories(id) ON DELETE SET NULL
         )
         """)
         
