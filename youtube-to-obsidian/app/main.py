@@ -15,6 +15,9 @@ from app.modules.clone.routes import router as clone_router
 from app.modules.orchestrator.routes import router as orchestrator_router
 from app.modules.brain.routes import router as brain_router
 from app.modules.documents.routes import router as documents_router
+from app.modules.finance.routes import router as finance_router
+from app.modules.dashboard_panel.routes import router as dashboard_panel_router
+from app.modules.logins.routes import router as logins_router
 
 # --- Logging estruturado ---
 logging.basicConfig(
@@ -44,6 +47,9 @@ app.include_router(clone_router)
 app.include_router(orchestrator_router)
 app.include_router(brain_router)
 app.include_router(documents_router)
+app.include_router(finance_router)
+app.include_router(dashboard_panel_router)
+app.include_router(logins_router)
 
 
 

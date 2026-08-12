@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/style.css?v=1.4.0">
+    <link rel="stylesheet" href="/static/style.css?v=2.3.0">
     <link rel="icon" href="/static/assets/oyto-o.svg" type="image/svg+xml">
 </head>
 <body>
@@ -31,18 +31,30 @@
                         <span class="material-symbols-outlined nav-icon">movie</span>
                         <span>YouTube → Obsidian</span>
                     </button>
-                    <button class="nav-item" id="nav-social-media">
-                        <span class="material-symbols-outlined nav-icon">insights</span>
-                        <span>Social Media AI</span>
-                    </button>
-                    <button class="nav-item" id="nav-clone">
-                        <span class="material-symbols-outlined nav-icon">psychology</span>
-                        <span>Mentes Clones</span>
-                    </button>
-                    <button class="nav-item" id="nav-brain">
-                        <span class="material-symbols-outlined nav-icon">psychology_alt</span>
-                        <span>Segundo Cérebro</span>
-                    </button>
+
+                    <!-- Menu Expansível AI Stuffs -->
+                    <div class="nav-group" id="nav-group-ai">
+                        <button class="nav-item nav-group-header" id="nav-ai-stuffs">
+                            <span class="material-symbols-outlined nav-icon">smart_toy</span>
+                            <span style="flex: 1; text-align: left;">AI Stuffs</span>
+                            <span class="material-symbols-outlined nav-arrow" style="font-size: 1.1rem; transition: transform 0.2s;">expand_more</span>
+                        </button>
+                        <div class="nav-sub-items" id="sub-ai-stuffs" style="display: none;">
+                            <button class="nav-item nav-sub-item" id="nav-social-media">
+                                <span class="material-symbols-outlined nav-icon" style="font-size: 1.1rem;">insights</span>
+                                <span>Social Media AI</span>
+                            </button>
+                            <button class="nav-item nav-sub-item" id="nav-clone">
+                                <span class="material-symbols-outlined nav-icon" style="font-size: 1.1rem;">psychology</span>
+                                <span>Mentes Clones</span>
+                            </button>
+                            <button class="nav-item nav-sub-item" id="nav-brain">
+                                <span class="material-symbols-outlined nav-icon" style="font-size: 1.1rem;">psychology_alt</span>
+                                <span>Segundo Cérebro</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <button class="nav-item" id="nav-orchestrator">
                         <span class="material-symbols-outlined nav-icon">apps</span>
                         <span>Orquestrador</span>
@@ -55,6 +67,29 @@
                         <span class="material-symbols-outlined nav-icon">folder_open</span>
                         <span>Documentos</span>
                     </button>
+                    <button class="nav-item" id="nav-logins">
+                        <span class="material-symbols-outlined nav-icon">key</span>
+                        <span>Logins</span>
+                    </button>
+                    
+                    <!-- Menu Expansível Dashboard -->
+                    <div class="nav-group" id="nav-group-dashboard">
+                        <button class="nav-item nav-group-header" id="nav-dashboard">
+                            <span class="material-symbols-outlined nav-icon">dashboard</span>
+                            <span style="flex: 1; text-align: left;">Dashboard</span>
+                            <span class="material-symbols-outlined nav-arrow" style="font-size: 1.1rem; transition: transform 0.2s;">expand_more</span>
+                        </button>
+                        <div class="nav-sub-items" id="sub-dashboard" style="display: none;">
+                            <button class="nav-item nav-sub-item" id="nav-dashboard-panel">
+                                <span class="material-symbols-outlined nav-icon" style="font-size: 1.1rem;">analytics</span>
+                                <span>Painel</span>
+                            </button>
+                            <button class="nav-item nav-sub-item" id="nav-finance">
+                                <span class="material-symbols-outlined nav-icon" style="font-size: 1.1rem;">payments</span>
+                                <span>Financeiro</span>
+                            </button>
+                        </div>
+                    </div>
                     <!-- Add new modules here in the future -->
                 </div>
             </nav>
@@ -1004,8 +1039,437 @@
                     </div>
                 </div>
             </div>
+            <!-- Módulo: Cofre de Logins -->
+            <div class="module-content" id="module-logins" style="display: none; flex-direction: column; gap: 20px;">
+                <header class="module-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h2>Cofre de Logins</h2>
+                        <p class="module-subtitle">Gerencie suas credenciais de acesso a serviços e plataformas.</p>
+                    </div>
+                    <button id="btn-add-credential" class="btn-import" style="width: auto; padding: 10px 20px; font-size: 0.85rem; margin-top: 0; display: flex; align-items: center; gap: 6px;">
+                        <span class="material-symbols-outlined" style="font-size: 1.1rem;">add</span> Novo Login
+                    </button>
+                </header>
+
+                <div id="credentials-grid" class="credential-grid">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Módulo: Painel Executivo & KPIs Geral -->
+            <div class="module-content" id="module-dashboard-panel" style="display: none; flex-direction: column; gap: 20px;">
+                <header class="module-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h2>Painel Executivo & KPIs</h2>
+                        <p class="module-subtitle">Visão consolidada de faturamento, fluxo de caixa, valuation, unit economics e mídia.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btn-refresh-panel" class="btn-chat-action" style="padding: 10px 18px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem;">refresh</span> Recarregar
+                        </button>
+                        <button id="btn-open-panel-config" class="btn-import" style="width: auto; padding: 10px 20px; font-size: 0.85rem; margin-top: 0; display: flex; align-items: center; gap: 6px;">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem;">tune</span> Editar Parâmetros
+                        </button>
+                    </div>
+                </header>
+
+                <div class="panel-sections-container" style="display: flex; flex-direction: column; gap: 24px; margin-top: 20px;">
+                    
+                    <!-- Bloco 1: Saúde Financeira & DRE Executiva -->
+                    <section class="panel-section-card">
+                        <div class="panel-section-header">
+                            <h3><span class="material-symbols-outlined section-title-icon" style="color: var(--accent);">account_balance_wallet</span> Saúde Financeira & DRE Executiva (P&L)</h3>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Faturamento Total</span><span class="material-symbols-outlined metric-icon" style="color: #4eff9b;">payments</span></div>
+                                <div class="metric-value" id="pkpi-faturamento">R$ 0,00</div>
+                                <div class="metric-sub">Receita acumulada total</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">EBITDA & Margem</span><span class="material-symbols-outlined metric-icon" style="color: var(--accent);">trending_up</span></div>
+                                <div class="metric-value" id="pkpi-ebitda">R$ 0,00</div>
+                                <div class="metric-sub" id="pkpi-ebitda-sub">Margem: 0%</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">EBITDA Ajustado</span><span class="material-symbols-outlined metric-icon" style="color: #6366f1;">analytics</span></div>
+                                <div class="metric-value" id="pkpi-ebitda-ajustado">R$ 0,00</div>
+                                <div class="metric-sub">Descontadas outras coisas</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">EBITDA ➔ Caixa Real</span><span class="material-symbols-outlined metric-icon" style="color: #38bdf8;">published_with_changes</span></div>
+                                <div class="metric-value" id="pkpi-ebitda-conversion">0%</div>
+                                <div class="metric-sub">Quanto do EBITDA vira caixa</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Lucro Líquido</span><span class="material-symbols-outlined metric-icon" style="color: #10b981;">monetization_on</span></div>
+                                <div class="metric-value" id="pkpi-lucro-liquido">R$ 0,00</div>
+                                <div class="metric-sub">Resultado final do período</div>
+                            </div>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Parte dos Sócios</span><span class="material-symbols-outlined metric-icon" style="color: #a855f7;">groups</span></div>
+                                <div class="metric-value" id="pkpi-parte-socios">R$ 0,00</div>
+                                <div class="metric-sub">Distribuição de dividendos</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Custos Operacionais</span><span class="material-symbols-outlined metric-icon" style="color: #f43f5e;">engineering</span></div>
+                                <div class="metric-value" id="pkpi-custos-op">R$ 0,00</div>
+                                <div class="metric-sub">Fixo + despesas cadastradas</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Custos de Marketing</span><span class="material-symbols-outlined metric-icon" style="color: #fb923c;">campaign</span></div>
+                                <div class="metric-value" id="pkpi-custos-mkt">R$ 0,00</div>
+                                <div class="metric-sub">Anúncios & Aquisição</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Custo de Tokens (AI)</span><span class="material-symbols-outlined metric-icon" style="color: #ec4899;">memory</span></div>
+                                <div class="metric-value" id="pkpi-custos-tokens">R$ 0,00</div>
+                                <div class="metric-sub">Consumo APIs de IA</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bloco 2: Fluxo de Caixa, Valuation & DCF -->
+                    <section class="panel-section-card">
+                        <div class="panel-section-header">
+                            <h3><span class="material-symbols-outlined section-title-icon" style="color: #38bdf8;">savings</span> Fluxo de Caixa, Valuation & DCF</h3>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Fluxo de Caixa Livre (FCF)</span><span class="material-symbols-outlined metric-icon" style="color: #4eff9b;">price_check</span></div>
+                                <div class="metric-value" id="pkpi-fcf">R$ 0,00</div>
+                                <div class="metric-sub">Com KPI Operacional integrado</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Valuation DCF</span><span class="material-symbols-outlined metric-icon" style="color: var(--accent);">domain</span></div>
+                                <div class="metric-value" id="pkpi-dcf">R$ 0,00</div>
+                                <div class="metric-sub">Fluxo de caixa descontado</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Caixa Futuro em VP</span><span class="material-symbols-outlined metric-icon" style="color: #818cf8;">auto_graph</span></div>
+                                <div class="metric-value" id="pkpi-future-pv">R$ 0,00</div>
+                                <div class="metric-sub">Trazido a Valor Presente</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Capex de Manutenção</span><span class="material-symbols-outlined metric-icon" style="color: #f59e0b;">build</span></div>
+                                <div class="metric-value" id="pkpi-capex">R$ 0,00</div>
+                                <div class="metric-sub">Manutenção de ativos</div>
+                            </div>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Imposto Recorrente</span><span class="material-symbols-outlined metric-icon" style="color: #ef4444;">receipt_long</span></div>
+                                <div class="metric-value" id="pkpi-imposto-rec">R$ 0,00</div>
+                                <div class="metric-sub">Tributos mensais recorrentes</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Capital de Giro Total</span><span class="material-symbols-outlined metric-icon" style="color: #10b981;">account_balance</span></div>
+                                <div class="metric-value" id="pkpi-capital-giro">R$ 0,00</div>
+                                <div class="metric-sub" id="pkpi-capital-giro-sub">Aumentando: +0%</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Tempo de Recebimento (PMR)</span><span class="material-symbols-outlined metric-icon" style="color: #a855f7;">schedule</span></div>
+                                <div class="metric-value" id="pkpi-dso">0 dias</div>
+                                <div class="metric-sub">Prazo médio (ex: 30–45 dias)</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bloco 3: Riscos & Governança Corporativa -->
+                    <section class="panel-section-card">
+                        <div class="panel-section-header">
+                            <h3><span class="material-symbols-outlined section-title-icon" style="color: #f43f5e;">security</span> Riscos & Governança Corporativa</h3>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Inadimplência Mal Provisionada</span><span class="material-symbols-outlined metric-icon" style="color: #ef4444;">warning</span></div>
+                                <div class="metric-value" id="pkpi-bad-debt">R$ 0,00</div>
+                                <div class="metric-sub">Risco de perda não coberto</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Cliente Concentrado</span><span class="material-symbols-outlined metric-icon" style="color: #f59e0b;">pie_chart</span></div>
+                                <div class="metric-value" id="pkpi-client-conc">0%</div>
+                                <div class="metric-sub">% da receita no maior cliente</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Despesa Sócio (Fora Empresa)</span><span class="material-symbols-outlined metric-icon" style="color: #a855f7;">person_cancel</span></div>
+                                <div class="metric-value" id="pkpi-partner-out">R$ 0,00</div>
+                                <div class="metric-sub">Gastos não operacionais</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bloco 4: Unit Economics, SaaS & Recorrência -->
+                    <section class="panel-section-card">
+                        <div class="panel-section-header">
+                            <h3><span class="material-symbols-outlined section-title-icon" style="color: #a855f7;">query_stats</span> Unit Economics & Recorrência</h3>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">LTV (Lifetime Value)</span><span class="material-symbols-outlined metric-icon" style="color: #4eff9b;">workspace_premium</span></div>
+                                <div class="metric-value" id="pkpi-ltv">R$ 0,00</div>
+                                <div class="metric-sub">Valor de vida do cliente</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Churn Rate Mensal</span><span class="material-symbols-outlined metric-icon" style="color: #ef4444;">person_remove</span></div>
+                                <div class="metric-value" id="pkpi-churn">0%</div>
+                                <div class="metric-sub">Taxa de cancelamento</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Recorrência (MRR)</span><span class="material-symbols-outlined metric-icon" style="color: var(--accent);">repeat</span></div>
+                                <div class="metric-value" id="pkpi-mrr">R$ 0,00</div>
+                                <div class="metric-sub">Receita Recorrente Mensal</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Margem por Usuário (ARPU)</span><span class="material-symbols-outlined metric-icon" style="color: #38bdf8;">face</span></div>
+                                <div class="metric-value" id="pkpi-arpu">R$ 0,00</div>
+                                <div class="metric-sub">Margem média por cliente</div>
+                            </div>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Produtividade Executiva</span><span class="material-symbols-outlined metric-icon" style="color: #10b981;">speed</span></div>
+                                <div class="metric-value" id="pkpi-produtividade">0%</div>
+                                <div class="metric-sub">Eficiência por recurso/equipe</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">Crescimento % ao Ano (YoY)</span><span class="material-symbols-outlined metric-icon" style="color: #4eff9b;">rocket_launch</span></div>
+                                <div class="metric-value" id="pkpi-yoy">0%</div>
+                                <div class="metric-sub">Taxa de crescimento anual</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bloco 5: Marketing & Performance por Formato de Mídia -->
+                    <section class="panel-section-card">
+                        <div class="panel-section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <h3><span class="material-symbols-outlined section-title-icon" style="color: #fb923c;">movie</span> Performance de Marketing &amp; Formatos de Vídeo/Mídia</h3>
+                            <button id="btn-open-media-modal" class="btn-chat-action" style="padding: 6px 14px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.8rem; display: flex; align-items: center; gap: 4px;">
+                                <span class="material-symbols-outlined" style="font-size: 1rem;">add</span> Adicionar Formato de Mídia
+                            </button>
+                        </div>
+                        <div class="finance-metrics-grid" style="margin-top: 14px;">
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">CPA de Campanha</span><span class="material-symbols-outlined metric-icon" style="color: #fb923c;">ads_click</span></div>
+                                <div class="metric-value" id="pkpi-cpa-campanha">R$ 0,00</div>
+                                <div class="metric-sub">Custo médio por aquisição</div>
+                            </div>
+                            <div class="finance-card">
+                                <div class="metric-header"><span class="metric-title">CPA Influencer / Embaixador</span><span class="material-symbols-outlined metric-icon" style="color: #a855f7;">star</span></div>
+                                <div class="metric-value" id="pkpi-cpa-influencer">R$ 0,00</div>
+                                <div class="metric-sub">Custo aquisição embaixadores</div>
+                            </div>
+                        </div>
+                        <div class="finance-table-container" style="margin-top: 16px;">
+                            <table class="finance-table">
+                                <thead>
+                                    <tr>
+                                        <th>MODELO / FORMATO DE MÍDIA</th>
+                                        <th>CLIQUES</th>
+                                        <th>CONVERSÕES</th>
+                                        <th>TAXA DE CONVERSÃO</th>
+                                        <th>CPA (R$)</th>
+                                        <th>FATURAMENTO GERADO</th>
+                                        <th style="text-align: right;">AÇÕES</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="panel-media-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <!-- Finance Module Content -->
+            <div class="module-content" id="module-finance" style="display: none; flex-direction: column; gap: 20px;">
+                <header class="module-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h2><span class="material-symbols-outlined nav-icon" style="font-size: 2rem; vertical-align: middle;">payments</span> Dashboard Financeiro</h2>
+                        <p class="module-subtitle">Controle organizacional de custos, assinaturas e despesas da empresa</p>
+                    </div>
+                    <button id="btn-new-expense" class="btn-import" style="width: auto; padding: 10px 20px; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span class="material-symbols-outlined">add</span> Nova Despesa
+                    </button>
+                </header>
+
+                <!-- Toolbar de Filtros Temporais e Busca -->
+                <section class="finance-filter-toolbar">
+                    <div class="finance-period-tabs">
+                        <button class="period-tab active" data-type="mes">Mês</button>
+                        <button class="period-tab" data-type="quarter">Quarter (Trimestre)</button>
+                        <button class="period-tab" data-type="semestre">Semestral</button>
+                        <button class="period-tab" data-type="ano">Anual</button>
+                        <button class="period-tab" data-type="todos">Todos</button>
+                    </div>
+
+                    <div class="finance-period-selector" id="finance-period-controls">
+                        <button id="btn-prev-period" class="btn-icon-subtle"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <span id="finance-period-label" class="period-display-label">Julho 2026</span>
+                        <button id="btn-next-period" class="btn-icon-subtle"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+
+                    <div class="finance-extra-filters">
+                        <select id="finance-filter-status" class="select-language" style="padding: 6px 12px; font-size: 0.85rem;">
+                            <option value="all">Todos os Status</option>
+                            <option value="pending">Pendente</option>
+                            <option value="paid">Pago</option>
+                            <option value="overdue">Vencido</option>
+                        </select>
+                        <select id="finance-filter-category" class="select-language" style="padding: 6px 12px; font-size: 0.85rem;">
+                            <option value="all">Todas as Categorias</option>
+                            <option value="Infraestrutura">Infraestrutura</option>
+                            <option value="Software/SaaS">Software / SaaS</option>
+                            <option value="Marketing">Marketing & Vendas</option>
+                            <option value="Operacional">Operacional</option>
+                            <option value="Impostos">Impostos & Taxas</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                        <input type="text" id="finance-search-input" class="input-url" placeholder="Buscar despesa..." style="width: 180px; margin-top: 0; padding: 6px 12px; font-size: 0.85rem;">
+                    </div>
+                </section>
+
+                <!-- Cards de Métricas Principais -->
+                <section class="finance-metrics-grid">
+                    <div class="finance-card metric-total">
+                        <div class="metric-header">
+                            <span class="metric-title">Total de Despesas</span>
+                            <span class="material-symbols-outlined metric-icon">account_balance_wallet</span>
+                        </div>
+                        <div class="metric-value" id="fin-metric-total">R$ 0,00</div>
+                        <div class="metric-sub" id="fin-sub-total">0 lançamentos</div>
+                    </div>
+
+                    <div class="finance-card metric-paid">
+                        <div class="metric-header">
+                            <span class="metric-title">Pagas / Liquidadas</span>
+                            <span class="material-symbols-outlined metric-icon">check_circle</span>
+                        </div>
+                        <div class="metric-value" id="fin-metric-paid">R$ 0,00</div>
+                        <div class="metric-sub" id="fin-sub-paid">0 despesas pagas</div>
+                    </div>
+
+                    <div class="finance-card metric-pending">
+                        <div class="metric-header">
+                            <span class="metric-title">Pendentes</span>
+                            <span class="material-symbols-outlined metric-icon">schedule</span>
+                        </div>
+                        <div class="metric-value" id="fin-metric-pending">R$ 0,00</div>
+                        <div class="metric-sub" id="fin-sub-pending">0 aguardando pagamento</div>
+                    </div>
+
+                    <div class="finance-card metric-overdue">
+                        <div class="metric-header">
+                            <span class="metric-title">Vencidas</span>
+                            <span class="material-symbols-outlined metric-icon">warning</span>
+                        </div>
+                        <div class="metric-value" id="fin-metric-overdue">R$ 0,00</div>
+                        <div class="metric-sub" id="fin-sub-overdue">0 faturas vencidas</div>
+                    </div>
+                </section>
+
+                <!-- Seção Intermediária: Distribuição por Categoria & Próximos Vencimentos -->
+                <div class="finance-dashboard-middle">
+                    <div class="finance-card category-breakdown-card">
+                        <h3><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2rem;">pie_chart</span> Gastos por Categoria</h3>
+                        <div id="finance-category-bars" class="category-bars-container">
+                            <!-- Gerado dinamicamente -->
+                        </div>
+                    </div>
+
+                    <div class="finance-card upcoming-due-card">
+                        <h3><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2rem;">notification_important</span> Próximos Vencimentos</h3>
+                        <div id="finance-upcoming-list" class="upcoming-list-container">
+                            <!-- Gerado dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Lançamentos de Despesas -->
+                <section class="finance-table-container">
+                    <div class="table-header-title">
+                        <h3><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2rem;">receipt_long</span> Lista de Despesas e Faturas</h3>
+                        <span id="finance-table-count" style="font-size: 0.8rem; color: var(--text-secondary);">Exibindo 0 despesas</span>
+                    </div>
+
+                    <div class="finance-table-scroll">
+                        <table class="finance-table">
+                            <thead>
+                                <tr>
+                                    <th>Despesa / Título</th>
+                                    <th>Categoria</th>
+                                    <th>Periodicidade</th>
+                                    <th>Vencimento</th>
+                                    <th>Valor (R$)</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-expenses-tbody">
+                                <!-- Gerado dinamicamente via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
 
         </main>
+    </div>    <!-- Modal: Adicionar/Editar Credencial -->
+    <div id="modal-credential-edit" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card" style="max-width: 550px;">
+            <div class="os-modal-header">
+                <h3><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">key</span> <span id="credential-modal-title">Nova Credencial</span></h3>
+                <button id="btn-close-credential-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <form id="credential-edit-form" autocomplete="off" style="margin-top: 10px;">
+                <input type="hidden" id="credential-edit-id" value="">
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div>
+                        <label class="os-modal-label">Serviço / Plataforma *</label>
+                        <input type="text" id="credential-service" class="os-modal-input" placeholder="Ex: AWS, Google, Github..." required>
+                    </div>
+                    <div>
+                        <label class="os-modal-label">Login / E-mail *</label>
+                        <input type="text" id="credential-login" class="os-modal-input" placeholder="usuario@email.com" required>
+                    </div>
+                    <div>
+                        <label class="os-modal-label">Senha</label>
+                        <div style="position: relative;">
+                            <input type="password" id="credential-password" class="os-modal-input" placeholder="••••••••" style="padding-right: 44px;">
+                            <button type="button" id="credential-password-toggle" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px;">
+                                <span class="material-symbols-outlined" style="font-size: 1.2rem;">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="os-modal-label">Categoria</label>
+                        <select id="credential-category" class="os-modal-input">
+                            <option value="Geral">Geral</option>
+                            <option value="Cloud">Cloud</option>
+                            <option value="SaaS">SaaS</option>
+                            <option value="API">API</option>
+                            <option value="AI">AI</option>
+                            <option value="Dev">Dev</option>
+                            <option value="Hosting">Hosting</option>
+                            <option value="Financeiro">Financeiro</option>
+                            <option value="Governo">Governo</option>
+                            <option value="Pessoal">Pessoal</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="os-modal-label">Notas</label>
+                        <textarea id="credential-notes" class="os-modal-input" rows="2" placeholder="Observações opcionais..."></textarea>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+                    <button type="button" id="btn-cancel-credential" class="btn-chat-action" style="padding: 10px 20px; border: 1px solid var(--border-default); border-radius: var(--radius-pill);">Cancelar</button>
+                    <button type="submit" class="btn-import" style="width: auto; padding: 10px 24px;">Salvar</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Modal: Adicionar/Editar Fase -->
@@ -1693,6 +2157,128 @@
     <li><span class="ix">04</span><div><p class="ti">Parceria com assessorias e clubes</p><p class="hk">Treinador recomenda a alunos que confiam nele. Premium grátis + comissão. Distribuição B2B2C.</p></div></li>
   </ul>
 </div>
+
+
+    <!-- Modal: Editar Parâmetros do Painel Executivo -->
+    <div id="modal-panel-metrics-edit" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card" style="max-width: 650px;">
+            <div class="os-modal-header">
+                <h3><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">tune</span> Editar Parâmetros Executivos</h3>
+                <button id="btn-close-panel-config-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <form id="panel-metrics-edit-form" autocomplete="off" style="margin-top: 10px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="input-group">
+                        <label for="pedit-dcf">Valuation DCF (R$)</label>
+                        <input type="text" id="pedit-dcf" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-future-pv">Caixa Futuro em VP (R$)</label>
+                        <input type="text" id="pedit-future-pv" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-capex">Capex de Manutenção (R$)</label>
+                        <input type="text" id="pedit-capex" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-imposto-rec">Imposto Recorrente (R$)</label>
+                        <input type="text" id="pedit-imposto-rec" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-capital-giro">Capital de Giro Total (R$)</label>
+                        <input type="text" id="pedit-capital-giro" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-working-cap-growth">Crescimento Cap. Giro (%)</label>
+                        <input type="text" id="pedit-working-cap-growth" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-bad-debt">Inadimplência Mal Provisionada (R$)</label>
+                        <input type="text" id="pedit-bad-debt" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-client-conc">Concentração Cliente (%)</label>
+                        <input type="text" id="pedit-client-conc" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-partner-out">Despesa Sócio (Fora) (R$)</label>
+                        <input type="text" id="pedit-partner-out" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-partner-divs">Parte Sócios / Dividendos (R$)</label>
+                        <input type="text" id="pedit-partner-divs" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-dso">Prazo Médio Recebimento (Dias)</label>
+                        <input type="text" id="pedit-dso" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-churn">Churn Mensal (%)</label>
+                        <input type="text" id="pedit-churn" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-arpu">ARPU / Margem Usuário (R$)</label>
+                        <input type="text" id="pedit-arpu" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-yoy">Crescimento YoY (%)</label>
+                        <input type="text" id="pedit-yoy" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-cpa-camp">CPA de Campanha (R$)</label>
+                        <input type="text" id="pedit-cpa-camp" class="input-url" style="margin-top: 4px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="pedit-cpa-inf">CPA Influencer (R$)</label>
+                        <input type="text" id="pedit-cpa-inf" class="input-url" style="margin-top: 4px;">
+                    </div>
+                </div>
+                <div class="modal-footer-actions" style="margin-top: 20px;">
+                    <button type="button" id="btn-cancel-panel-config" class="btn-chat-action" style="padding: 10px 18px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem;">Cancelar</button>
+                    <button type="submit" id="btn-save-panel-config" class="btn-import" style="width: auto; padding: 10px 24px; margin-top: 0;">Salvar Parâmetros</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Adicionar/Editar Modelo de Mídia -->
+    <div id="modal-media-edit" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card">
+            <div class="os-modal-header">
+                <h3><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">movie</span> Modelo de Mídia</h3>
+                <button id="btn-close-media-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <form id="media-edit-form" autocomplete="off" style="margin-top: 10px;">
+                <div class="input-group">
+                    <label for="medit-format-name">Modelo / Formato (ex: Reels, Story, Colab)</label>
+                    <input type="text" id="medit-format-name" class="input-url" placeholder="ex: Reels de Influencer" required style="margin-top: 6px;">
+                </div>
+                <div class="input-row-2" style="display: flex; gap: 12px; margin-top: 12px;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="medit-clicks">Total de Cliques</label>
+                        <input type="number" id="medit-clicks" class="input-url" placeholder="0" required style="margin-top: 6px;">
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="medit-conversions">Conversões</label>
+                        <input type="number" id="medit-conversions" class="input-url" placeholder="0" required style="margin-top: 6px;">
+                    </div>
+                </div>
+                <div class="input-row-2" style="display: flex; gap: 12px; margin-top: 12px;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="medit-cpa">CPA Médio (R$)</label>
+                        <input type="text" id="medit-cpa" class="input-url" placeholder="ex: 28,50" style="margin-top: 6px;">
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="medit-revenue">Faturamento Gerado (R$)</label>
+                        <input type="text" id="medit-revenue" class="input-url" placeholder="ex: 150000,00" style="margin-top: 6px;">
+                    </div>
+                </div>
+                <div class="modal-footer-actions" style="margin-top: 20px;">
+                    <button type="button" id="btn-cancel-media" class="btn-chat-action" style="padding: 10px 18px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem;">Cancelar</button>
+                    <button type="submit" id="btn-save-media" class="btn-import" style="width: auto; padding: 10px 24px; margin-top: 0;">Salvar Formato</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Modal: Adicionar/Editar Categoria de Documentos -->
@@ -1765,6 +2351,77 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=1.4.0"></script>
+    <!-- Modal: Adicionar/Editar Despesa Financeira -->
+    <div id="modal-expense-edit" class="os-modal-overlay" style="display: none;">
+        <div class="os-modal-card">
+            <div class="os-modal-header">
+                <h3 id="modal-expense-title-action"><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">post_add</span> Nova Despesa</h3>
+                <button id="btn-close-expense-modal" class="btn-close-modal"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <form id="expense-edit-form" autocomplete="off">
+                <input type="hidden" id="expense-id-input">
+                <div class="input-group">
+                    <label for="expense-title-input">Título da Despesa / Fornecedor</label>
+                    <input type="text" id="expense-title-input" class="input-url" placeholder="ex: Servidor AWS, Adobe CC, Aluguel" required style="margin-top: 6px;">
+                </div>
+                <div class="input-row-2" style="display: flex; gap: 12px; margin-top: 12px;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="expense-category-input">Categoria</label>
+                        <select id="expense-category-input" class="select-language" style="margin-top: 6px; width: 100%;">
+                            <option value="Infraestrutura">Infraestrutura</option>
+                            <option value="Software/SaaS">Software / SaaS</option>
+                            <option value="Marketing">Marketing & Vendas</option>
+                            <option value="Operacional">Operacional</option>
+                            <option value="Impostos">Impostos & Taxas</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="expense-amount-input">Valor (R$)</label>
+                        <input type="text" id="expense-amount-input" class="input-url" placeholder="ex: 114,21 ou 150,00" required style="margin-top: 6px;">
+                    </div>
+                </div>
+                <div class="input-row-2" style="display: flex; gap: 12px; margin-top: 12px;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="expense-periodicity-input">Periodicidade</label>
+                        <select id="expense-periodicity-input" class="select-language" style="margin-top: 6px; width: 100%;">
+                            <option value="mensal">Mensal</option>
+                            <option value="trimestral">Trimestral</option>
+                            <option value="semestral">Semestral</option>
+                            <option value="anual">Anual</option>
+                            <option value="unico">Único / Eventual</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="expense-duedate-input">Data de Vencimento</label>
+                        <input type="date" id="expense-duedate-input" class="input-url" required style="margin-top: 6px; width: 100%;">
+                    </div>
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
+                    <label for="expense-status-input">Status Inicial</label>
+                    <select id="expense-status-input" class="select-language" style="margin-top: 6px; width: 100%;">
+                        <option value="pending">Pendente (A vencer)</option>
+                        <option value="paid">Pago / Liquidado</option>
+                    </select>
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
+                    <label for="expense-notes-input">Observações / Links (Opcional)</label>
+                    <textarea id="expense-notes-input" class="input-textarea" rows="2" placeholder="Detalhes adicionais, código de barras ou observações..." style="margin-top: 6px;"></textarea>
+                </div>
+
+                <div class="modal-footer-actions" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <button type="button" id="btn-delete-expense" class="btn-danger btn-import" style="display: none; width: auto; padding: 10px 18px; margin-top: 0; background: var(--error-soft); border: 1px solid rgba(248,113,113,0.3); color: var(--error);">
+                        Excluir Despesa
+                    </button>
+                    <div style="display: flex; gap: 10px; margin-left: auto;">
+                        <button type="button" id="btn-cancel-expense" class="btn-chat-action" style="padding: 10px 18px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font-size: 0.85rem;">Cancelar</button>
+                        <button type="submit" id="btn-save-expense" class="btn-import" style="width: auto; padding: 10px 24px; margin-top: 0;">Salvar Despesa</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=2.3.0"></script>
 </body>
 </html>

@@ -232,12 +232,21 @@
     // ============================================================
 
     const navYoutube = document.getElementById('nav-youtube');
+    const navAiStuffs = document.getElementById('nav-ai-stuffs');
+    const navGroupAi = document.getElementById('nav-group-ai');
+    const subAiStuffs = document.getElementById('sub-ai-stuffs');
     const navSocialMedia = document.getElementById('nav-social-media');
     const navClone = document.getElementById('nav-clone');
     const navBrain = document.getElementById('nav-brain');
     const navOrchestrator = document.getElementById('nav-orchestrator');
     const navCreativeHub = document.getElementById('nav-creative-hub');
     const navDocuments = document.getElementById('nav-documents');
+    const navDashboard = document.getElementById('nav-dashboard');
+    const navGroupDashboard = document.getElementById('nav-group-dashboard');
+    const subDashboard = document.getElementById('sub-dashboard');
+    const navDashboardPanel = document.getElementById('nav-dashboard-panel');
+    const navFinance = document.getElementById('nav-finance');
+    const navLogins = document.getElementById('nav-logins');
     const moduleYoutube = document.getElementById('module-youtube');
     const moduleSocialMedia = document.getElementById('module-social-media');
     const moduleClone = document.getElementById('module-clone');
@@ -245,26 +254,29 @@
     const moduleOrchestrator = document.getElementById('module-orchestrator');
     const moduleCreativeHub = document.getElementById('module-creative-hub');
     const moduleDocuments = document.getElementById('module-documents');
+    const moduleDashboardPanel = document.getElementById('module-dashboard-panel');
+    const moduleFinance = document.getElementById('module-finance');
+    const moduleLogins = document.getElementById('module-logins');
 
     // Troca de módulo na Sidebar
     function switchModule(activeNav, activeModule) {
-        [navYoutube, navSocialMedia, navClone, navBrain, navOrchestrator, navCreativeHub, navDocuments].forEach(nav => {
+        [navYoutube, navSocialMedia, navClone, navBrain, navOrchestrator, navCreativeHub, navDocuments, navDashboardPanel, navFinance, navLogins].forEach(nav => {
             if (nav) nav.classList.remove('active');
         });
-        [moduleYoutube, moduleSocialMedia, moduleClone, moduleBrain, moduleOrchestrator, moduleCreativeHub, moduleDocuments].forEach(mod => {
+        [moduleYoutube, moduleSocialMedia, moduleClone, moduleBrain, moduleOrchestrator, moduleCreativeHub, moduleDocuments, moduleDashboardPanel, moduleFinance, moduleLogins].forEach(mod => {
             if (mod) mod.style.display = 'none';
         });
-        activeNav.classList.add('active');
-        if (activeModule === moduleOrchestrator || activeModule === moduleDocuments) {
+        if (activeNav) activeNav.classList.add('active');
+        if (activeModule === moduleOrchestrator || activeModule === moduleDocuments || activeModule === moduleDashboardPanel || activeModule === moduleFinance || activeModule === moduleLogins) {
             activeModule.style.display = 'flex';
         } else {
             activeModule.style.display = 'block';
         }
 
-        // Toggle wide layout for Orchestrator, Brain, Creative Hub or Documents
+        // Toggle wide layout for Orchestrator, Brain, Creative Hub, Documents, Panel or Finance
         const osContent = document.querySelector('.os-content');
         if (osContent) {
-            if (activeModule === moduleOrchestrator || activeModule === moduleBrain || activeModule === moduleCreativeHub || activeModule === moduleDocuments) {
+            if (activeModule === moduleOrchestrator || activeModule === moduleBrain || activeModule === moduleCreativeHub || activeModule === moduleDocuments || activeModule === moduleDashboardPanel || activeModule === moduleFinance || activeModule === moduleLogins) {
                 osContent.classList.add('wide-layout');
             } else {
                 osContent.classList.remove('wide-layout');
@@ -276,17 +288,42 @@
         switchModule(navYoutube, moduleYoutube);
     });
 
-    navSocialMedia.addEventListener('click', () => {
-        switchModule(navSocialMedia, moduleSocialMedia);
-        loadCreators();
-        loadConfigs();
-        loadPipelines();
-    });
+    // --- Grupo Expansível: AI Stuffs ---
+    if (navAiStuffs && navGroupAi && subAiStuffs) {
+        navAiStuffs.addEventListener('click', () => {
+            const isExpanded = navGroupAi.classList.contains('expanded');
+            if (isExpanded) {
+                navGroupAi.classList.remove('expanded');
+                subAiStuffs.style.display = 'none';
+            } else {
+                navGroupAi.classList.add('expanded');
+                subAiStuffs.style.display = 'flex';
+                // Seleciona automaticamente o primeiro submenu se nenhum estiver ativo
+                if (!navSocialMedia.classList.contains('active') && !navClone.classList.contains('active') && !navBrain.classList.contains('active')) {
+                    switchModule(navSocialMedia, moduleSocialMedia);
+                    loadCreators();
+                    loadConfigs();
+                    loadPipelines();
+                }
+            }
+        });
+    }
 
-    navClone.addEventListener('click', () => {
-        switchModule(navClone, moduleClone);
-        loadClones();
-    });
+    if (navSocialMedia) {
+        navSocialMedia.addEventListener('click', () => {
+            switchModule(navSocialMedia, moduleSocialMedia);
+            loadCreators();
+            loadConfigs();
+            loadPipelines();
+        });
+    }
+
+    if (navClone) {
+        navClone.addEventListener('click', () => {
+            switchModule(navClone, moduleClone);
+            loadClones();
+        });
+    }
 
     if (navBrain) {
         navBrain.addEventListener('click', () => {
@@ -312,6 +349,46 @@
         navDocuments.addEventListener('click', () => {
             switchModule(navDocuments, moduleDocuments);
             initDocumentsModule();
+        });
+    }
+
+    if (navLogins) {
+        navLogins.addEventListener('click', () => {
+            switchModule(navLogins, moduleLogins);
+            loadCredentials();
+        });
+    }
+
+    // --- Grupo Expansível: Dashboard ---
+    if (navDashboard && navGroupDashboard && subDashboard) {
+        navDashboard.addEventListener('click', () => {
+            const isExpanded = navGroupDashboard.classList.contains('expanded');
+            if (isExpanded) {
+                navGroupDashboard.classList.remove('expanded');
+                subDashboard.style.display = 'none';
+            } else {
+                navGroupDashboard.classList.add('expanded');
+                subDashboard.style.display = 'flex';
+                // Seleciona automaticamente o Painel se nenhum submenu do Dashboard estiver ativo
+                if ((!navDashboardPanel || !navDashboardPanel.classList.contains('active')) && (!navFinance || !navFinance.classList.contains('active'))) {
+                    switchModule(navDashboardPanel, moduleDashboardPanel);
+                    initDashboardPanelModule();
+                }
+            }
+        });
+    }
+
+    if (navDashboardPanel) {
+        navDashboardPanel.addEventListener('click', () => {
+            switchModule(navDashboardPanel, moduleDashboardPanel);
+            initDashboardPanelModule();
+        });
+    }
+
+    if (navFinance) {
+        navFinance.addEventListener('click', () => {
+            switchModule(navFinance, moduleFinance);
+            initFinanceModule();
         });
     }
 
@@ -3538,9 +3615,924 @@
         document.body.removeChild(link);
     }
 
+    // ============================================================
+    // Lógica do Módulo Dashboard Financeiro
+    // ============================================================
+    let isFinanceInitialized = false;
+    let finPeriodType = 'mes';
+    let finCurrentDate = new Date(); // Hoje
+
+    const ptMonthNames = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+
+    function formatBRL(value) {
+        const val = parseFloat(value) || 0;
+        return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function getPeriodValueString() {
+        const year = finCurrentDate.getFullYear();
+        const monthIdx = finCurrentDate.getMonth(); // 0..11
+        const monthNum = String(monthIdx + 1).padStart(2, '0');
+
+        if (finPeriodType === 'mes') {
+            return `${year}-${monthNum}`;
+        } else if (finPeriodType === 'quarter') {
+            const q = Math.floor(monthIdx / 3) + 1;
+            return `${year}-Q${q}`;
+        } else if (finPeriodType === 'semestre') {
+            const s = monthIdx < 6 ? 'S1' : 'S2';
+            return `${year}-${s}`;
+        } else if (finPeriodType === 'ano') {
+            return `${year}`;
+        }
+        return null;
+    }
+
+    function updatePeriodLabel() {
+        const labelEl = document.getElementById('finance-period-label');
+        if (!labelEl) return;
+
+        const year = finCurrentDate.getFullYear();
+        const monthIdx = finCurrentDate.getMonth();
+
+        if (finPeriodType === 'mes') {
+            labelEl.textContent = `${ptMonthNames[monthIdx]} ${year}`;
+        } else if (finPeriodType === 'quarter') {
+            const q = Math.floor(monthIdx / 3) + 1;
+            labelEl.textContent = `${q}º Trimestre ${year} (Q${q})`;
+        } else if (finPeriodType === 'semestre') {
+            const s = monthIdx < 6 ? 1 : 2;
+            labelEl.textContent = `${s}º Semestre ${year}`;
+        } else if (finPeriodType === 'ano') {
+            labelEl.textContent = `Ano de ${year}`;
+        } else if (finPeriodType === 'todos') {
+            labelEl.textContent = 'Todo o Histórico';
+        }
+    }
+
+    function navigatePeriod(delta) {
+        if (finPeriodType === 'todos') return;
+
+        if (finPeriodType === 'mes') {
+            finCurrentDate.setMonth(finCurrentDate.getMonth() + delta);
+        } else if (finPeriodType === 'quarter') {
+            finCurrentDate.setMonth(finCurrentDate.getMonth() + (delta * 3));
+        } else if (finPeriodType === 'semestre') {
+            finCurrentDate.setMonth(finCurrentDate.getMonth() + (delta * 6));
+        } else if (finPeriodType === 'ano') {
+            finCurrentDate.setFullYear(finCurrentDate.getFullYear() + delta);
+        }
+
+        updatePeriodLabel();
+        loadFinanceDashboard();
+    }
+
+    async function initFinanceModule() {
+        updatePeriodLabel();
+        await loadFinanceDashboard();
+
+        if (isFinanceInitialized) return;
+        isFinanceInitialized = true;
+
+        // Abas de tipo de período
+        const periodTabs = document.querySelectorAll('.finance-period-tabs .period-tab');
+        periodTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                periodTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                finPeriodType = tab.getAttribute('data-type');
+                
+                const controlsEl = document.getElementById('finance-period-controls');
+                if (controlsEl) {
+                    controlsEl.style.display = (finPeriodType === 'todos') ? 'none' : 'flex';
+                }
+
+                updatePeriodLabel();
+                loadFinanceDashboard();
+            });
+        });
+
+        // Botões de navegação temporal
+        const btnPrev = document.getElementById('btn-prev-period');
+        const btnNext = document.getElementById('btn-next-period');
+        if (btnPrev) btnPrev.addEventListener('click', () => navigatePeriod(-1));
+        if (btnNext) btnNext.addEventListener('click', () => navigatePeriod(1));
+
+        // Filtros adicionais
+        const filterStatus = document.getElementById('finance-filter-status');
+        const filterCat = document.getElementById('finance-filter-category');
+        const searchInput = document.getElementById('finance-search-input');
+
+        if (filterStatus) filterStatus.addEventListener('change', loadFinanceDashboard);
+        if (filterCat) filterCat.addEventListener('change', loadFinanceDashboard);
+        if (searchInput) searchInput.addEventListener('input', debounce(loadFinanceDashboard, 300));
+
+        // Botão Nova Despesa
+        const btnNew = document.getElementById('btn-new-expense');
+        if (btnNew) btnNew.addEventListener('click', () => openExpenseModal(null));
+
+        // Modal Form Submit
+        const form = document.getElementById('expense-edit-form');
+        if (form) form.addEventListener('submit', handleExpenseSubmit);
+
+        // Cancelar / Fechar Modal
+        const btnClose = document.getElementById('btn-close-expense-modal');
+        const btnCancel = document.getElementById('btn-cancel-expense');
+        const btnDelete = document.getElementById('btn-delete-expense');
+        if (btnClose) btnClose.addEventListener('click', closeExpenseModal);
+        if (btnCancel) btnCancel.addEventListener('click', closeExpenseModal);
+        if (btnDelete) {
+            btnDelete.addEventListener('click', () => {
+                const id = document.getElementById('expense-id-input').value;
+                if (id) confirmDeleteExpense(id);
+            });
+        }
+    }
+
+    async function loadFinanceDashboard() {
+        const periodValue = getPeriodValueString();
+        const statusVal = document.getElementById('finance-filter-status')?.value || 'all';
+        const categoryVal = document.getElementById('finance-filter-category')?.value || 'all';
+        const searchVal = document.getElementById('finance-search-input')?.value || '';
+
+        // Query params para summary e expenses
+        let summaryUrl = '/api/finance/summary';
+        if (finPeriodType !== 'todos' && periodValue) {
+            summaryUrl += `?period_type=${finPeriodType}&period_value=${encodeURIComponent(periodValue)}`;
+        }
+
+        let expensesUrl = '/api/finance/expenses?';
+        const queryParts = [];
+        if (finPeriodType !== 'todos' && periodValue) {
+            queryParts.push(`period_type=${finPeriodType}&period_value=${encodeURIComponent(periodValue)}`);
+        }
+        if (statusVal !== 'all') queryParts.push(`status=${statusVal}`);
+        if (categoryVal !== 'all') queryParts.push(`category=${encodeURIComponent(categoryVal)}`);
+        if (searchVal.trim() !== '') queryParts.push(`search=${encodeURIComponent(searchVal.trim())}`);
+        expensesUrl += queryParts.join('&');
+
+        try {
+            const [summary, expenses] = await Promise.all([
+                apiFetch(summaryUrl),
+                apiFetch(expensesUrl)
+            ]);
+
+            renderFinanceSummary(summary);
+            renderFinanceExpensesTable(expenses);
+
+        } catch (err) {
+            console.error("Erro ao carregar Dashboard Financeiro:", err);
+        }
+    }
+
+    function renderFinanceSummary(summary) {
+        document.getElementById('fin-metric-total').textContent = formatBRL(summary.total_amount);
+        document.getElementById('fin-sub-total').textContent = `${summary.total_count} lançamento(s)`;
+
+        document.getElementById('fin-metric-paid').textContent = formatBRL(summary.paid_amount);
+        document.getElementById('fin-sub-paid').textContent = `${summary.paid_count} despesa(s) liquidadas`;
+
+        document.getElementById('fin-metric-pending').textContent = formatBRL(summary.pending_amount);
+        document.getElementById('fin-sub-pending').textContent = `${summary.pending_count} despesa(s) pendente(s)`;
+
+        document.getElementById('fin-metric-overdue').textContent = formatBRL(summary.overdue_amount);
+        document.getElementById('fin-sub-overdue').textContent = `${summary.overdue_count} fatura(s) vencida(s)`;
+
+        // Renderiza barras de categoria
+        const barsContainer = document.getElementById('finance-category-bars');
+        if (barsContainer) {
+            if (!summary.categories || summary.categories.length === 0) {
+                barsContainer.innerHTML = '<div style="font-size:0.8rem; color:var(--text-secondary);">Sem lançamentos no período.</div>';
+            } else {
+                barsContainer.innerHTML = summary.categories.map(cat => `
+                    <div class="category-bar-row">
+                        <div class="category-bar-info">
+                            <span class="category-bar-name">${escapeHtml(cat.category)}</span>
+                            <span class="category-bar-val">${formatBRL(cat.amount)} (${cat.percentage}%)</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill" style="width: ${cat.percentage}%;"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Renderiza próximos vencimentos
+        const upcomingContainer = document.getElementById('finance-upcoming-list');
+        if (upcomingContainer) {
+            if (!summary.upcoming_due || summary.upcoming_due.length === 0) {
+                upcomingContainer.innerHTML = '<div style="font-size:0.8rem; color:var(--text-secondary);">Nenhum vencimento pendente no momento.</div>';
+            } else {
+                upcomingContainer.innerHTML = summary.upcoming_due.map(item => {
+                    const dateParts = item.due_date.split('-');
+                    const dateFmt = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` : item.due_date;
+                    const isOverdue = item.status === 'overdue';
+                    const badgeClass = isOverdue ? 'overdue' : 'pending';
+                    const statusText = isOverdue ? 'Vencida' : 'Pendente';
+
+                    return `
+                        <div class="upcoming-item-row">
+                            <div class="upcoming-item-info">
+                                <span class="upcoming-title">${escapeHtml(item.title)}</span>
+                                <span class="upcoming-date">Vence em: ${dateFmt} · ${escapeHtml(item.category)}</span>
+                            </div>
+                            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+                                <span style="font-weight: 700; color: var(--text-primary);">${formatBRL(item.amount)}</span>
+                                <span class="status-badge ${badgeClass}">${statusText}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+    }
+
+    function renderFinanceExpensesTable(expenses) {
+        const tbody = document.getElementById('finance-expenses-tbody');
+        const countEl = document.getElementById('finance-table-count');
+        if (!tbody) return;
+
+        if (countEl) countEl.textContent = `Exibindo ${expenses.length} despesa(s)`;
+
+        if (expenses.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-secondary);">
+                        Nenhuma despesa ou fatura encontrada para este período ou filtro.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = expenses.map(item => {
+            const dateParts = item.due_date.split('-');
+            const dateFmt = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` : item.due_date;
+
+            let statusLabel = 'Pendente';
+            let statusClass = 'pending';
+            if (item.status === 'paid') {
+                statusLabel = 'Pago';
+                statusClass = 'paid';
+            } else if (item.status === 'overdue') {
+                statusLabel = 'Vencido';
+                statusClass = 'overdue';
+            }
+
+            const isPaid = item.status === 'paid';
+            const toggleTitle = isPaid ? 'Marcar como Pendente' : 'Marcar como Pago';
+            const toggleIcon = isPaid ? 'undo' : 'check_circle';
+
+            return `
+                <tr data-id="${item.id}">
+                    <td style="font-weight: 600;">
+                        <div>${escapeHtml(item.title)}</div>
+                        ${item.notes ? `<div style="font-size:0.75rem; color:var(--text-secondary); font-weight:normal;">${escapeHtml(item.notes)}</div>` : ''}
+                    </td>
+                    <td><span style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px; font-size: 0.78rem;">${escapeHtml(item.category)}</span></td>
+                    <td style="text-transform: capitalize;">${escapeHtml(item.periodicity)}</td>
+                    <td>${dateFmt}</td>
+                    <td style="font-weight: 700; font-family: monospace; font-size: 0.9rem;">${formatBRL(item.amount)}</td>
+                    <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn-table-action btn-toggle-paid" data-id="${item.id}" data-current="${item.status}" title="${toggleTitle}">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">${toggleIcon}</span>
+                        </button>
+                        <button class="btn-table-action btn-edit-expense" data-id="${item.id}" title="Editar">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">edit</span>
+                        </button>
+                        <button class="btn-table-action btn-delete" data-id="${item.id}" title="Excluir">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">delete</span>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // Bind events em cada linha da tabela
+        tbody.querySelectorAll('.btn-toggle-paid').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                const currStatus = btn.getAttribute('data-current');
+                const newStatus = currStatus === 'paid' ? 'pending' : 'paid';
+                try {
+                    const formData = new FormData();
+                    formData.append('status', newStatus);
+                    await fetch(`/api/finance/expenses/${id}/status`, {
+                        method: 'PATCH',
+                        body: formData
+                    });
+                    loadFinanceDashboard();
+                } catch (err) {
+                    alert("Erro ao alterar status: " + err.message);
+                }
+            });
+        });
+
+        tbody.querySelectorAll('.btn-edit-expense').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                try {
+                    const item = await apiFetch(`/api/finance/expenses/${id}`);
+                    openExpenseModal(item);
+                } catch (err) {
+                    alert("Erro ao carregar despesa: " + err.message);
+                }
+            });
+        });
+
+        tbody.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                confirmDeleteExpense(id);
+            });
+        });
+    }
+
+    function openExpenseModal(expenseToEdit = null) {
+        const modal = document.getElementById('modal-expense-edit');
+        const titleAction = document.getElementById('modal-expense-title-action');
+        const btnDelete = document.getElementById('btn-delete-expense');
+
+        const idInput = document.getElementById('expense-id-input');
+        const titleInput = document.getElementById('expense-title-input');
+        const catInput = document.getElementById('expense-category-input');
+        const amountInput = document.getElementById('expense-amount-input');
+        const periodicityInput = document.getElementById('expense-periodicity-input');
+        const dueDateInput = document.getElementById('expense-duedate-input');
+        const statusInput = document.getElementById('expense-status-input');
+        const notesInput = document.getElementById('expense-notes-input');
+
+        if (!modal) return;
+
+        if (expenseToEdit && expenseToEdit.id) {
+            idInput.value = String(expenseToEdit.id);
+            titleInput.value = expenseToEdit.title || '';
+            catInput.value = expenseToEdit.category || 'Software/SaaS';
+            amountInput.value = (expenseToEdit.amount !== undefined && expenseToEdit.amount !== null) ? String(expenseToEdit.amount).replace('.', ',') : '';
+            periodicityInput.value = expenseToEdit.periodicity || 'mensal';
+            dueDateInput.value = expenseToEdit.due_date || '';
+            statusInput.value = expenseToEdit.status === 'overdue' ? 'pending' : (expenseToEdit.status || 'pending');
+            notesInput.value = expenseToEdit.notes || '';
+
+            if (titleAction) titleAction.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">edit</span> Editar Despesa';
+            if (btnDelete) btnDelete.style.display = 'block';
+        } else {
+            idInput.value = '';
+            titleInput.value = '';
+            catInput.value = 'Software/SaaS';
+            amountInput.value = '';
+            periodicityInput.value = 'mensal';
+
+            // Data padrão = hoje (YYYY-MM-DD)
+            const todayISO = new Date().toISOString().split('T')[0];
+            dueDateInput.value = todayISO;
+            statusInput.value = 'pending';
+            notesInput.value = '';
+
+            if (titleAction) titleAction.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">post_add</span> Nova Despesa';
+            if (btnDelete) btnDelete.style.display = 'none';
+        }
+
+        modal.style.display = 'flex';
+        if (titleInput) titleInput.focus();
+    }
+
+    function closeExpenseModal() {
+        const modal = document.getElementById('modal-expense-edit');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function handleExpenseSubmit(e) {
+        e.preventDefault();
+        const rawId = (document.getElementById('expense-id-input')?.value || '').trim();
+        const isEdit = rawId !== '' && rawId !== '0' && !isNaN(parseInt(rawId));
+
+        const title = document.getElementById('expense-title-input').value;
+        const category = document.getElementById('expense-category-input').value;
+        const amountRaw = document.getElementById('expense-amount-input').value;
+        const periodicity = document.getElementById('expense-periodicity-input').value;
+        const due_date = document.getElementById('expense-duedate-input').value;
+        const status = document.getElementById('expense-status-input').value;
+        const notes = document.getElementById('expense-notes-input').value;
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('category', category);
+        formData.append('amount', amountRaw);
+        formData.append('periodicity', periodicity);
+        formData.append('due_date', due_date);
+        formData.append('status', status);
+        formData.append('notes', notes);
+
+        const targetUrl = isEdit ? `/api/finance/expenses/${rawId}` : '/api/finance/expenses';
+        const targetMethod = isEdit ? 'PUT' : 'POST';
+
+        try {
+            const res = await fetch(targetUrl, {
+                method: targetMethod,
+                body: formData
+            });
+
+            if (!res.ok) {
+                let errorMsg = `Erro ${res.status}: não foi possível salvar a despesa.`;
+                try {
+                    const errData = await res.json();
+                    if (typeof errData.detail === 'string') {
+                        errorMsg = errData.detail;
+                    } else if (Array.isArray(errData.detail)) {
+                        errorMsg = errData.detail.map(d => d.msg).join(', ');
+                    }
+                } catch (e) {}
+                throw new Error(errorMsg);
+            }
+
+            closeExpenseModal();
+            loadFinanceDashboard();
+        } catch (err) {
+            console.error("Erro ao salvar despesa:", err);
+            alert("Não foi possível salvar: " + err.message);
+        }
+    }
+
+    function confirmDeleteExpense(id) {
+        if (confirm("Tem certeza que deseja excluir esta despesa permanentemente?")) {
+            deleteExpense(id);
+        }
+    }
+
+    async function deleteExpense(id) {
+        try {
+            const res = await fetch(`/api/finance/expenses/${id}`, {
+                method: 'DELETE'
+            });
+            if (!res.ok) throw new Error("Erro ao excluir despesa.");
+            closeExpenseModal();
+            loadFinanceDashboard();
+        } catch (err) {
+            alert("Erro ao excluir: " + err.message);
+        }
+    }
+
+    // ============================================================
+    // Lógica do Módulo Painel Executivo & KPIs
+    // ============================================================
+    let isPanelInitialized = false;
+    let panelDataRaw = null;
+
+    function initDashboardPanelModule() {
+        if (!isPanelInitialized) {
+            isPanelInitialized = true;
+            setupPanelEventListeners();
+        }
+        loadExecutivePanel();
+    }
+
+    function setupPanelEventListeners() {
+        const btnRefresh = document.getElementById('btn-refresh-panel');
+        if (btnRefresh) btnRefresh.addEventListener('click', loadExecutivePanel);
+
+        const btnConfig = document.getElementById('btn-open-panel-config');
+        if (btnConfig) btnConfig.addEventListener('click', openPanelConfigModal);
+
+        const btnCloseConfig = document.getElementById('btn-close-panel-config-modal');
+        const btnCancelConfig = document.getElementById('btn-cancel-panel-config');
+        if (btnCloseConfig) btnCloseConfig.addEventListener('click', closePanelConfigModal);
+        if (btnCancelConfig) btnCancelConfig.addEventListener('click', closePanelConfigModal);
+
+        const formConfig = document.getElementById('panel-metrics-edit-form');
+        if (formConfig) formConfig.addEventListener('submit', handlePanelConfigSubmit);
+
+        // Mídia Modal
+        const btnOpenMedia = document.getElementById('btn-open-media-modal');
+        if (btnOpenMedia) btnOpenMedia.addEventListener('click', () => openMediaModal());
+
+        const btnCloseMedia = document.getElementById('btn-close-media-modal');
+        const btnCancelMedia = document.getElementById('btn-cancel-media');
+        if (btnCloseMedia) btnCloseMedia.addEventListener('click', closeMediaModal);
+        if (btnCancelMedia) btnCancelMedia.addEventListener('click', closeMediaModal);
+
+        const formMedia = document.getElementById('media-edit-form');
+        if (formMedia) formMedia.addEventListener('submit', handleMediaSubmit);
+    }
+
+    async function loadExecutivePanel() {
+        try {
+            const data = await apiFetch('/api/dashboard/panel');
+            panelDataRaw = data;
+            renderExecutivePanel(data);
+        } catch (err) {
+            console.error("Erro ao carregar Painel Executivo:", err);
+        }
+    }
+
+    function renderExecutivePanel(data) {
+        const m = data.metrics || {};
+        
+        // DRE & Saúde
+        const elFat = document.getElementById('pkpi-faturamento');
+        const elEbitda = document.getElementById('pkpi-ebitda');
+        const elEbitdaSub = document.getElementById('pkpi-ebitda-sub');
+        const elEbitdaAdj = document.getElementById('pkpi-ebitda-ajustado');
+        const elEbitdaConv = document.getElementById('pkpi-ebitda-conversion');
+        const elLucro = document.getElementById('pkpi-lucro-liquido');
+        const elParteSocios = document.getElementById('pkpi-parte-socios');
+        const elCustosOp = document.getElementById('pkpi-custos-op');
+        const elCustosMkt = document.getElementById('pkpi-custos-mkt');
+        const elCustosTokens = document.getElementById('pkpi-custos-tokens');
+
+        if (elFat) elFat.textContent = formatBRL(m.faturamento);
+        if (elEbitda) elEbitda.textContent = formatBRL(m.ebitda);
+        if (elEbitdaSub) elEbitdaSub.textContent = `Margem EBITDA: ${m.ebitda_pct}%`;
+        if (elEbitdaAdj) elEbitdaAdj.textContent = formatBRL(m.ebitda_ajustado);
+        if (elEbitdaConv) elEbitdaConv.textContent = `${m.ebitda_cash_conversion_pct}%`;
+        if (elLucro) elLucro.textContent = formatBRL(m.lucro_liquido);
+        if (elParteSocios) elParteSocios.textContent = formatBRL(m.parte_socios);
+        if (elCustosOp) elCustosOp.textContent = formatBRL(m.custos_operacionais);
+        if (elCustosMkt) elCustosMkt.textContent = formatBRL(m.custos_marketing);
+        if (elCustosTokens) elCustosTokens.textContent = formatBRL(m.custos_tokens_ai);
+
+        // Fluxo de Caixa & DCF
+        const elFcf = document.getElementById('pkpi-fcf');
+        const elDcf = document.getElementById('pkpi-dcf');
+        const elFuturePv = document.getElementById('pkpi-future-pv');
+        const elCapex = document.getElementById('pkpi-capex');
+        const elImpostoRec = document.getElementById('pkpi-imposto-rec');
+        const elCapGiro = document.getElementById('pkpi-capital-giro');
+        const elCapGiroSub = document.getElementById('pkpi-capital-giro-sub');
+        const elDso = document.getElementById('pkpi-dso');
+
+        if (elFcf) elFcf.textContent = formatBRL(m.fluxo_caixa_livre);
+        if (elDcf) elDcf.textContent = formatBRL(m.dcf_valuation);
+        if (elFuturePv) elFuturePv.textContent = formatBRL(m.future_cash_pv);
+        if (elCapex) elCapex.textContent = formatBRL(m.capex_manutencao);
+        if (elImpostoRec) elImpostoRec.textContent = formatBRL(m.imposto_recorrente);
+        if (elCapGiro) elCapGiro.textContent = formatBRL(m.capital_giro);
+        if (elCapGiroSub) elCapGiroSub.textContent = `Aumentando: +${m.capital_giro_crescimento_pct}%`;
+        if (elDso) elDso.textContent = `${m.dso_dias} dias`;
+
+        // Riscos & Governança
+        const elBadDebt = document.getElementById('pkpi-bad-debt');
+        const elClientConc = document.getElementById('pkpi-client-conc');
+        const elPartnerOut = document.getElementById('pkpi-partner-out');
+
+        if (elBadDebt) elBadDebt.textContent = formatBRL(m.inadimplencia_bad_debt);
+        if (elClientConc) elClientConc.textContent = `${m.cliente_concentrado_pct}%`;
+        if (elPartnerOut) elPartnerOut.textContent = formatBRL(m.despesa_socio_fora);
+
+        // Unit Economics
+        const elLtv = document.getElementById('pkpi-ltv');
+        const elChurn = document.getElementById('pkpi-churn');
+        const elMrr = document.getElementById('pkpi-mrr');
+        const elArpu = document.getElementById('pkpi-arpu');
+        const elProd = document.getElementById('pkpi-produtividade');
+        const elYoy = document.getElementById('pkpi-yoy');
+
+        if (elLtv) elLtv.textContent = formatBRL(m.ltv);
+        if (elChurn) elChurn.textContent = `${m.churn_rate}%`;
+        if (elMrr) elMrr.textContent = formatBRL(m.recorrencia_mrr);
+        if (elArpu) elArpu.textContent = formatBRL(m.margem_por_usuario_arpu);
+        if (elProd) elProd.textContent = `${m.produtividade_score}%`;
+        if (elYoy) elYoy.textContent = `+${m.crescimento_yoy_pct}%`;
+
+        // Marketing
+        const elCpaCamp = document.getElementById('pkpi-cpa-campanha');
+        const elCpaInf = document.getElementById('pkpi-cpa-influencer');
+
+        if (elCpaCamp) elCpaCamp.textContent = formatBRL(m.cpa_campanha);
+        if (elCpaInf) elCpaInf.textContent = formatBRL(m.cpa_influencer);
+
+        // Tabela de Formatos de Mídia
+        const mediaTbody = document.getElementById('panel-media-tbody');
+        if (mediaTbody) {
+            if (!data.media_performance || data.media_performance.length === 0) {
+                mediaTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color:var(--text-secondary);">Nenhum modelo de mídia cadastrado.</td></tr>`;
+            } else {
+                mediaTbody.innerHTML = data.media_performance.map(item => {
+                    const convRate = item.clicks > 0 ? (item.conversions / item.clicks * 100).toFixed(1) : '0.0';
+                    return `
+                        <tr>
+                            <td style="font-weight: 600; color: var(--text-primary);">
+                                ${escapeHtml(item.format_name)}
+                                ${item.notes ? `<div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: normal;">${escapeHtml(item.notes)}</div>` : ''}
+                            </td>
+                            <td>${item.clicks.toLocaleString('pt-BR')}</td>
+                            <td>${item.conversions.toLocaleString('pt-BR')}</td>
+                            <td><span style="background: rgba(0, 195, 255, 0.1); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;">${convRate}%</span></td>
+                            <td style="font-family: monospace;">${formatBRL(item.cpa)}</td>
+                            <td style="font-weight: 700; color: #4eff9b; font-family: monospace;">${formatBRL(item.revenue_generated)}</td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <button class="btn-table-action btn-delete-media" data-id="${item.id}" title="Excluir">
+                                    <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                mediaTbody.querySelectorAll('.btn-delete-media').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.getAttribute('data-id');
+                        if (confirm("Remover este formato de mídia?")) {
+                            await fetch(`/api/dashboard/panel/media-performance/${id}`, { method: 'DELETE' });
+                            loadExecutivePanel();
+                        }
+                    });
+                });
+            }
+        }
+    }
+
+    function openPanelConfigModal() {
+        const modal = document.getElementById('modal-panel-metrics-edit');
+        if (!modal) return;
+
+        const p = (panelDataRaw && panelDataRaw.parameters_raw) ? panelDataRaw.parameters_raw : {};
+
+        const mapFields = {
+            'pedit-dcf': p.dcf_valuation || 4500000.0,
+            'pedit-future-pv': p.future_cash_pv || 3850000.0,
+            'pedit-capex': p.capex_maintenance || 15400.0,
+            'pedit-imposto-rec': p.tax_recurring || 18500.0,
+            'pedit-capital-giro': p.working_capital || 125000.0,
+            'pedit-working-cap-growth': p.working_capital_growth || 12.5,
+            'pedit-bad-debt': p.bad_debt_provision || 4200.0,
+            'pedit-client-conc': p.client_concentration || 18.5,
+            'pedit-partner-out': p.partner_out_expense || 3500.0,
+            'pedit-partner-divs': p.partner_dividends || 35000.0,
+            'pedit-dso': p.dso_days || 38.0,
+            'pedit-churn': p.churn_rate || 2.1,
+            'pedit-arpu': p.arpu_user_margin || 420.0,
+            'pedit-yoy': p.yoy_growth || 48.2,
+            'pedit-cpa-camp': p.cpa_campaign || 45.5,
+            'pedit-cpa-inf': p.cpa_influencer || 68.0
+        };
+
+        for (const [id, val] of Object.entries(mapFields)) {
+            const input = document.getElementById(id);
+            if (input) input.value = String(val).replace('.', ',');
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function closePanelConfigModal() {
+        const modal = document.getElementById('modal-panel-metrics-edit');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function handlePanelConfigSubmit(e) {
+        e.preventDefault();
+
+        const updates = [
+            { key: 'dcf_valuation', value: document.getElementById('pedit-dcf').value },
+            { key: 'future_cash_pv', value: document.getElementById('pedit-future-pv').value },
+            { key: 'capex_maintenance', value: document.getElementById('pedit-capex').value },
+            { key: 'tax_recurring', value: document.getElementById('pedit-imposto-rec').value },
+            { key: 'working_capital', value: document.getElementById('pedit-capital-giro').value },
+            { key: 'working_capital_growth', value: document.getElementById('pedit-working-cap-growth').value },
+            { key: 'bad_debt_provision', value: document.getElementById('pedit-bad-debt').value },
+            { key: 'client_concentration', value: document.getElementById('pedit-client-conc').value },
+            { key: 'partner_out_expense', value: document.getElementById('pedit-partner-out').value },
+            { key: 'partner_dividends', value: document.getElementById('pedit-partner-divs').value },
+            { key: 'dso_days', value: document.getElementById('pedit-dso').value },
+            { key: 'churn_rate', value: document.getElementById('pedit-churn').value },
+            { key: 'arpu_user_margin', value: document.getElementById('pedit-arpu').value },
+            { key: 'yoy_growth', value: document.getElementById('pedit-yoy').value },
+            { key: 'cpa_campaign', value: document.getElementById('pedit-cpa-camp').value },
+            { key: 'cpa_influencer', value: document.getElementById('pedit-cpa-inf').value }
+        ];
+
+        try {
+            for (const item of updates) {
+                const formData = new FormData();
+                formData.append('metric_key', item.key);
+                formData.append('metric_value', item.value);
+                await fetch('/api/dashboard/panel/metrics', { method: 'POST', body: formData });
+            }
+            closePanelConfigModal();
+            loadExecutivePanel();
+        } catch (err) {
+            alert("Erro ao salvar parâmetros: " + err.message);
+        }
+    }
+
+    function openMediaModal() {
+        const modal = document.getElementById('modal-media-edit');
+        if (!modal) return;
+        document.getElementById('medit-format-name').value = '';
+        document.getElementById('medit-clicks').value = '';
+        document.getElementById('medit-conversions').value = '';
+        document.getElementById('medit-cpa').value = '';
+        document.getElementById('medit-revenue').value = '';
+        modal.style.display = 'flex';
+    }
+
+    function closeMediaModal() {
+        const modal = document.getElementById('modal-media-edit');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function handleMediaSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('format_name', document.getElementById('medit-format-name').value);
+        formData.append('clicks', document.getElementById('medit-clicks').value || 0);
+        formData.append('conversions', document.getElementById('medit-conversions').value || 0);
+        formData.append('cpa', document.getElementById('medit-cpa').value || '0.0');
+        formData.append('revenue_generated', document.getElementById('medit-revenue').value || '0.0');
+
+        try {
+            const res = await fetch('/api/dashboard/panel/media-performance', { method: 'POST', body: formData });
+            if (!res.ok) throw new Error("Erro ao salvar modelo de mídia.");
+            closeMediaModal();
+            loadExecutivePanel();
+        } catch (err) {
+            alert("Erro ao salvar formato de mídia: " + err.message);
+        }
+    }
+
+    // ============================================================
+    // Lógica do Módulo Cofre de Logins
+    // ============================================================
+    let credentialsLoaded = false;
+
+    async function loadCredentials() {
+        try {
+            const res = await fetch('/api/logins');
+            if (!res.ok) throw new Error('Erro ao carregar credenciais');
+            const data = await res.json();
+            credentialsLoaded = true;
+            renderCredentials(data);
+        } catch (err) {
+            console.error('loadCredentials error:', err);
+            const grid = document.getElementById('credentials-grid');
+            if (grid) grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">Erro ao carregar credenciais.</p>';
+        }
+    }
+
+    function renderCredentials(credentials) {
+        const grid = document.getElementById('credentials-grid');
+        if (!grid) return;
+        if (!credentials || credentials.length === 0) {
+            grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">Nenhuma credencial cadastrada.</p>';
+            return;
+        }
+        grid.innerHTML = credentials.map(c => {
+            const hasPassword = c.password && c.password.trim() !== '';
+            const passwordDisplay = hasPassword ? '••••••••' : '—';
+            const notesHtml = c.notes && c.notes.trim() ? `<div class="credential-notes">${escapeHtml(c.notes)}</div>` : '';
+            return `
+            <div class="credential-card" data-id="${c.id}">
+                <div class="credential-card-header">
+                    <span class="credential-service-name">${escapeHtml(c.service_name)}</span>
+                    <span class="credential-category-badge">${escapeHtml(c.category || 'Geral')}</span>
+                </div>
+                <div class="credential-field">
+                    <span class="credential-field-label">Login</span>
+                    <span class="credential-field-value">${escapeHtml(c.login)}</span>
+                    <button class="btn-credential-action" title="Copiar login" onclick="copyCredentialText('${escapeHtml(c.login).replace(/'/g, "\\'")}')"><span class="material-symbols-outlined" style="font-size: 1rem;">content_copy</span></button>
+                </div>
+                <div class="credential-field">
+                    <span class="credential-field-label">Senha</span>
+                    <span class="credential-field-value password-masked" id="pw-display-${c.id}">${passwordDisplay}</span>
+                    ${hasPassword ? `
+                    <button class="btn-credential-action btn-toggle-pw" title="Mostrar/Ocultar" data-id="${c.id}" data-pw="${encodeURIComponent(c.password)}"><span class="material-symbols-outlined" style="font-size: 1rem;">visibility</span></button>
+                    <button class="btn-credential-action" title="Copiar senha" onclick="copyCredentialText(decodeURIComponent('${encodeURIComponent(c.password)}'))"><span class="material-symbols-outlined" style="font-size: 1rem;">content_copy</span></button>
+                    ` : ''}
+                </div>
+                ${notesHtml}
+                <div class="credential-card-actions">
+                    <button class="btn-credential-action" title="Editar" onclick="openEditCredential(${c.id})"><span class="material-symbols-outlined" style="font-size: 1.1rem;">edit</span></button>
+                    <button class="btn-credential-action" title="Excluir" onclick="deleteCredential(${c.id}, '${escapeHtml(c.service_name).replace(/'/g, "\\'")}')"><span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span></button>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Toggle password visibility
+        grid.querySelectorAll('.btn-toggle-pw').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const pw = decodeURIComponent(btn.dataset.pw);
+                const display = document.getElementById(`pw-display-${id}`);
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (display.classList.contains('password-masked')) {
+                    display.textContent = pw;
+                    display.classList.remove('password-masked');
+                    icon.textContent = 'visibility_off';
+                } else {
+                    display.textContent = '••••••••';
+                    display.classList.add('password-masked');
+                    icon.textContent = 'visibility';
+                }
+            });
+        });
+    }
+
+    // Global helpers for credentials
+    window.copyCredentialText = function(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            // clipboard success
+        }).catch(err => console.error('Copy failed:', err));
+    };
+
+    window.openEditCredential = async function(id) {
+        try {
+            const res = await fetch('/api/logins');
+            const all = await res.json();
+            const cred = all.find(c => c.id === id);
+            if (!cred) return;
+            document.getElementById('credential-edit-id').value = cred.id;
+            document.getElementById('credential-service').value = cred.service_name;
+            document.getElementById('credential-login').value = cred.login;
+            document.getElementById('credential-password').value = cred.password || '';
+            document.getElementById('credential-category').value = cred.category || 'Geral';
+            document.getElementById('credential-notes').value = cred.notes || '';
+            document.getElementById('credential-modal-title').textContent = 'Editar Credencial';
+            document.getElementById('modal-credential-edit').style.display = 'flex';
+        } catch (err) {
+            console.error('openEditCredential error:', err);
+        }
+    };
+
+    window.deleteCredential = async function(id, name) {
+        if (!confirm(`Excluir credencial "${name}"?`)) return;
+        try {
+            const res = await fetch(`/api/logins/${id}`, { method: 'DELETE' });
+            if (res.ok) loadCredentials();
+        } catch (err) {
+            console.error('deleteCredential error:', err);
+        }
+    };
+
+    // Add credential button
+    const btnAddCredential = document.getElementById('btn-add-credential');
+    if (btnAddCredential) {
+        btnAddCredential.addEventListener('click', () => {
+            document.getElementById('credential-edit-id').value = '';
+            document.getElementById('credential-edit-form').reset();
+            document.getElementById('credential-modal-title').textContent = 'Nova Credencial';
+            document.getElementById('modal-credential-edit').style.display = 'flex';
+        });
+    }
+
+    // Close modal
+    const btnCloseCredentialModal = document.getElementById('btn-close-credential-modal');
+    const btnCancelCredential = document.getElementById('btn-cancel-credential');
+    if (btnCloseCredentialModal) btnCloseCredentialModal.addEventListener('click', () => { document.getElementById('modal-credential-edit').style.display = 'none'; });
+    if (btnCancelCredential) btnCancelCredential.addEventListener('click', () => { document.getElementById('modal-credential-edit').style.display = 'none'; });
+
+    // Submit form
+    const credentialForm = document.getElementById('credential-edit-form');
+    if (credentialForm) {
+        credentialForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('credential-edit-id').value;
+            const formData = new FormData();
+            formData.append('service_name', document.getElementById('credential-service').value);
+            formData.append('login', document.getElementById('credential-login').value);
+            formData.append('password', document.getElementById('credential-password').value);
+            formData.append('category', document.getElementById('credential-category').value);
+            formData.append('notes', document.getElementById('credential-notes').value);
+
+            try {
+                const url = id ? `/api/logins/${id}` : '/api/logins';
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, { method, body: formData });
+                if (res.ok) {
+                    document.getElementById('modal-credential-edit').style.display = 'none';
+                    loadCredentials();
+                }
+            } catch (err) {
+                console.error('credential submit error:', err);
+            }
+        });
+    }
+
+    // Password toggle in modal
+    const pwToggle = document.getElementById('credential-password-toggle');
+    if (pwToggle) {
+        pwToggle.addEventListener('click', () => {
+            const input = document.getElementById('credential-password');
+            const icon = pwToggle.querySelector('.material-symbols-outlined');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        });
+    }
+
     // Inicializa carregamento do custo ao abrir a página
     updateSystemUsage();
 
 })();
+
 
 

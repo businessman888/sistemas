@@ -349,6 +349,35 @@ def init_postgres():
             created_at VARCHAR(100) NOT NULL
         )
         """)
+
+        # 15. Tabela: financial_expenses
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS financial_expenses (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            category VARCHAR(100) NOT NULL,
+            amount DOUBLE PRECISION NOT NULL,
+            periodicity VARCHAR(50) NOT NULL,
+            due_date VARCHAR(10) NOT NULL,
+            status VARCHAR(50) NOT NULL DEFAULT 'pending',
+            notes TEXT,
+            created_at VARCHAR(100) NOT NULL
+        )
+        """)
+
+        # 16. Tabela: credentials
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS credentials (
+            id SERIAL PRIMARY KEY,
+            service_name VARCHAR(255) NOT NULL,
+            login VARCHAR(500) NOT NULL,
+            password VARCHAR(500) DEFAULT '',
+            notes TEXT DEFAULT '',
+            category VARCHAR(100) DEFAULT 'Geral',
+            created_at VARCHAR(100) DEFAULT NOW()::text,
+            updated_at VARCHAR(100) DEFAULT NOW()::text
+        )
+        """)
         
         conn.commit()
     logger.info("Banco PostgreSQL inicializado com sucesso!")
@@ -548,6 +577,134 @@ def init_sqlite():
             FOREIGN KEY(category_id) REFERENCES document_categories(id) ON DELETE SET NULL
         )
         """)
-        
+
+        # Tabela: Despesas Financeiras
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS financial_expenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            category TEXT NOT NULL,
+            amount REAL NOT NULL,
+            periodicity TEXT NOT NULL,
+            due_date TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            notes TEXT,
+            created_at TEXT NOT NULL
+        )
+        """)
+
+        # Tabela: Parâmetros e Métricas do Painel Executivo
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS executive_panel_metrics (
+            metric_key TEXT PRIMARY KEY,
+            metric_group TEXT NOT NULL,
+            metric_label TEXT NOT NULL,
+            metric_value REAL NOT NULL DEFAULT 0.0,
+            unit TEXT DEFAULT 'BRL',
+            notes TEXT,
+            updated_at TEXT NOT NULL
+        )
+        """)
+
+        # Tabela: Performance por Formato de Mídia
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS media_performance_metrics (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            format_name TEXT NOT NULL UNIQUE,
+            clicks INTEGER DEFAULT 0,
+            conversions INTEGER DEFAULT 0,
+            cpa REAL DEFAULT 0.0,
+            revenue_generated REAL DEFAULT 0.0,
+            notes TEXT,
+            updated_at TEXT NOT NULL
+        )
+        """)
+
+        # Tabela: credentials
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS credentials (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            service_name TEXT NOT NULL,
+            login TEXT NOT NULL,
+            password TEXT DEFAULT '',
+            notes TEXT DEFAULT '',
+            category TEXT DEFAULT 'Geral',
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        )
+        """)
+
+        # Seed inicial para o Painel Executivo se estiver vazio
+        cursor.execute("SELECT COUNT(*) FROM executive_panel_metrics")
+        if cursor.fetchone()[0] == 0:
+            now_iso = datetime.now().isoformat()
+            default_metrics = [
+                ('capex_maintenance', 'cashflow', 'Capex de Manutenção', 15400.0, 'BRL', 'Investimento em manutenção', now_iso),
+                ('tax_recurring', 'tax', 'Imposto Recorrente', 18500.0, 'BRL', 'Estimativa mensal', now_iso),
+                ('working_capital', 'cashflow', 'Capital de Giro Total', 125000.0, 'BRL', 'Reserva de liquidez', now_iso),
+                ('working_capital_growth', 'cashflow', 'Capital de Giro Aumentando', 12.5, '%', 'Crescimento do NCG', now_iso),
+                ('bad_debt_provision', 'risk', 'Inadimplência Mal Provisionada', 4200.0, 'BRL', 'Provisão de perda', now_iso),
+                ('client_concentration', 'risk', 'Cliente Concentrado (% Maior Cliente)', 18.5, '%', 'Risco de concentração', now_iso),
+                ('partner_out_expense', 'governance', 'Despesa do Sócio Fora da Empresa', 3500.0, 'BRL', 'Retiradas não operacionais', now_iso),
+                ('dcf_valuation', 'valuation', 'Valuation DCF', 4500000.0, 'BRL', 'Fluxo de Caixa Descontado', now_iso),
+                ('future_cash_pv', 'valuation', 'Caixa Futuro Trazido a Valor Presente', 3850000.0, 'BRL', 'VP dos fluxos projetados', now_iso),
+                ('ebitda_adjusted_deductions', 'dre', 'Deduções EBITDA (Ajustes)', 8500.0, 'BRL', 'Outras despesas não recorrentes', now_iso),
+                ('partner_dividends', 'dre', 'Parte dos Sócios (Dividendos)', 35000.0, 'BRL', 'Distribuição de lucro', now_iso),
+                ('dso_days', 'cashflow', 'Tempo Médio de Recebimento (PMR)', 38.0, 'dias', 'Média de dias para receber', now_iso),
+                ('churn_rate', 'unit_economics', 'Churn Rate Mensal', 2.1, '%', 'Taxa de cancelamento', now_iso),
+                ('arpu_user_margin', 'unit_economics', 'Margem por Usuário (ARPU Líquido)', 420.0, 'BRL', 'Lucro médio por cliente', now_iso),
+                ('productivity_score', 'unit_economics', 'Produtividade Executiva', 94.5, '%', 'Eficiência de entrega', now_iso),
+                ('yoy_growth', 'unit_economics', 'Crescimento % ao Ano', 48.2, '%', 'YoY Revenue Growth', now_iso),
+                ('cpa_campaign', 'marketing', 'CPA de Campanha', 45.5, 'BRL', 'Custo por aquisição pago', now_iso),
+                ('cpa_influencer', 'marketing', 'CPA de Influencer / Embaixador', 68.0, 'BRL', 'Custo por aquisição influência', now_iso),
+            ]
+            cursor.executemany(
+                "INSERT INTO executive_panel_metrics (metric_key, metric_group, metric_label, metric_value, unit, notes, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                default_metrics
+            )
+
+        # Seed inicial de mídias se vazio
+        cursor.execute("SELECT COUNT(*) FROM media_performance_metrics")
+        if cursor.fetchone()[0] == 0:
+            now_iso = datetime.now().isoformat()
+            default_media = [
+                ('Reels Orgânico/Pago', 14200, 420, 38.5, 84000.0, 'Performance alta engajamento', now_iso),
+                ('Post Estático', 6100, 115, 62.0, 23000.0, 'Conteúdo institucional', now_iso),
+                ('Carrossel Educacional', 18500, 560, 32.1, 112000.0, 'Taxa de salvamento elevada', now_iso),
+                ('Post Colab com Influencer', 22400, 890, 28.4, 178000.0, 'Excelente conversão direta', now_iso),
+                ('Story Diario', 9800, 280, 41.0, 56000.0, 'Sequência de vendas', now_iso),
+                ('Story de Influencer', 16500, 490, 48.0, 98000.0, 'Cupom específico', now_iso),
+                ('Reels de Influencer', 31000, 1120, 24.5, 224000.0, 'Maior ROI da campanha', now_iso),
+            ]
+            cursor.executemany(
+                "INSERT INTO media_performance_metrics (format_name, clicks, conversions, cpa, revenue_generated, notes, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                default_media
+            )
+
+        cursor.execute("SELECT COUNT(*) FROM credentials")
+        if cursor.fetchone()[0] == 0:
+            now_iso = datetime.now().isoformat()
+            default_credentials = [
+                ('Login INPI', 'oytotec', 'Lagorce369!', '', 'Governo', now_iso, now_iso),
+                ('AWS', 'contato@oytotecnologia.com', 'LagorceSanmarino369!', '', 'Cloud', now_iso, now_iso),
+                ('Revenue Cat', 'contato@oytotecnologia.com', 'LagorceSanmarino369!', '', 'SaaS', now_iso, now_iso),
+                ('Fitbit', 'Google irineu', '', 'https://dev.fitbit.com/apps/new', 'API', now_iso, now_iso),
+                ('Polar', 'contato@oytotecnologia.com', 'LagorceSanmarino369!', '', 'API', now_iso, now_iso),
+                ('Garmin', 'contato@oytotecnologia.com', 'LagorceSanmarino369!', '', 'API', now_iso, now_iso),
+                ('Google', 'contato@oytotecnologia.com', 'LagorceSanmarino369!', '', 'Cloud', now_iso, now_iso),
+                ('Apple', 'contato@oyto.com.br', 'SanmarinoLagorce02!', '', 'Cloud', now_iso, now_iso),
+                ('Antigravity', 'Google irineu', '', '', 'AI', now_iso, now_iso),
+                ('Claude', 'Google irineu', '', '', 'AI', now_iso, now_iso),
+                ('Hostinger', 'Google irineu', '', '', 'Hosting', now_iso, now_iso),
+                ('Google Irineu', 'irineuVieiramelo@gmail.com', 'j56486765', 'Conta pessoal', 'Pessoal', now_iso, now_iso),
+                ('Superwall', 'contato@oytotecnologia.com', 'LagorceSanmarino369!', '', 'SaaS', now_iso, now_iso),
+                ('Asaas', 'contato@oytotecnologia.com', 'LagorceSanmarino369!', '', 'Financeiro', now_iso, now_iso),
+                ('Github', 'businessman888', 'Jyc56486765!', '', 'Dev', now_iso, now_iso),
+            ]
+            cursor.executemany(
+                "INSERT INTO credentials (service_name, login, password, notes, category, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                default_credentials
+            )
+
         conn.commit()
     logger.info("Banco SQLite inicializado com sucesso!")
